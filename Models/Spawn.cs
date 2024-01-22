@@ -22,10 +22,5 @@ namespace CS2Executes.Models
 			Position = position;
 			Angle = angle;
 		}
-
-		public void SpawnPlayer(CCSPlayerController player)
-		{
-			player.Teleport(Position, Angle, new Vector(IntPtr.Zero));
-		}
 	}
 }

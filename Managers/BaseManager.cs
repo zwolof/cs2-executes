@@ -1,14 +1,14 @@
 namespace CS2Executes.Managers
 {
 
-	public interface IBaseManager
-	{ }
+    public interface IBaseManager
+    { }
 
-	public class BaseManager : IBaseManager
-	{
-		public BaseManager()
-		{
+    public class BaseManager : IBaseManager
+    {
+        public BaseManager()
+        {
 
-		}
-	}
+        }
+    }
 }

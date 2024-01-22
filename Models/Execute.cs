@@ -3,19 +3,19 @@ using CS2Executes.Enums;
 
 namespace CS2Executes.Models
 {
-	public class Execute
-	{
-		public string Name { get; set; }
-		public EBombsite Bombsite { get; set; }
-		public Dictionary<CsTeam, List<Spawn>> Spawns { get; set; }
+    public class Execute
+    {
+        public string Name { get; set; }
+        public EBombsite Bombsite { get; set; }
+        public Dictionary<CsTeam, List<Spawn>> Spawns { get; set; }
 
-		public Execute(string name, EBombsite bombsite, Dictionary<CsTeam, List<Spawn>> spawns)
-		{
-			Name = name;
-			Bombsite = bombsite;
-			Spawns = spawns;
-		}
-	}
+        public Execute(string name, EBombsite bombsite, Dictionary<CsTeam, List<Spawn>> spawns)
+        {
+            Name = name;
+            Bombsite = bombsite;
+            Spawns = spawns;
+        }
+    }
 }
 
 // {

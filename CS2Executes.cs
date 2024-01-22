@@ -6,6 +6,7 @@ using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
 using CounterStrikeSharp.API.Modules.Utils;
 using CS2Executes.Managers;
 using CS2Executes.Memory;
+using CS2Executes.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CS2Executes
@@ -56,58 +57,6 @@ namespace CS2Executes
 					Console.WriteLine("[Executes] Failed to get player.");
                     return;
                 }
-				
-				// EmitSound( const char *soundname, float soundtime = 0.0f, float *duration = NULL );
-				var test = SmokeFunctions.EmitSound.Invoke(
-					"Weapon_Knife.Hit",
-					0.0f,
-					1.5f
-				);
-				Server.PrintToChatAll($"[Executes] Executing EmitSound");
-
-
-				// var vPos = player.PlayerPawn.Value.AbsOrigin;
-
-				// vPos.Z += 10.0f;
-
-				// SmokeFunctions.CSmokeGrenadeProjectile_CreateFunc.Invoke(
-				// 	player.PlayerPawn.Value.AbsOrigin.Handle,
-				// 	player.PlayerPawn.Value.EyeAngles.Handle,
-				// 	player.PlayerPawn.Value.AbsVelocity.Handle,
-				// 	player.PlayerPawn.Value.AngVelocity.Handle,
-				// 	player.Pawn.Value!.Handle,
-				// 	45,
-				// 	player.TeamNum
-				// );
-				
-
-				// smokegrenade_projectile.TeamNum = player.TeamNum;
-
-				// smokegrenade_projectile.AbsOrigin.X = player.PlayerPawn.Value.AbsOrigin.X;
-				// smokegrenade_projectile.AbsOrigin.Y = player.PlayerPawn.Value.AbsOrigin.Y;
-				// smokegrenade_projectile.AbsOrigin.Z = player.PlayerPawn.Value.AbsOrigin.Z + 10.0f;
-
-				// smokegrenade_projectile.DidSmokeEffect = false;
-
-				// smokegrenade_projectile.SmokeDetonationPos.X = smokegrenade_projectile.AbsOrigin.X;
-				// smokegrenade_projectile.SmokeDetonationPos.Y = smokegrenade_projectile.AbsOrigin.Y;
-				// smokegrenade_projectile.SmokeDetonationPos.Z = smokegrenade_projectile.AbsOrigin.Z;
-
-				// smokegrenade_projectile.SpawnTime = Server.TickCount;
-
-				// smokegrenade_projectile.LastBounce = Server.TickCount + 1;
-				// smokegrenade_projectile.LastThinkTick = Server.TickCount + 1;
-				// smokegrenade_projectile.NextThinkTick = Server.TickCount + 1;
-				// smokegrenade_projectile.SmokeEffectTickBegin = Server.TickCount + 10;
-				// smokegrenade_projectile.Bounces = 0;
-				// smokegrenade_projectile.SmokeColor.X = 256;
-				// smokegrenade_projectile.SmokeColor.Y = 256;
-				// smokegrenade_projectile.SmokeColor.Z = 256;
-				
-				// smokegrenade_projectile.DispatchSpawn();
-
-				// smokegrenade_projectile.AcceptInput("InitializeSpawnFromWorld", player.PlayerPawn.Value!, player.PlayerPawn.Value!, "");
-				// smokegrenade_projectile.DetonateTime = 0;
             });
 
 			Console.WriteLine("[Executes] ----------- CS2 Executes loaded -----------");
@@ -121,6 +70,7 @@ namespace CS2Executes
 			services.AddSingleton<QueueManager>();
 			services.AddSingleton<GameManager>();
 			services.AddSingleton<GrenadeManager>();
+			services.AddSingleton<ExecutesQueue<CCSPlayerController>>();
 
 			Console.WriteLine("[Executes] ----------- CS2 Executes services loaded -----------");
 		}

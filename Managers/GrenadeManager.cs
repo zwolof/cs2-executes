@@ -8,20 +8,20 @@ using Vector = CounterStrikeSharp.API.Modules.Utils.Vector;
 
 namespace CS2Executes.Managers
 {
-	public sealed class GrenadeManager : BaseManager
-	{
-		public GrenadeManager() {}
+    public sealed class GrenadeManager : BaseManager
+    {
+        public GrenadeManager() {}
 
-		public void ThrowGrenade(CCSPlayerController player, EGrenade type, Vector position, QAngle angle, Vector velocity)
-		{
-			if(player.Pawn.Value == null)
-			{
-				return;
-			}
+        public void ThrowGrenade(CCSPlayerController player, EGrenade type, Vector position, QAngle angle, Vector velocity)
+        {
+            if(player.Pawn.Value == null)
+            {
+                return;
+            }
 
-			switch(type)
-			{
-				case EGrenade.Smoke:
+            switch(type)
+            {
+                case EGrenade.Smoke:
                     SmokeFunctions.CSmokeGrenadeProjectile_CreateFunc.Invoke(
                         position.Handle,
                         angle.Handle,
@@ -31,12 +31,12 @@ namespace CS2Executes.Managers
                         45,
                         player.TeamNum
                     );
-					break;
-				
-				default:
-					break;
-			}
+                    break;
+                
+                default:
+                    break;
+            }
 
-		}
-	}
+        }
+    }
 }

@@ -22,5 +22,15 @@ namespace CS2Executes
 
 			return players.Count(x => x.Team == team);
 		}
+
+		public static bool IsWarmup()
+		{
+			return GetGameRules()?.WarmupPeriod ?? false;
+		}
+
+		public static bool IsFreezeTime()
+		{
+			return GetGameRules()?.FreezePeriod ?? false;
+		}
 	}
 }
