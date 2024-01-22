@@ -22,17 +22,20 @@ namespace CS2Executes
 		#endregion
 
 		private readonly GameManager? _gameManager = null;
+		private readonly EventHandler _eventHandler = new();
 
 		public CS2ExecutesPlugin(GameManager gameManager) {
 			_gameManager = gameManager;
+			_eventHandler = new EventHandler();
 		}
 
         public override void Load(bool hotReload)
         {
-            RegisterEventHandler<EventPlayerConnectFull>(EventHandler.OnPlayerConnectFull);
-            RegisterEventHandler<EventRoundStart>(EventHandler.OnRoundStart);
-            RegisterEventHandler<EventRoundEnd>(EventHandler.OnRoundEnd);
-            RegisterEventHandler<EventRoundFreezeEnd>(EventHandler.OnRoundFreezeEnd);
+            RegisterEventHandler<EventPlayerConnectFull>(_eventHandler.OnPlayerConnectFull);
+            RegisterEventHandler<EventRoundStart>(_eventHandler.OnRoundStart);
+            RegisterEventHandler<EventRoundEnd>(_eventHandler.OnRoundEnd);
+            RegisterEventHandler<EventRoundFreezeEnd>(_eventHandler.OnRoundFreezeEnd);
+            RegisterEventHandler<EventPlayerTeam>(_eventHandler.OnEventPlayerTeam);
 
 			RegisterListener<Listeners.OnMapStart>((string mapName) => 
 			{
@@ -70,7 +73,7 @@ namespace CS2Executes
 			services.AddSingleton<QueueManager>();
 			services.AddSingleton<GameManager>();
 			services.AddSingleton<GrenadeManager>();
-			services.AddSingleton<ExecutesQueue<CCSPlayerController>>();
+			services.AddSingleton<SpawnManager>();
 
 			Console.WriteLine("[Executes] ----------- CS2 Executes services loaded -----------");
 		}
