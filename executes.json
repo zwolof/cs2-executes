@@ -1,0 +1,56 @@
+[
+    {
+        "description": "You are alone against 2 CTs, try to plant the bomb at {{ site }} and win the round!",
+        "bombsite": "A",
+        "grenades": [
+            {
+                "Type": "smokegrenade",
+                "Position": "-942.44;-2369.17;-167.96",
+				"Angle": "0;0;0",
+				"Velocity": "0;0;0",
+                "Delay": 4.5
+            },
+            {
+                "Type": "smokegrenade",
+                "Position": "-942.44;-2369.17;-167.96",
+				"Angle": "0;0;0",
+				"Velocity": "0;0;0",
+                "Delay": 4.5
+            },
+            {
+                "Type": "molotov",
+                "Position": "-942.44;-2369.17;-167.96",
+				"Angle": "0;0;0",
+				"Velocity": "0;0;0",
+                "Delay": 6.5
+            }
+        ],
+        "spawns": [
+            {
+                "team": "ct",
+                "position": "123.45;123.45;123.45",
+                "angles": "123.45;123.45;123.45",
+                "type": "defuser",
+                "grenades": {
+                    "smoke": 1,
+                    "flashbang": 2,
+                    "molotov": 1,
+                    "decoy": 0
+                }
+            },
+            {
+                "team": "tt",
+                "position": "123.45;123.45;123.45",
+                "angles": "123.45;123.45;123.45",
+                "type": "bomb",
+                "grenades": {
+                    "smoke": 0,
+                    "flashbang": 2,
+                    "molotov": 1,
+                    "decoy": 1,
+                    "hegrenade": 0
+                }
+            }
+        ]
+    }
+]
