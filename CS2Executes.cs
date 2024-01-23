@@ -1,19 +1,12 @@
 ﻿using System.Diagnostics;
-using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
-using CounterStrikeSharp.API.Core.Attributes.Registration;
-using CounterStrikeSharp.API.Modules.Memory;
-using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
-using CounterStrikeSharp.API.Modules.Utils;
 using CS2Executes.Managers;
-using CS2Executes.Memory;
-using CS2Executes.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CS2Executes
 {
-    [MinimumApiVersion(140)]
+    [MinimumApiVersion(147)]
     public partial class CS2ExecutesPlugin : BasePlugin
     {
         #region Plugin Info
