@@ -1,12 +1,7 @@
-using System.Numerics;
-using CounterStrikeSharp.API;
-using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Enums;
-using ExecutesPlugin.Memory;
 using ExecutesPlugin.Models;
 using Newtonsoft.Json;
-using Vector = CounterStrikeSharp.API.Modules.Utils.Vector;
 
 namespace ExecutesPlugin.Managers
 {
