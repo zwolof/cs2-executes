@@ -1,4 +1,4 @@
-namespace CS2Executes.Managers
+namespace ExecutesPlugin.Managers
 {
     public interface IBaseManager { }
 

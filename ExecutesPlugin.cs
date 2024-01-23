@@ -2,13 +2,13 @@
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
-using CS2Executes.Managers;
+using ExecutesPlugin.Managers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CS2Executes
+namespace ExecutesPlugin
 {
     [MinimumApiVersion(147)]
-    public partial class CS2ExecutesPlugin : BasePlugin
+    public partial class ExecutesPluginPlugin : BasePlugin
     {
         #region Plugin Info
         public override string ModuleName => "CS2 Executes";
@@ -21,7 +21,7 @@ namespace CS2Executes
         private readonly QueueManager? _queueManager = null;
         private readonly SpawnManager? _spawnManager = null;
 
-        public CS2ExecutesPlugin(GameManager gameManager, QueueManager queueManager, SpawnManager spawnManager)
+        public ExecutesPluginPlugin(GameManager gameManager, QueueManager queueManager, SpawnManager spawnManager)
         {
             _gameManager = gameManager;
             _queueManager = queueManager;
@@ -137,7 +137,7 @@ namespace CS2Executes
         }
     }
 
-    public class WithDependencyInjectionPluginServiceCollection : IPluginServiceCollection<CS2ExecutesPlugin>
+    public class WithDependencyInjectionPluginServiceCollection : IPluginServiceCollection<ExecutesPluginPlugin>
     {
         public void ConfigureServices(IServiceCollection services)
         {

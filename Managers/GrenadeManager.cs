@@ -2,11 +2,11 @@ using System.Numerics;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
-using CS2Executes.Enums;
-using CS2Executes.Memory;
+using ExecutesPlugin.Enums;
+using ExecutesPlugin.Memory;
 using Vector = CounterStrikeSharp.API.Modules.Utils.Vector;
 
-namespace CS2Executes.Managers
+namespace ExecutesPlugin.Managers
 {
     public sealed class GrenadeManager : BaseManager
     {

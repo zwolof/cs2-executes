@@ -1,4 +1,4 @@
-namespace CS2Executes.Enums
+namespace ExecutesPlugin.Enums
 {
 	public enum EGrenade {
 		Flashbang,

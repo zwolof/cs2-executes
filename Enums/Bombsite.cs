@@ -1,7 +1,7 @@
 
 using System.Runtime.Serialization;
 
-namespace CS2Executes.Enums
+namespace ExecutesPlugin.Enums
 {
 	public enum EBombsite
 	{

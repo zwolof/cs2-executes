@@ -1,8 +1,8 @@
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
-using CS2Executes.Enums;
+using ExecutesPlugin.Enums;
 
-namespace CS2Executes.Models
+namespace ExecutesPlugin.Models
 {
 	public class Spawn
 	{

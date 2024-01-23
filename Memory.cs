@@ -2,7 +2,7 @@
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
 
-namespace CS2Executes.Memory
+namespace ExecutesPlugin.Memory
 {
 	public static class SmokeFunctions
 	{

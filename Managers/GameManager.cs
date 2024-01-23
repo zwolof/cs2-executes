@@ -2,13 +2,13 @@ using System.Numerics;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
-using CS2Executes.Enums;
-using CS2Executes.Memory;
-using CS2Executes.Models;
+using ExecutesPlugin.Enums;
+using ExecutesPlugin.Memory;
+using ExecutesPlugin.Models;
 using Newtonsoft.Json;
 using Vector = CounterStrikeSharp.API.Modules.Utils.Vector;
 
-namespace CS2Executes.Managers
+namespace ExecutesPlugin.Managers
 {
     public sealed class GameManager : BaseManager
     {

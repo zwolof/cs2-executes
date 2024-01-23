@@ -1,8 +1,8 @@
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
-using CS2Executes.Models;
+using ExecutesPlugin.Models;
 
-namespace CS2Executes
+namespace ExecutesPlugin
 {
 	public static class PlayerExtension
 	{

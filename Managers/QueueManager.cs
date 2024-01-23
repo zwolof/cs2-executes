@@ -1,8 +1,8 @@
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Timers;
-using CS2Executes.Models;
+using ExecutesPlugin.Models;
 
-namespace CS2Executes.Managers
+namespace ExecutesPlugin.Managers
 {
     public sealed class QueueManager : BaseManager
     {

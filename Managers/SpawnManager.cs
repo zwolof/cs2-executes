@@ -2,9 +2,9 @@ using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
-using CS2Executes.Models;
+using ExecutesPlugin.Models;
 
-namespace CS2Executes.Managers
+namespace ExecutesPlugin.Managers
 {
     public sealed class SpawnManager : BaseManager
     {

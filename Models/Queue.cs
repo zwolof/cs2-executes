@@ -1,4 +1,4 @@
-namespace CS2Executes.Models
+namespace ExecutesPlugin.Models
 {
   // LIFO Queue
     public class ExecutesQueue<T> where T : class
