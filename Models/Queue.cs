@@ -1,7 +1,7 @@
 namespace CS2Executes.Models
 {
-    // LIFO Queue
-    public class ExecutesQueue<T> // 'T' is a 'Execute
+  // LIFO Queue
+    public class ExecutesQueue<T> where T : class
     {
         private readonly List<T> _queue = new();
 

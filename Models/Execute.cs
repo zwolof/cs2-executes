@@ -15,6 +15,11 @@ namespace CS2Executes.Models
             Bombsite = bombsite;
             Spawns = spawns;
         }
+
+        public Dictionary<CsTeam, List<Spawn>> GetSpawns()
+        {
+            return Spawns;
+        }
     }
 }
 

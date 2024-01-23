@@ -18,21 +18,22 @@ namespace CS2Executes.Managers
 
         public bool LoadSpawns(string map)
         {
-            var configExists = File.Exists($"{map}.json");
+            var fileName = $"{map}.json";
+            var configExists = File.Exists(fileName);
 
             if(!configExists)
             {
-                Console.WriteLine($"[Executes] {map}.json does not exist.");
+                Console.WriteLine($"[Executes] {fileName} does not exist.");
                 return false;
             }
 
-            var config = File.ReadAllText("executes.json");
+            var config = File.ReadAllText(fileName);
 
             var parsedConfig = JsonConvert.DeserializeObject<List<Execute>>(config);
 
             if(parsedConfig == null)
             {
-                Console.WriteLine($"[Executes] Failed to parse {map}.json");
+                Console.WriteLine($"[Executes] Failed to parse {fileName}");
                 return false;
             }
 
@@ -42,9 +43,10 @@ namespace CS2Executes.Managers
             return true;
         }
 
-        public void SetupScenario()
+        public Execute? GetRandomScenario()
         {
-            
+            // TODO: Implement this
+            return null;
         }
     }
 }

@@ -6,9 +6,14 @@ namespace CS2Executes
 {
 	public static class PlayerExtension
 	{
-		public static void PrintToChat(this CCSPlayerController player, string message)
+		public static void ChatMessage(this CCSPlayerController player, string message)
 		{
-			player.PrintToChat($"[Prefix] {message}");
+			player.PrintToChat($"[Executes] {message}");
+		}
+
+		public static bool IsValidPlayer(this CCSPlayerController? player)
+		{
+			return player != null && player.IsValid && player.Connected == PlayerConnectedState.PlayerConnected;
 		}
 
 		public static void MoveToSpawn(this CCSPlayerController player, Spawn spawn)
