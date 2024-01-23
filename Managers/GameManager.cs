@@ -64,7 +64,7 @@ namespace ExecutesPlugin.Managers
         public Scenario GetCurrentScenario()
         {
             // TODO: Implement this properly
-            return new Scenario("test", EBombsite.A, new Dictionary<CsTeam, List<Spawn>>(), new List<Grenade>());
+            return _currentScenario ?? throw new Exception("No current scenario");
         }
     }
 }
