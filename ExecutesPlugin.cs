@@ -14,7 +14,7 @@ namespace ExecutesPlugin
         
         #region Plugin Info
         public override string ModuleName => "Executes Plugin";
-        public override string ModuleAuthor => "zwolof, b3none";
+        public override string ModuleAuthor => "zwolof, B3none";
         public override string ModuleDescription => "Community executes for CS2.";
         public override string ModuleVersion => Version;
         #endregion
