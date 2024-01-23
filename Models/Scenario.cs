@@ -3,17 +3,19 @@ using ExecutesPlugin.Enums;
 
 namespace ExecutesPlugin.Models
 {
-    public class Execute
+    public class Scenario
     {
         public string Name { get; set; }
         public EBombsite Bombsite { get; set; }
         public Dictionary<CsTeam, List<Spawn>> Spawns { get; set; }
+        public List<Grenade> Grenades { get; set; }
 
-        public Execute(string name, EBombsite bombsite, Dictionary<CsTeam, List<Spawn>> spawns)
+        public Scenario(string name, EBombsite bombsite, Dictionary<CsTeam, List<Spawn>> spawns, List<Grenade> grenades)
         {
             Name = name;
             Bombsite = bombsite;
             Spawns = spawns;
+            Grenades = grenades;
         }
 
         public Dictionary<CsTeam, List<Spawn>> GetSpawns()
@@ -22,26 +24,3 @@ namespace ExecutesPlugin.Models
         }
     }
 }
-
-// {
-// 	"Name": "Test",
-// 	"Bombsite": "A",
-// 	"Spawns": {
-//		"1": [
-//			{
-//				"Name": "Top mid",
-//				"Team": 2,
-//				"Position": {
-//					"X": 0,
-//					"Y": 0,
-//					"Z": 0
-//				},
-//				"Angle": {
-//					"X": 0,
-//					"Y": 0,
-//					"Z": 0
-//				}
-//			}
-//		],
-// 	}
-// }

@@ -10,7 +10,7 @@ namespace ExecutesPlugin.Managers
     {
         public SpawnManager() { }
 
-        public void SetupSpawns(Execute execute)
+        public void SetupSpawns(Scenario scenario)
         {
             var players = Utilities.GetPlayers();
 
@@ -20,7 +20,7 @@ namespace ExecutesPlugin.Managers
             }
             // TODO: A BUNCH OF CHECKS
 
-            var spawns = execute.GetSpawns().ToDictionary(
+            var spawns = scenario.GetSpawns().ToDictionary(
                 x => x.Key,
                 x => x.Value
             );

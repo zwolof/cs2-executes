@@ -12,7 +12,7 @@ namespace ExecutesPlugin.Managers
 {
     public sealed class GameManager : BaseManager
     {
-        private List<Execute> _executes = new();
+        private List<Scenario> _executes = new();
 
         public GameManager() { }
 
@@ -29,7 +29,7 @@ namespace ExecutesPlugin.Managers
 
             var config = File.ReadAllText(fileName);
 
-            var parsedConfig = JsonConvert.DeserializeObject<List<Execute>>(config);
+            var parsedConfig = JsonConvert.DeserializeObject<List<Scenario>>(config);
 
             if (parsedConfig == null)
             {
@@ -43,10 +43,17 @@ namespace ExecutesPlugin.Managers
             return true;
         }
 
-        public Execute? GetRandomScenario()
+        public Scenario? GetRandomScenario()
         {
             // TODO: Implement this
+            // TODO: Set the current scenario
             return null;
+        }
+
+        public Scenario GetCurrentScenario()
+        {
+            // TODO: Implement this properly
+            return new Scenario("test", EBombsite.A, new Dictionary<CsTeam, List<Spawn>>(), new List<Grenade>());
         }
     }
 }

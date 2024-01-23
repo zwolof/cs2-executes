@@ -10,11 +10,13 @@ namespace ExecutesPlugin
     [MinimumApiVersion(147)]
     public class ExecutesPlugin : BasePlugin
     {
+        private const string Version = "0.0.1";
+        
         #region Plugin Info
-        public override string ModuleName => "CS2 Executes";
+        public override string ModuleName => "Executes Plugin";
         public override string ModuleAuthor => "zwolof, b3none";
-        public override string ModuleDescription => "Brings executes to CS2";
-        public override string ModuleVersion => "1.0.0";
+        public override string ModuleDescription => "Community executes for CS2.";
+        public override string ModuleVersion => Version;
         #endregion
 
         private readonly GameManager _gameManager;
@@ -106,12 +108,14 @@ namespace ExecutesPlugin
 
             return HookResult.Continue;
         }
-    
-        [GameEventHandler]
-        public HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
-        {
-            Console.WriteLine("[Executes] EventHandler::OnRoundStart");
 
+        [GameEventHandler]
+        public HookResult OnRoundPreStart(EventRoundPrestart @event, GameEventInfo info)
+        {
+            Console.WriteLine("[Executes] EventHandler::OnRoundPreStart");
+            
+            // TODO: Handle team swapping here
+            
             // Attempt to get a random scenario from the game manager
             var scenario = _gameManager.GetRandomScenario();
 
@@ -120,9 +124,19 @@ namespace ExecutesPlugin
                 Console.WriteLine("[Executes] Failed to get executes.");
                 return HookResult.Continue;
             }
+            
+            return HookResult.Continue;
+        }
 
+        [GameEventHandler]
+        public HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
+        {
+            Console.WriteLine("[Executes] EventHandler::OnRoundStart");
+            
             // If we have a scenario then setup the players
-            _spawnManager.SetupSpawns(scenario);
+            _spawnManager.SetupSpawns(
+                _gameManager.GetCurrentScenario()
+            );
             
             return HookResult.Continue;
         }
