@@ -1,4 +1,10 @@
-# CS2-Executes
+# CS2 Executes
+CS2 implementation of executes written in C# for CounterStrikeSharp. Based on the version for CS:GO by Splewis.
+
+## Share the love
+If you appreciate the project then please take the time to star the repository 🙏
+
+![Star us](https://github.com/b3none/gdprconsent/raw/development/.github/README_ASSETS/star_us.png)
 
 ### Requirements
 
