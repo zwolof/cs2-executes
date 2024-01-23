@@ -1,0 +1,15 @@
+{
+	"0": {
+		"Team": 2,
+		"Position": "123.45;123.45;123.45",
+		"EyeAngles": "123.45;123.45;123.45",
+		"Type": 4,
+		"Grenades": {
+			"Smoke": 1,
+			"Flashbang": 2,
+			"Molotov": 1,
+			"Decoy": 0
+		},
+		"PossibleGrenades": [0, 1, 3]
+	}
+}
