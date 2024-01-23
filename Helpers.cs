@@ -30,6 +30,17 @@ namespace ExecutesPlugin
 			return players.Count(x => x.Team == team);
 		}
 
+		public static Dictionary<CsTeam, int> GetPlayerCountDict()
+		{
+			var players = Utilities.GetPlayers();
+
+			return new Dictionary<CsTeam, int>()
+			{
+				{ CsTeam.CounterTerrorist, players.Count(x => x.Team == CsTeam.CounterTerrorist) },
+				{ CsTeam.Terrorist, players.Count(x => x.Team == CsTeam.Terrorist) }
+			};
+		}
+
 		public static int GetRandomInt(int min, int max)
 		{
 			return new Random().Next(min, max);

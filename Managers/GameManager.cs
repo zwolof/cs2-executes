@@ -7,7 +7,8 @@ namespace ExecutesPlugin.Managers
 {
     public sealed class GameManager : BaseManager
     {
-        private List<Scenario> _executes = new();
+        private List<Scenario> _scenarios = new();
+        private Scenario? _currentScenario;
 
         public GameManager() { }
 
@@ -32,17 +33,32 @@ namespace ExecutesPlugin.Managers
                 return false;
             }
 
-            _executes = parsedConfig;
+            _scenarios = parsedConfig;
 
-            Console.WriteLine($"-------------------------- Loaded {_executes.Count} executes.");
+            Console.WriteLine($"-------------------------- Loaded {_scenarios.Count} executes.");
             return true;
         }
 
         public Scenario? GetRandomScenario()
         {
-            // TODO: Implement this
-            // TODO: Set the current scenario
-            return null;
+            var counts = Helpers.GetPlayerCountDict();
+
+            var validScenarios = _scenarios.Where(
+                scen => scen.GetSpawns().All(y => y.Value.Count >= counts[y.Key])
+            ).ToList();
+
+            if (!validScenarios.Any())
+            {
+                _currentScenario = null;
+                return null;
+            }
+
+            var random = Helpers.GetRandomInt(0, validScenarios.Count);
+
+            var current = validScenarios[random];
+            _currentScenario = current;
+            
+            return current;
         }
 
         public Scenario GetCurrentScenario()

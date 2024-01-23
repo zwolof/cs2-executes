@@ -1,0 +1,43 @@
+{
+	"Scenarios": [
+		{
+			"Description": "You are alone against 2 CTs, try to plant the bomb at {{ site }} and win the round!",
+			"Bombsite": 2,
+			"Spawns": [
+				0
+			],
+			"Grenades": [
+				"stairs_smoke"
+			]
+		}
+	],
+	"Spawns": [
+		{
+			"Id": 0,
+			"Team": 2,
+			"Position": "123.45;123.45;123.45",
+			"EyeAngles": "123.45;123.45;123.45",
+			"Type": 4,
+			"Grenades": {
+				"Smoke": 1,
+				"Flashbang": 2,
+				"Molotov": 1,
+				"Decoy": 0
+			},
+			"PossibleGrenades": [
+				"stairs_smoke"
+			]
+		}
+	],
+	"Grenades": [
+		{
+			"Id": "stairs_smoke",
+			"Name": "Stairs smoke",
+			"Type": "smokegrenade",
+			"Position": "-942.44;-2369.17;-167.96",
+			"Angle": "0;0;0",
+			"Velocity": "0;0;0",
+			"Delay": 4.5
+		}
+	]
+}
