@@ -56,8 +56,8 @@ namespace ExecutesPlugin.Managers
             var random = Helpers.GetRandomInt(0, validScenarios.Count);
 
             var current = validScenarios[random];
-            _currentScenario = current;
             
+            _currentScenario = current;
             return current;
         }
 

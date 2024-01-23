@@ -32,7 +32,10 @@ namespace ExecutesPlugin.Managers
                     continue;
                 }
 
+                // Since spawns are already shuffled, we can just take the first one
                 var spawn = spawns[player.Team].First();
+
+                // Now we get rid of it so we don't use it again
                 spawns[player.Team].RemoveAt(0);
 
                 player.MoveToSpawn(spawn);
