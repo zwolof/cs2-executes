@@ -118,7 +118,7 @@ namespace CS2Executes
 
             if(scenario == null)
             {
-                Console.WriteLine("[Executes] Failed to get scenario.");
+                Console.WriteLine("[Executes] Failed to get executes.");
                 return HookResult.Continue;
             }
 
