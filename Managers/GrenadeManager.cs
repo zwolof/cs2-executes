@@ -14,7 +14,7 @@ namespace ExecutesPlugin.Managers
 
         public void ThrowGrenade(CCSPlayerController player, EGrenade type, Vector position, QAngle angle, Vector velocity)
         {
-            if(player.Pawn.Value == null)
+            if (player.Pawn.Value == null)
             {
                 return;
             }

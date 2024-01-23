@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ExecutesPlugin
 {
     [MinimumApiVersion(147)]
-    public partial class ExecutesPlugin : BasePlugin
+    public class ExecutesPlugin : BasePlugin
     {
         #region Plugin Info
         public override string ModuleName => "CS2 Executes";
@@ -17,9 +17,9 @@ namespace ExecutesPlugin
         public override string ModuleVersion => "1.0.0";
         #endregion
 
-        private readonly GameManager? _gameManager = null;
-        private readonly QueueManager? _queueManager = null;
-        private readonly SpawnManager? _spawnManager = null;
+        private readonly GameManager _gameManager;
+        private readonly QueueManager _queueManager;
+        private readonly SpawnManager _spawnManager;
 
         public ExecutesPlugin(GameManager gameManager, QueueManager queueManager, SpawnManager spawnManager)
         {
@@ -30,18 +30,24 @@ namespace ExecutesPlugin
 
         public override void Load(bool hotReload)
         {
-            RegisterListener<Listeners.OnMapStart>((string mapName) => 
-            {
-                var loaded = _gameManager?.LoadSpawns(mapName);
-
-                if(loaded == null || !loaded.Value)
-                {
-                    Console.WriteLine("[Executes] Failed to load spawns.");
-                    return;
-                }
-            });
+            RegisterListener<Listeners.OnMapStart>(OnMapStart);
 
             Console.WriteLine("[Executes] ----------- CS2 Executes loaded -----------");
+
+            if (hotReload)
+            {
+                OnMapStart(Server.MapName);
+            }
+        }
+
+        private void OnMapStart(string mapName)
+        {
+            var loaded = _gameManager.LoadSpawns(mapName);
+
+            if (!loaded)
+            {
+                Console.WriteLine("[Executes] Failed to load spawns.");
+            }
         }
 
         [GameEventHandler]
@@ -58,11 +64,9 @@ namespace ExecutesPlugin
         {
             Console.WriteLine("[Executes] EventHandler::OnPlayerConnectFull");
 
-            Debug.Assert(_queueManager != null);
-
             var player = @event.Userid;
 
-            if(player == null)
+            if (player == null)
             {
                 Console.WriteLine("[Executes] Failed to get player.");
                 return HookResult.Continue;
@@ -81,11 +85,9 @@ namespace ExecutesPlugin
         {
             Console.WriteLine("[Executes] EventHandler::OnPlayerDisconnect");
 
-            Debug.Assert(_queueManager != null);
-
             var player = @event.Userid;
 
-            if(player == null)
+            if (player == null)
             {
                 Console.WriteLine("[Executes] Failed to get player.");
                 return HookResult.Continue;
@@ -110,13 +112,10 @@ namespace ExecutesPlugin
         {
             Console.WriteLine("[Executes] EventHandler::OnRoundStart");
 
-            Debug.Assert(_gameManager != null);
-            Debug.Assert(_spawnManager != null);
-
             // Attempt to get a random scenario from the game manager
             var scenario = _gameManager.GetRandomScenario();
 
-            if(scenario == null)
+            if (scenario == null)
             {
                 Console.WriteLine("[Executes] Failed to get executes.");
                 return HookResult.Continue;

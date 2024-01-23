@@ -22,7 +22,7 @@ namespace ExecutesPlugin
 		{
 			var players = Utilities.GetPlayers();
 			
-			if(team == null)
+			if (team == null)
 			{
 				return players.Count;
 			}

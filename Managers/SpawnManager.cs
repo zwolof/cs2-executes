@@ -14,7 +14,7 @@ namespace ExecutesPlugin.Managers
         {
             var players = Utilities.GetPlayers();
 
-            if(!players.Any())
+            if (!players.Any())
             {
                 return;
             }
@@ -27,7 +27,7 @@ namespace ExecutesPlugin.Managers
 
             foreach(var player in Helpers.Shuffle(players))
             {
-                if(!player.IsValidPlayer())
+                if (!player.IsValidPlayer())
                 {
                     continue;
                 }

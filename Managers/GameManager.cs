@@ -21,7 +21,7 @@ namespace ExecutesPlugin.Managers
             var fileName = $"{map}.json";
             var configExists = File.Exists(fileName);
 
-            if(!configExists)
+            if (!configExists)
             {
                 Console.WriteLine($"[Executes] {fileName} does not exist.");
                 return false;
@@ -31,7 +31,7 @@ namespace ExecutesPlugin.Managers
 
             var parsedConfig = JsonConvert.DeserializeObject<List<Execute>>(config);
 
-            if(parsedConfig == null)
+            if (parsedConfig == null)
             {
                 Console.WriteLine($"[Executes] Failed to parse {fileName}");
                 return false;

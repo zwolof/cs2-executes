@@ -24,7 +24,7 @@ namespace ExecutesPlugin.Models
 
         public bool Drop(T item)
         {
-            if(_queue.Contains(item))
+            if (_queue.Contains(item))
             {
                 _queue.Remove(item);
                 return true;
