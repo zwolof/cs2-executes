@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ExecutesPlugin
 {
     [MinimumApiVersion(147)]
-    public partial class ExecutesPluginPlugin : BasePlugin
+    public partial class ExecutesPlugin : BasePlugin
     {
         #region Plugin Info
         public override string ModuleName => "CS2 Executes";
@@ -21,7 +21,7 @@ namespace ExecutesPlugin
         private readonly QueueManager? _queueManager = null;
         private readonly SpawnManager? _spawnManager = null;
 
-        public ExecutesPluginPlugin(GameManager gameManager, QueueManager queueManager, SpawnManager spawnManager)
+        public ExecutesPlugin(GameManager gameManager, QueueManager queueManager, SpawnManager spawnManager)
         {
             _gameManager = gameManager;
             _queueManager = queueManager;
@@ -137,7 +137,7 @@ namespace ExecutesPlugin
         }
     }
 
-    public class WithDependencyInjectionPluginServiceCollection : IPluginServiceCollection<ExecutesPluginPlugin>
+    public class WithDependencyInjectionPluginServiceCollection : IPluginServiceCollection<ExecutesPlugin>
     {
         public void ConfigureServices(IServiceCollection services)
         {
