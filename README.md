@@ -13,12 +13,14 @@ If you appreciate the project then please take the time to star the repository ð
 - [ ] Ability to add spawns
 - [ ] Fallback weapon allocation
 
-### Requirements
+## Requirements
 
 - [Metamod:Source](https://www.sourcemm.net/downloads.php/?branch=master) (Dev Build)
 - [CounterStrikeSharp v147](https://github.com/roflmuffin/CounterStrikeSharp)
 
-Extract the contents of the archive into your `counterstrikesharp/plugins` folder.
+## Installation
+1. Download the zip file from the [latest release](https://github.com/B3none/cs2-retakes/releases), and extract the contents into your `counterstrikesharp/plugins` directory.
+2. Copy `cfg/cs2-executes/executes.cfg` to `/game/csgo/cfg/cs2-executes/executes.cfg`
 
 ## Credits
 This was inspired by the [CS:GO Executes project](https://github.com/splewis/csgo-executes) written by [splewis](https://github.com/splewis).
