@@ -1,19 +1,13 @@
 ﻿using System.Diagnostics;
-using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
-using CounterStrikeSharp.API.Modules.Memory;
-using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
-using CounterStrikeSharp.API.Modules.Utils;
 using CS2Executes.Managers;
-using CS2Executes.Memory;
-using CS2Executes.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CS2Executes
 {
-    [MinimumApiVersion(140)]
+    [MinimumApiVersion(147)]
     public partial class CS2ExecutesPlugin : BasePlugin
     {
         #region Plugin Info
@@ -36,13 +30,6 @@ namespace CS2Executes
 
         public override void Load(bool hotReload)
         {
-            RegisterEventHandler<EventPlayerConnectFull>(OnPlayerConnectFull);
-            RegisterEventHandler<EventPlayerDisconnect>(OnEventPlayerDisconnect);
-            RegisterEventHandler<EventRoundStart>(OnRoundStart);
-            RegisterEventHandler<EventRoundEnd>(OnRoundEnd);
-            RegisterEventHandler<EventRoundFreezeEnd>(OnRoundFreezeEnd);
-            RegisterEventHandler<EventPlayerTeam>(OnEventPlayerTeam);
-
             RegisterListener<Listeners.OnMapStart>((string mapName) => 
             {
                 var loaded = _gameManager?.LoadSpawns(mapName);
@@ -57,14 +44,16 @@ namespace CS2Executes
             Console.WriteLine("[Executes] ----------- CS2 Executes loaded -----------");
         }
 
-        public static HookResult OnEventPlayerTeam(EventPlayerTeam @event, GameEventInfo info)
+        [GameEventHandler]
+        public HookResult OnPlayerTeam(EventPlayerTeam @event, GameEventInfo info)
         {
-            Console.WriteLine("[Executes] EventHandler::OnEventPlayerTeam");
+            Console.WriteLine("[Executes] EventHandler::OnPlayerTeam");
             @event.Silent = true;
 
             return HookResult.Continue;
         }
 
+        [GameEventHandler]
         public HookResult OnPlayerConnectFull(EventPlayerConnectFull @event, GameEventInfo info)
         {
             Console.WriteLine("[Executes] EventHandler::OnPlayerConnectFull");
@@ -87,9 +76,10 @@ namespace CS2Executes
             return HookResult.Continue;
         }
       
-        public HookResult OnEventPlayerDisconnect(EventPlayerDisconnect @event, GameEventInfo info)
+        [GameEventHandler]
+        public HookResult OnPlayerDisconnect(EventPlayerDisconnect @event, GameEventInfo info)
         {
-            Console.WriteLine("[Executes] EventHandler::OnEventPlayerDisconnect");
+            Console.WriteLine("[Executes] EventHandler::OnPlayerDisconnect");
 
             Debug.Assert(_queueManager != null);
 
@@ -107,6 +97,7 @@ namespace CS2Executes
             return HookResult.Continue;
         }
     
+        [GameEventHandler]
         public HookResult OnRoundFreezeEnd(EventRoundFreezeEnd @event, GameEventInfo info)
         {
             Console.WriteLine("[Executes] EventHandler::OnRoundFreezeEnd");
@@ -114,6 +105,7 @@ namespace CS2Executes
             return HookResult.Continue;
         }
     
+        [GameEventHandler]
         public HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
         {
             Console.WriteLine("[Executes] EventHandler::OnRoundStart");
@@ -136,6 +128,7 @@ namespace CS2Executes
             return HookResult.Continue;
         }
       
+        [GameEventHandler]
         public HookResult OnRoundEnd(EventRoundEnd @event, GameEventInfo info)
         {
             Console.WriteLine("[Executes] EventHandler::OnRoundEnd");
