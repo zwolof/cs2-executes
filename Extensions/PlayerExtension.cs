@@ -2,7 +2,7 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Models;
 
-namespace ExecutesPlugin
+namespace ExecutesPlugin.Extensions
 {
 	public static class PlayerExtension
 	{
