@@ -1,14 +1,11 @@
 {
 	"Scenarios": [
 		{
+			"Name": "1v2 A site",
 			"Description": "You are alone against 2 CTs, try to plant the bomb at {{ site }} and win the round!",
 			"Bombsite": 2,
-			"Spawns": [
-				0
-			],
-			"Grenades": [
-				"stairs_smoke"
-			]
+			"Spawns": [],
+			"Grenades": ["stairs_smoke"]
 		}
 	],
 	"Spawns": [
@@ -18,18 +15,7 @@
 			"Position": "1148.4546;-1183.9679;-205.57178",
 			"Angle": "-39.97839;-165.32172;0",
 			"Team": 2,
-			"Type": 0,
-			"Loadout": {
-				"Grenades": {
-					"Smoke": 1,
-					"Flashbang": 2,
-					"Molotov": 1,
-					"Decoy": 0
-				}
-			},
-			"PossibleGrenades": [
-				"stairs_smoke"
-			]
+			"Type": 0
 		}
 	],
 	"Grenades": [

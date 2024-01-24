@@ -1,13 +1,11 @@
-using CounterStrikeSharp.API.Modules.Utils;
-using ExecutesPlugin.Enums;
 using ExecutesPlugin.Models;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace ExecutesPlugin.Managers
 {
     public sealed class GameManager : BaseManager
     {
-        private MapConfig _scenarios = new();
+        private MapConfig _mapConfig = new();
         private Scenario? _currentScenario;
 
         public GameManager() { }
@@ -15,11 +13,12 @@ namespace ExecutesPlugin.Managers
         public bool LoadSpawns(string moduleDirectory, string map)
         {
             var fileName = $"{map}.json";
-            var configExists = File.Exists(fileName);
 
             // Path.Exists
             string _mapConfigDirectory = Path.Combine(moduleDirectory, "map_configs");
             string _mapConfigPath = Path.Combine(_mapConfigDirectory, fileName);
+
+            Console.WriteLine($"[Executes] Loading \"{_mapConfigPath}\"");
 
             if (!File.Exists(_mapConfigPath))
             {
@@ -27,9 +26,9 @@ namespace ExecutesPlugin.Managers
                 return false;
             }
 
-            var config = File.ReadAllText(fileName);
+            var config = File.ReadAllText(_mapConfigPath);
 
-            var parsedConfig = JsonConvert.DeserializeObject<MapConfig>(config);
+            var parsedConfig = JsonSerializer.Deserialize<MapConfig>(config);
 
             if (parsedConfig == null)
             {
@@ -37,33 +36,18 @@ namespace ExecutesPlugin.Managers
                 return false;
             }
 
+            _mapConfig = parsedConfig;
 
-            _scenarios = parsedConfig;
-
-            Console.WriteLine($"-------------------------- Loaded {_scenarios.Scenarios?.Count} executes.");
+            Console.WriteLine($"-------------------------- Loaded {_mapConfig.Scenarios?.Count} executes.");
             return true;
         }
 
         public Scenario? GetRandomScenario()
         {
-            var counts = Helpers.GetPlayerCountDict();
+            Console.WriteLine("Calling GameManager::GetRandomScenario()");
+            Console.WriteLine($"There are {_mapConfig.Scenarios.Count} scenarios loaded.");
 
-            var validScenarios = _scenarios.Scenarios;
-            // .Where(x =>
-            // {
-            //     var spawnIds = x.Spawns;
-            //     var valid = true;
-
-            //     foreach (var (team, spawnsList) in spawnIds)
-            //     {
-            //         if (spawnsList.Count > counts[team])
-            //         {
-            //             valid = false;
-            //         }
-            //     }
-
-                // return valid;
-            // }).ToList();
+            var validScenarios = _mapConfig.Scenarios;
 
             if (!validScenarios!.Any())
             {
@@ -72,7 +56,6 @@ namespace ExecutesPlugin.Managers
             }
 
             var random = Helpers.GetRandomInt(0, validScenarios!.Count);
-
             var current = validScenarios[random];
             
             _currentScenario = current;

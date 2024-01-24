@@ -51,9 +51,8 @@ namespace ExecutesPlugin
 
         private void OnMapStart(string mapName)
         {
-			Console.WriteLine($"[Executes] OnMapStart pre load");
+			Console.WriteLine($"[Executes] OnMapStart - {mapName}");
             var loaded = _gameManager.LoadSpawns(ModuleDirectory, mapName);
-			Console.WriteLine($"[Executes] OnMapStart post load \"{loaded}\"");
 
             if (!loaded)
             {
