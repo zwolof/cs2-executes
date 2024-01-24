@@ -19,7 +19,7 @@ If you appreciate the project then please take the time to star the repository ð
 - [CounterStrikeSharp v147](https://github.com/roflmuffin/CounterStrikeSharp)
 
 ## Installation
-1. Download the zip file from the [latest release](https://github.com/B3none/cs2-retakes/releases), and extract the contents into your `counterstrikesharp/plugins` directory.
+1. Download the zip file from the [latest release](https://github.com/zwolof/cs2-executes/releases), and extract the contents into your `counterstrikesharp/plugins` directory.
 2. Copy `cfg/cs2-executes/executes.cfg` to `/game/csgo/cfg/cs2-executes/executes.cfg`
 
 ## Credits
