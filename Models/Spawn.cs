@@ -5,12 +5,12 @@ namespace ExecutesPlugin.Models
 {
 	public class Spawn
 	{
-		public int Id { get; set; }
+		public int? Id { get; set; }
 		public string? Name { get; set; }
-		public CsTeam Team { get; set; }
 		public Vector? Position { get; set; }
 		public QAngle? Angle { get; set; }
-		public ESpawnType SpawnType { get; set; }
+		public CsTeam? Team { get; set; }
+		public ESpawnType Type { get; set; }
 		
 		public ESpawnType GetSpawnFlags()
 		{
