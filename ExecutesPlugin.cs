@@ -1,9 +1,15 @@
-﻿using CounterStrikeSharp.API;
+﻿using System.Diagnostics;
+using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
+using CounterStrikeSharp.API.Modules.Admin;
+using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Managers;
+using ExecutesPlugin.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace ExecutesPlugin
 {
@@ -51,6 +57,58 @@ namespace ExecutesPlugin
                 Console.WriteLine("[Executes] Failed to load spawns.");
             }
         }
+
+		[ConsoleCommand("css_addspawn", "Adds a spawn point to the map")]
+		[CommandHelper(
+			minArgs: 2,
+			usage: "[T/CT] [A/B]",
+			whoCanExecute: CommandUsage.CLIENT_ONLY
+		)]
+		[RequiresPermissions("@css/root")]
+		public void OnCommandAddSpawn(CCSPlayerController? player, CommandInfo commandInfo)
+		{
+
+			if(!player.IsValidPlayer())
+			{
+				commandInfo.ReplyToCommand("[Executes] You must be a player to execute this command.");
+				return;
+			}
+			
+			var team = commandInfo.GetArg(1).ToUpper();
+
+			if (team != "T" && team != "CT")
+			{
+				commandInfo.ReplyToCommand($"[Executes] You must specify a team [T / CT] - [Value: {team}].");
+				return;
+			}
+
+			var bombsite = commandInfo.GetArg(2).ToUpper();
+
+			if (bombsite != "A" && bombsite != "B")
+			{
+				commandInfo.ReplyToCommand($"[Executes] You must specify a bombsite [A / B] - [Value: {bombsite}].");
+				return;
+			}
+
+			Debug.Assert(player != null, "player != null");
+			Debug.Assert(player.PlayerPawn != null, "player.PlayerPawn != null");
+			Debug.Assert(player.PlayerPawn.Value != null, "player.PlayerPawn.Value != null");
+			
+			var spawn = new Spawn
+			{
+				Id = 0,
+				Name = "Spawn",
+				Position = player.PlayerPawn.Value.AbsOrigin,
+				Angle = player.PlayerPawn.Value.EyeAngles,
+				Team = team == "T" ? CsTeam.Terrorist : CsTeam.CounterTerrorist,
+				SpawnType = Enums.ESpawnType.SPAWNTYPE_LURKER
+			};
+
+			player.PrintToConsole("Latest spawn:");
+			player.PrintToConsole("---------------------------");
+			player.PrintToConsole(JsonConvert.SerializeObject(spawn));
+			player.PrintToConsole("---------------------------");
+		}
 
         [GameEventHandler]
         public HookResult OnPlayerTeam(EventPlayerTeam @event, GameEventInfo info)
