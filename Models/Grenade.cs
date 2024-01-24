@@ -7,7 +7,7 @@ namespace ExecutesPlugin.Models
 {
 	public class Grenade
 	{
-		public string? Id { get; set; }
+		public int? Id { get; set; }
 		public string? Name { get; set; }
 		public EGrenade Type { get; set; }
 		

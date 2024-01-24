@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text.Json;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
@@ -10,7 +11,6 @@ using ExecutesPlugin.Enums;
 using ExecutesPlugin.Managers;
 using ExecutesPlugin.Models;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace ExecutesPlugin
 {
@@ -160,7 +160,7 @@ namespace ExecutesPlugin
 
 			player.PrintToConsole("Latest grenade:");
 			player.PrintToConsole("---------------------------");
-			player.PrintToConsole(JsonConvert.SerializeObject(grenade));
+			player.PrintToConsole(JsonSerializer.Serialize(grenade));
 			player.PrintToConsole("---------------------------");
 		}
 
