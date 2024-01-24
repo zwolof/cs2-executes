@@ -11,10 +11,5 @@ namespace ExecutesPlugin.Models
 		public QAngle? Angle { get; set; }
 		public CsTeam? Team { get; set; }
 		public ESpawnType Type { get; set; }
-		
-		public ESpawnType GetSpawnFlags()
-		{
-			return SpawnType;
-		}
 	}
 }
