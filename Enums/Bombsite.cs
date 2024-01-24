@@ -1,6 +1,3 @@
-
-using System.Runtime.Serialization;
-
 namespace ExecutesPlugin.Enums
 {
 	public enum EBombsite
