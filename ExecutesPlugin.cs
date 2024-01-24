@@ -101,7 +101,7 @@ namespace ExecutesPlugin
 				Position = player.PlayerPawn.Value.AbsOrigin,
 				Angle = player.PlayerPawn.Value.EyeAngles,
 				Team = team == "T" ? CsTeam.Terrorist : CsTeam.CounterTerrorist,
-				SpawnType = Enums.ESpawnType.SPAWNTYPE_LURKER
+				SpawnType = ESpawnType.SPAWNTYPE_LURKER
 			};
 
 			player.PrintToConsole("Latest spawn:");
