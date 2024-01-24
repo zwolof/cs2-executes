@@ -6,6 +6,7 @@ using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Utils;
+using ExecutesPlugin.Enums;
 using ExecutesPlugin.Managers;
 using ExecutesPlugin.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -67,8 +68,7 @@ namespace ExecutesPlugin
 		[RequiresPermissions("@css/root")]
 		public void OnCommandAddSpawn(CCSPlayerController? player, CommandInfo commandInfo)
 		{
-
-			if(!player.IsValidPlayer())
+			if (!player.IsValidPlayer())
 			{
 				commandInfo.ReplyToCommand("[Executes] You must be a player to execute this command.");
 				return;
@@ -107,6 +107,58 @@ namespace ExecutesPlugin
 			player.PrintToConsole("Latest spawn:");
 			player.PrintToConsole("---------------------------");
 			player.PrintToConsole(JsonConvert.SerializeObject(spawn));
+			player.PrintToConsole("---------------------------");
+		}
+
+		[ConsoleCommand("css_addgrenade", "Adds a grenade to the map config")]
+		[CommandHelper(
+			minArgs: 2,
+			usage: "[T/CT] [A/B]",
+			whoCanExecute: CommandUsage.CLIENT_ONLY
+		)]
+		[RequiresPermissions("@css/root")]
+		public void OnCommandAddGrenade(CCSPlayerController? player, CommandInfo commandInfo)
+		{
+			if (!player.IsValidPlayer())
+			{
+				commandInfo.ReplyToCommand("[Executes] You must be a player to execute this command.");
+				return;
+			}
+			
+			var team = commandInfo.GetArg(1).ToUpper();
+
+			if (team != "T" && team != "CT")
+			{
+				commandInfo.ReplyToCommand($"[Executes] You must specify a team [T / CT] - [Value: {team}].");
+				return;
+			}
+
+			var bombsite = commandInfo.GetArg(2).ToUpper();
+
+			if (bombsite != "A" && bombsite != "B")
+			{
+				commandInfo.ReplyToCommand($"[Executes] You must specify a bombsite [A / B] - [Value: {bombsite}].");
+				return;
+			}
+
+			Debug.Assert(player != null, "player != null");
+			Debug.Assert(player.PlayerPawn != null, "player.PlayerPawn != null");
+			Debug.Assert(player.PlayerPawn.Value != null, "player.PlayerPawn.Value != null");
+			
+			var grenade = new Grenade
+			{
+				Id = 0,
+				Name = "x to y",
+				Type = EGrenade.Flashbang,
+				Position = player.PlayerPawn.Value.AbsOrigin,
+				Angle = player.PlayerPawn.Value.EyeAngles,
+				Velocity = new Vector(-431.161926f, -115.314392f, 506.386200f),
+				Delay = 0.0f,
+			};
+
+			player.PrintToConsole("Latest grenade:");
+			player.PrintToConsole("---------------------------");
+			player.PrintToConsole(JsonConvert.SerializeObject(grenade));
 			player.PrintToConsole("---------------------------");
 		}
 
