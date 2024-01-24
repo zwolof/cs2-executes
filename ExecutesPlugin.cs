@@ -149,7 +149,7 @@ namespace ExecutesPlugin
 			{
 				Id = 0,
 				Name = "x to y",
-				Type = EGrenade.Flashbang,
+				Type = EGrenade.Smoke,
 				Position = player.PlayerPawn.Value.AbsOrigin,
 				Angle = player.PlayerPawn.Value.EyeAngles,
 				Velocity = new Vector(-431.161926f, -115.314392f, 506.386200f),
