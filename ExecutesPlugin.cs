@@ -50,7 +50,7 @@ namespace ExecutesPlugin
 
         private void OnMapStart(string mapName)
         {
-            var loaded = _gameManager.LoadSpawns(mapName);
+            var loaded = _gameManager.LoadSpawns(ModuleDirectory, mapName);
 
             if (!loaded)
             {
@@ -64,7 +64,6 @@ namespace ExecutesPlugin
 			usage: "[T/CT] [A/B]",
 			whoCanExecute: CommandUsage.CLIENT_ONLY
 		)]
-		[RequiresPermissions("@css/root")]
 		public void OnCommandAddSpawn(CCSPlayerController? player, CommandInfo commandInfo)
 		{
 
@@ -90,24 +89,26 @@ namespace ExecutesPlugin
 				return;
 			}
 
-			Debug.Assert(player != null, "player != null");
-			Debug.Assert(player.PlayerPawn != null, "player.PlayerPawn != null");
-			Debug.Assert(player.PlayerPawn.Value != null, "player.PlayerPawn.Value != null");
-			
-			var spawn = new Spawn
-			{
-				Id = 0,
-				Name = "Spawn",
-				Position = player.PlayerPawn.Value.AbsOrigin,
-				Angle = player.PlayerPawn.Value.EyeAngles,
-				Team = team == "T" ? CsTeam.Terrorist : CsTeam.CounterTerrorist,
-				SpawnType = Enums.ESpawnType.SPAWNTYPE_LURKER
-			};
+			// var spawn = new Spawn
+			// {
+			// 	Id = 0,
+			// 	Name = "Spawn",
+			// 	Position = player.PlayerPawn.Value.AbsOrigin,
+			// 	Angle = player.PlayerPawn.Value.EyeAngles,
+			// 	Team = team == "T" ? CsTeam.Terrorist : CsTeam.CounterTerrorist,
+			// 	SpawnType = Enums.ESpawnType.SPAWNTYPE_LURKER
+			// };
+
+			var csTeam = team == "T" ? CsTeam.Terrorist : CsTeam.CounterTerrorist;
 
 			player.PrintToConsole("Latest spawn:");
 			player.PrintToConsole("---------------------------");
-			player.PrintToConsole(JsonConvert.SerializeObject(spawn));
+			player.PrintToConsole($"\"Position\": {player.PlayerPawn.Value.AbsOrigin.X};{player.PlayerPawn.Value.AbsOrigin.Y};{player.PlayerPawn.Value.AbsOrigin.Z}");
+			player.PrintToConsole($"\"Angle\": {player.PlayerPawn.Value.EyeAngles.X};{player.PlayerPawn.Value.EyeAngles.Y};{player.PlayerPawn.Value.EyeAngles.Z}");
+			player.PrintToConsole($"\"Team\": {(int)csTeam}");
 			player.PrintToConsole("---------------------------");
+
+			commandInfo.ReplyToCommand("[Executes] Printed into console.");
 		}
 
         [GameEventHandler]

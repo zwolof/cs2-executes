@@ -10,14 +10,6 @@ namespace ExecutesPlugin.Models
         public Dictionary<CsTeam, List<Spawn>> Spawns { get; set; }
         public List<Grenade> Grenades { get; set; }
 
-        public Scenario(string name, EBombsite bombsite, Dictionary<CsTeam, List<Spawn>> spawns, List<Grenade> grenades)
-        {
-            Name = name;
-            Bombsite = bombsite;
-            Spawns = spawns;
-            Grenades = grenades;
-        }
-
         public Dictionary<CsTeam, List<Spawn>> GetSpawns()
         {
             return Spawns;

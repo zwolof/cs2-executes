@@ -14,15 +14,18 @@
 	"Spawns": [
 		{
 			"Id": 0,
+			"Name": "Stairs smoke",
+			"Position": "1148.4546;-1183.9679;-205.57178",
+			"Angle": "-39.97839;-165.32172;0",
 			"Team": 2,
-			"Position": "123.45;123.45;123.45",
-			"EyeAngles": "123.45;123.45;123.45",
-			"Type": 4,
-			"Grenades": {
-				"Smoke": 1,
-				"Flashbang": 2,
-				"Molotov": 1,
-				"Decoy": 0
+			"Type": 0,
+			"Loadout": {
+				"Grenades": {
+					"Smoke": 1,
+					"Flashbang": 2,
+					"Molotov": 1,
+					"Decoy": 0
+				}
 			},
 			"PossibleGrenades": [
 				"stairs_smoke"

@@ -7,17 +7,21 @@ namespace ExecutesPlugin.Managers
 {
     public sealed class GameManager : BaseManager
     {
-        private List<Scenario> _scenarios = new();
+        private MapConfig _scenarios = new();
         private Scenario? _currentScenario;
 
         public GameManager() { }
 
-        public bool LoadSpawns(string map)
+        public bool LoadSpawns(string moduleDirectory, string map)
         {
             var fileName = $"{map}.json";
             var configExists = File.Exists(fileName);
 
-            if (!configExists)
+            // Path.Exists
+            string _mapConfigDirectory = Path.Combine(moduleDirectory, "map_configs");
+            string _mapConfigPath = Path.Combine(_mapConfigDirectory, fileName);
+
+            if (!File.Exists(_mapConfigPath))
             {
                 Console.WriteLine($"[Executes] {fileName} does not exist.");
                 return false;
@@ -25,7 +29,7 @@ namespace ExecutesPlugin.Managers
 
             var config = File.ReadAllText(fileName);
 
-            var parsedConfig = JsonConvert.DeserializeObject<List<Scenario>>(config);
+            var parsedConfig = JsonConvert.DeserializeObject<MapConfig>(config);
 
             if (parsedConfig == null)
             {
@@ -33,9 +37,10 @@ namespace ExecutesPlugin.Managers
                 return false;
             }
 
+
             _scenarios = parsedConfig;
 
-            Console.WriteLine($"-------------------------- Loaded {_scenarios.Count} executes.");
+            Console.WriteLine($"-------------------------- Loaded {_scenarios.Scenarios?.Count} executes.");
             return true;
         }
 
@@ -43,17 +48,29 @@ namespace ExecutesPlugin.Managers
         {
             var counts = Helpers.GetPlayerCountDict();
 
-            var validScenarios = _scenarios.Where(
-                scen => scen.GetSpawns().All(y => y.Value.Count >= counts[y.Key])
-            ).ToList();
+            var validScenarios = _scenarios.Scenarios?.Where(x =>
+            {
+                var spawns = x.Spawns;
+                var valid = true;
 
-            if (!validScenarios.Any())
+                foreach (var (team, spawnsList) in spawns)
+                {
+                    if (spawnsList.Count > counts[team])
+                    {
+                        valid = false;
+                    }
+                }
+
+                return valid;
+            }).ToList();
+
+            if (!validScenarios!.Any())
             {
                 _currentScenario = null;
                 return null;
             }
 
-            var random = Helpers.GetRandomInt(0, validScenarios.Count);
+            var random = Helpers.GetRandomInt(0, validScenarios!.Count);
 
             var current = validScenarios[random];
             
