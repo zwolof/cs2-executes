@@ -7,6 +7,9 @@
   
   <ItemGroup>
     <PackageReference Include="CounterStrikeSharp.API" Version="1.0.147" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(CopyPath)' != '' ">
+    <Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(CopyPath)&quot; " />
+  </Target>
 </Project>
