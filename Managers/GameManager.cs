@@ -38,7 +38,10 @@ namespace ExecutesPlugin.Managers
 
             _mapConfig = parsedConfig;
 
-            Console.WriteLine($"-------------------------- Loaded {_mapConfig.Scenarios?.Count} executes.");
+            Console.WriteLine($"-------------------------- Loaded {_mapConfig.Scenarios?.Count} executes config.");
+            
+            ParseMapConfigIdReferences(_mapConfig);
+            
             return true;
         }
 
@@ -60,6 +63,42 @@ namespace ExecutesPlugin.Managers
             
             _currentScenario = current;
             return current;
+        }
+
+        public void ParseMapConfigIdReferences(MapConfig mapConfig)
+        {
+            foreach (var scenario in mapConfig.Scenarios)
+            {
+                foreach (var spawnId in scenario.SpawnIds)
+                {
+                    var spawn = mapConfig.Spawns.First(x => x.Id == spawnId);
+                    
+                    // TODO: Figure out why the IDE thinks spawn is never null
+                    if (spawn != null)
+                    {
+                        scenario.Spawns.Add(spawn);
+                    }
+                    else
+                    {
+                        throw new Exception($"Error! spawn id \"{spawnId}\" does not exist!");
+                    }
+                }
+                
+                foreach (var grenadeId in scenario.GrenadeIds)
+                {
+                    var grenade = mapConfig.Grenades.First(x => x.Id == grenadeId);
+                    
+                    // TODO: Figure out why the IDE thinks grenade is never null
+                    if (grenade != null)
+                    {
+                        scenario.Grenades.Add(grenade);
+                    }
+                    else
+                    {
+                        throw new Exception($"Error! grenade id \"{grenadeId}\" does not exist!");
+                    }
+                }
+            }
         }
 
         public Scenario GetCurrentScenario()
