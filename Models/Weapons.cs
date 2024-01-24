@@ -6,9 +6,8 @@ namespace ExecutesPlugin.Models
 	public class Weapons
 	{
 		public string? DesignerName { get; set; }
-		public int Ammo { get; set; }
+		public int Clip1 { get; set; }
+		public int Clip2 { get; set; }
 		public int ReserveAmmo { get; set; }
-		public Vector Velocity { get; set; }
-		public float Delay { get; set; }
 	}
 }

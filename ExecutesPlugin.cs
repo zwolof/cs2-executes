@@ -51,7 +51,9 @@ namespace ExecutesPlugin
 
         private void OnMapStart(string mapName)
         {
+			Console.WriteLine($"[Executes] OnMapStart pre load");
             var loaded = _gameManager.LoadSpawns(ModuleDirectory, mapName);
+			Console.WriteLine($"[Executes] OnMapStart post load \"{loaded}\"");
 
             if (!loaded)
             {
@@ -243,7 +245,7 @@ namespace ExecutesPlugin
         public HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
         {
             Console.WriteLine("[Executes] EventHandler::OnRoundStart");
-            
+
             // If we have a scenario then setup the players
             _spawnManager.SetupSpawns(
                 _gameManager.GetCurrentScenario()

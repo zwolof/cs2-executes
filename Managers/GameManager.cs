@@ -48,21 +48,22 @@ namespace ExecutesPlugin.Managers
         {
             var counts = Helpers.GetPlayerCountDict();
 
-            var validScenarios = _scenarios.Scenarios?.Where(x =>
-            {
-                var spawns = x.Spawns;
-                var valid = true;
+            var validScenarios = _scenarios.Scenarios;
+            // .Where(x =>
+            // {
+            //     var spawnIds = x.Spawns;
+            //     var valid = true;
 
-                foreach (var (team, spawnsList) in spawns)
-                {
-                    if (spawnsList.Count > counts[team])
-                    {
-                        valid = false;
-                    }
-                }
+            //     foreach (var (team, spawnsList) in spawnIds)
+            //     {
+            //         if (spawnsList.Count > counts[team])
+            //         {
+            //             valid = false;
+            //         }
+            //     }
 
-                return valid;
-            }).ToList();
+                // return valid;
+            // }).ToList();
 
             if (!validScenarios!.Any())
             {
