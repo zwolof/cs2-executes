@@ -1,3 +1,4 @@
+using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Models;
 using System.Text.Json;
 
@@ -74,9 +75,9 @@ namespace ExecutesPlugin.Managers
                     var spawn = mapConfig.Spawns.First(x => x.Id == spawnId);
                     
                     // TODO: Figure out why the IDE thinks spawn is never null
-                    if (spawn != null)
+                    if (spawn != null && spawn.Team != null)
                     {
-                        scenario.Spawns.Add(spawn);
+                        scenario.Spawns[(CsTeam)spawn.Team].Add(spawn);
                     }
                     else
                     {
@@ -89,9 +90,9 @@ namespace ExecutesPlugin.Managers
                     var grenade = mapConfig.Grenades.First(x => x.Id == grenadeId);
                     
                     // TODO: Figure out why the IDE thinks grenade is never null
-                    if (grenade != null)
+                    if (grenade != null && grenade.Team != null)
                     {
-                        scenario.Grenades.Add(grenade);
+                        scenario.Grenades[(CsTeam)grenade.Team].Add(grenade);
                     }
                     else
                     {

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
@@ -51,7 +52,6 @@ namespace ExecutesPlugin
 
         private void OnMapStart(string mapName)
         {
-			Console.WriteLine($"[Executes] OnMapStart - {mapName}");
             var loaded = _gameManager.LoadSpawns(ModuleDirectory, mapName);
 
             if (!loaded)
@@ -90,23 +90,21 @@ namespace ExecutesPlugin
 				return;
 			}
 
-			// var spawn = new Spawn
-			// {
-			// 	Id = 0,
-			// 	Name = "Spawn",
-			// 	Position = player.PlayerPawn.Value.AbsOrigin,
-			// 	Angle = player.PlayerPawn.Value.EyeAngles,
-			// 	Team = team == "T" ? CsTeam.Terrorist : CsTeam.CounterTerrorist,
-			// 	SpawnType = Enums.ESpawnType.SPAWNTYPE_LURKER
-			// };
+			var spawn = new Spawn
+			{
+				Id = 0,
+				Name = "Spawn",
+				Position = player.PlayerPawn.Value.AbsOrigin,
+				Angle = player.PlayerPawn.Value.EyeAngles,
+				Team = team == "T" ? CsTeam.Terrorist : CsTeam.CounterTerrorist,
+				Type = Enums.ESpawnType.SPAWNTYPE_NORMAL
+			};
 
 			var csTeam = team == "T" ? CsTeam.Terrorist : CsTeam.CounterTerrorist;
 
 			player.PrintToConsole("Latest spawn:");
 			player.PrintToConsole("---------------------------");
-			player.PrintToConsole($"\"Position\": {player.PlayerPawn.Value.AbsOrigin.X};{player.PlayerPawn.Value.AbsOrigin.Y};{player.PlayerPawn.Value.AbsOrigin.Z}");
-			player.PrintToConsole($"\"Angle\": {player.PlayerPawn.Value.EyeAngles.X};{player.PlayerPawn.Value.EyeAngles.Y};{player.PlayerPawn.Value.EyeAngles.Z}");
-			player.PrintToConsole($"\"Team\": {(int)csTeam}");
+			player.PrintToConsole(JsonSerializer.Serialize(spawn));
 			player.PrintToConsole("---------------------------");
 
 			commandInfo.ReplyToCommand("[Executes] Printed into console.");
@@ -244,7 +242,7 @@ namespace ExecutesPlugin
         public HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
         {
             Console.WriteLine("[Executes] EventHandler::OnRoundStart");
-
+            
             // If we have a scenario then setup the players
             _spawnManager.SetupSpawns(
                 _gameManager.GetCurrentScenario()

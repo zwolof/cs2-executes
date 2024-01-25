@@ -20,10 +20,7 @@ namespace ExecutesPlugin.Managers
             }
             // TODO: A BUNCH OF CHECKS
 
-            var spawns = scenario.GetSpawns().ToDictionary(
-                x => x.Key,
-                x => x.Value
-            );
+            var spawns = scenario.Spawns.ToDictionary(x => x.Key, x => x.Value.ToHashSet());
 
             foreach(var player in Helpers.Shuffle(players))
             {
@@ -36,7 +33,7 @@ namespace ExecutesPlugin.Managers
                 var spawn = spawns[player.Team].First();
 
                 // Now we get rid of it so we don't use it again
-                spawns[player.Team].RemoveAt(0);
+                spawns[player.Team].Remove(spawn);
 
                 player.MoveToSpawn(spawn);
             }

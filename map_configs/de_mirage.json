@@ -4,7 +4,7 @@
 			"Name": "1v2 A site",
 			"Description": "You are alone against 2 CTs, try to plant the bomb at {{ site }} and win the round!",
 			"Bombsite": 2,
-			"Spawns": [],
+			"Spawns": [0],
 			"Grenades": ["stairs_smoke"]
 		}
 	],
