@@ -14,7 +14,7 @@
 		},
 		{
 			"Name": "A Execute",
-			"Description": "You are with your team, try to execute the {{site}} site!",
+			"Description": "Execute the {{site}} site!",
 			"Bombsite": 0,
 			"RoundTime": 90,
 			"MinPlayerCount": 2,
@@ -28,7 +28,7 @@
 		},
 		{
 			"Name": "B Execute",
-			"Description": "You are with your team, try to execute the {{site}} site!",
+			"Description": "Execute the {{site}} site!",
 			"Bombsite": 1,
 			"RoundTime": 90,
 			"MinPlayerCount": 2,
@@ -42,7 +42,7 @@
 		},
 		{
 			"Name": "Mid Control",
-			"Description": "Take control of mid and try to win the round from there!",
+			"Description": "Take control of mid, and try to win the round from there!",
 			"Bombsite": -1,
 			"RoundTime": 90,
 			"MinPlayerCount": 2,
