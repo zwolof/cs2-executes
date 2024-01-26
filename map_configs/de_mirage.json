@@ -4,7 +4,7 @@
 			"Name": "1v2 A site",
 			"Description": "You are alone against 2 CTs, try to plant the bomb at {{ site }} and win the round!",
 			"Bombsite": 2,
-			"SpawnIds": [1],
+			"SpawnIds": [1, 2],
 			"GrenadeIds": [0, 1]
 		}
 	],
@@ -12,9 +12,17 @@
 		{
 			"Id": 1,
 			"Name": "Stairs smoke",
-			"Position": "1148.4546;-1183.9679;-205.57178",
-			"Angle": "-39.97839;-165.32172;0.00",
+			"Position": "1148.4546 -1183.9679 -205.57178",
+			"Angle": "-39.97839 -165.32172 0.00",
 			"Team": 2,
+			"Type": 0
+		},
+		{
+			"Id": 2,
+			"Name": "Holding ramp",
+			"Position": "-336.708313 -2365.014404 -32.269775",
+			"Angle": "5.057639 60.794651 0.000000",
+			"Team": 3,
 			"Type": 0
 		}
 	],
@@ -23,9 +31,9 @@
 			"Id": 1,
 			"Name": "Stairs smoke",
 			"Type": 2,
-			"Position": "1,136.85;-1,186.81;-131.72",
-			"Angle": "0.00;0.00;0.00",
-			"Velocity": "-455.82;-120.04;483.16",
+			"Position": "1,136.85 -1,186.81 -131.72",
+			"Angle": "0.00 0.00 0.00",
+			"Velocity": "-455.82 -120.04 483.16",
 			"Team": 2,
 			"Delay": 2.0
 		},
@@ -33,9 +41,9 @@
 			"Id": 2,
 			"Name": "Random smoke",
 			"Type": 2,
-			"Position": "1,286.52;-220.30;-113.79",
-			"Angle": "0.00;0.00;0.00",
-			"Velocity": "-105.30;-644.33;171.41",
+			"Position": "1,286.52 -220.30 -113.79",
+			"Angle": "0.00 0.00 0.00",
+			"Velocity": "-105.30 -644.33 171.41",
 			"Team": 2,
 			"Delay": 0
 		}

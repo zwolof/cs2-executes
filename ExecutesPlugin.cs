@@ -283,6 +283,12 @@ namespace ExecutesPlugin
         public HookResult OnRoundPreStart(EventRoundPrestart @event, GameEventInfo info)
         {
             Console.WriteLine("[Executes] EventHandler::OnRoundPreStart");
+
+			if(Helpers.IsWarmup())
+			{
+				Console.WriteLine("[Executes] Warmup detected, skipping.");
+				return HookResult.Continue;
+			}
             
             // TODO: Handle team swapping here
             
@@ -298,10 +304,16 @@ namespace ExecutesPlugin
             return HookResult.Continue;
         }
 
-        [GameEventHandler]
+        [GameEventHandler(HookMode.Post)]
         public HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
         {
             Console.WriteLine("[Executes] EventHandler::OnRoundStart");
+
+			if(Helpers.IsWarmup())
+			{
+				Console.WriteLine("[Executes] Warmup detected, skipping.");
+				return HookResult.Continue;
+			}
             
             // If we have a scenario then setup the players
             _spawnManager.SetupSpawns(

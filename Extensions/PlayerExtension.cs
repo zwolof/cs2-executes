@@ -18,13 +18,15 @@ namespace ExecutesPlugin
 
 		public static void MoveToSpawn(this CCSPlayerController player, Spawn spawn)
 		{
-			if(spawn.Position == null || spawn.Angle == null) 
+			if(player.PlayerPawn.Value == null || spawn.Position == null || spawn.Angle == null) 
 			{
 				Console.WriteLine("[Executes] Spawn position or angle is null.");
 				return;
 			}
 
-			player.Teleport(spawn.Position, spawn.Angle, new Vector(IntPtr.Zero));
+			Console.WriteLine($"[Executes] Moving {player.PlayerName} to {spawn.Name}.");
+
+			player.PlayerPawn.Value.Teleport(spawn.Position, spawn.Angle, new Vector());
 		}
 	}
 }

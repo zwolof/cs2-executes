@@ -20,7 +20,7 @@ namespace ExecutesPlugin.Models.JsonConverters
                 throw new JsonException("String value is null.");
             }
 
-            var values = stringValue.Split(';'); // Split by semicolon
+            var values = stringValue.Split(' '); // Split by semicolon
 
 			Console.WriteLine($"[Executes] Vector values: {stringValue}");
 
