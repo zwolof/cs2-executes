@@ -10,7 +10,7 @@ namespace ExecutesPlugin.Models
 		public string Description { get; set; } = "";
         public EBombsite Bombsite { get; set; }
         public int RoundTime { get; set; }
-        public int PlayerCount { get; set; }
+        public int MinPlayerCount { get; set; }
         public HashSet<int> SpawnIds { get; set; } = new();
         public HashSet<int> GrenadeIds { get; set; } = new();
 
