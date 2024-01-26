@@ -17,7 +17,7 @@ namespace ExecutesPlugin
 		{
 			var players = Utilities.GetPlayers();
 
-			if(players.Count == 0)
+			if (players.Count == 0)
 			{
 				Console.WriteLine($"No players found.");
 				return;
@@ -25,12 +25,12 @@ namespace ExecutesPlugin
 
 			foreach(var player in players)
 			{
-				if(!player.IsValidPlayer())
+				if (!player.IsValidPlayer())
 				{
 					continue;
 				}
 
-				if(team != null && player.Team != team)
+				if (team != null && player.Team != team)
 				{
 					continue;
 				}

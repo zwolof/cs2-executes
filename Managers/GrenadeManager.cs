@@ -43,7 +43,7 @@ namespace ExecutesPlugin.Managers
 				{
 					var nadeThrowPercentage = new Random().Next(0, 100);
 
-					if(nadesThrown[team] >= Helpers.GetPlayerCount(team))
+					if (nadesThrown[team] >= Helpers.GetPlayerCount(team))
 					{
 						Console.WriteLine($"[Executes] Skipping \"{grenade.Name}\".");
 						continue;

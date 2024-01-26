@@ -93,7 +93,7 @@ namespace ExecutesPlugin.Managers
 				}
 			}
 
-			if(validScenarios.Count == 0)
+			if (validScenarios.Count == 0)
 			{
 				Console.WriteLine($"[Executes] No valid scenarios found.");
 				_currentScenario = null;
