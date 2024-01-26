@@ -1,5 +1,3 @@
-
-using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
 
 namespace ExecutesPlugin.Memory

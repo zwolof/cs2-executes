@@ -110,6 +110,8 @@ namespace ExecutesPlugin
 				Console.WriteLine("[Executes] Failed to load spawns.");
 				return;
 			}
+			
+			Helpers.ExecuteExecutesConfiguration(ModuleDirectory);
 		}
 
 		[ConsoleCommand("css_debug", "Reloads the scenarios from the map config")]
