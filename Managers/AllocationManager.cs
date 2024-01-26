@@ -60,20 +60,20 @@ public static class AllocationManager
 
     private static void AllocateGrenades(CCSPlayerController player)
     {
-        switch (new Random().Next(4))
+        switch (new Random().Next(3))
         {
             case 0:
-                player.GiveNamedItem(CsItem.SmokeGrenade);
-                break;
-            case 1:
                 player.GiveNamedItem(CsItem.Flashbang);
                 break;
-            case 2:
+            case 1:
                 player.GiveNamedItem(CsItem.HEGrenade);
                 break;
-            case 3:
+            case 2:
                 player.GiveNamedItem(player.Team == CsTeam.Terrorist ? CsItem.Molotov : CsItem.Incendiary);
                 break;
+            // case 3:
+            //     player.GiveNamedItem(CsItem.SmokeGrenade);
+            //     break;
         }
     }
 }
