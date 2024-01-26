@@ -6,18 +6,18 @@ namespace ExecutesPlugin.Managers
 {
     public class QueueManager
     {
-        private readonly int _maxRetakesPlayers;
+        private readonly int _maxExecutesPlayers;
         private readonly float _terroristRatio;
         private readonly string _queuePriorityFlag;
 
         public HashSet<CCSPlayerController> QueuePlayers = new();
         public HashSet<CCSPlayerController> ActivePlayers = new();
 
-        public QueueManager(int? retakesMaxPlayers, float? retakesTerroristRatio, string? queuePriorityFlag)
+        public QueueManager()
         {
-            _maxRetakesPlayers = retakesMaxPlayers ?? 9;
-            _terroristRatio = retakesTerroristRatio ?? 0.45f;
-            _queuePriorityFlag = queuePriorityFlag ?? "@css/vip";
+            _maxExecutesPlayers = 10;
+            _terroristRatio = 0.45f;
+            _queuePriorityFlag = "@css/vip";
         }
 
         public int GetTargetNumTerrorists()
@@ -92,7 +92,7 @@ namespace ExecutesPlugin.Managers
             Console.WriteLine($"[Executes][{player.PlayerName}] Checking QueuePlayers.");
             if (!QueuePlayers.Contains(player))
             {
-                if (Helpers.GetGameRules().WarmupPeriod && ActivePlayers.Count < _maxRetakesPlayers)
+                if (Helpers.GetGameRules().WarmupPeriod && ActivePlayers.Count < _maxExecutesPlayers)
                 {
                     Console.WriteLine(
                         $"[Executes][{player.PlayerName}] Not found, adding to ActivePlayers (because in warmup).");
@@ -139,7 +139,7 @@ namespace ExecutesPlugin.Managers
         private void HandleQueuePriority()
         {
             Console.WriteLine($"[Executes]handling queue priority.");
-            if (ActivePlayers.Count != _maxRetakesPlayers)
+            if (ActivePlayers.Count != _maxExecutesPlayers)
             {
                 Console.WriteLine($"[Executes]ActivePlayers.Count != _maxRetakesPlayers, returning.");
                 return;
@@ -200,9 +200,9 @@ namespace ExecutesPlugin.Managers
             RemoveDisconnectedPlayers();
 
             Console.WriteLine(
-                $"[Executes]{_maxRetakesPlayers} max players, {ActivePlayers.Count} active players, {QueuePlayers.Count} players in queue.");
-            Console.WriteLine($"[Executes]players to add: {_maxRetakesPlayers - ActivePlayers.Count}");
-            var playersToAdd = _maxRetakesPlayers - ActivePlayers.Count;
+                $"[Executes]{_maxExecutesPlayers} max players, {ActivePlayers.Count} active players, {QueuePlayers.Count} players in queue.");
+            Console.WriteLine($"[Executes]players to add: {_maxExecutesPlayers - ActivePlayers.Count}");
+            var playersToAdd = _maxExecutesPlayers - ActivePlayers.Count;
 
             if (playersToAdd > 0 && QueuePlayers.Count > 0)
             {
@@ -232,7 +232,7 @@ namespace ExecutesPlugin.Managers
 
             HandleQueuePriority();
 
-            if (ActivePlayers.Count == _maxRetakesPlayers && QueuePlayers.Count > 0)
+            if (ActivePlayers.Count == _maxExecutesPlayers && QueuePlayers.Count > 0)
             {
                 foreach (var player in QueuePlayers)
                 {

@@ -11,11 +11,11 @@ namespace ExecutesPlugin.Managers
         private MapConfig _mapConfig = new();
         private Scenario? _currentScenario;
         
-        public GameManager(QueueManager queueManager, int? roundsToScramble, bool? isScrambleEnabled)
+        public GameManager(QueueManager queueManager)
         {
             QueueManager = queueManager;
-            _consecutiveRoundWinsToScramble = roundsToScramble ?? 5;
-            _isScrambleEnabled = isScrambleEnabled ?? true;
+            _consecutiveRoundWinsToScramble = 5;
+            _isScrambleEnabled = true;
         }
 
         public bool LoadSpawns(string moduleDirectory, string map)
