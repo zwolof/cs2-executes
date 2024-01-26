@@ -31,6 +31,8 @@ namespace ExecutesPlugin
         private readonly GameManager _gameManager;
         private readonly SpawnManager _spawnManager;
         private readonly GrenadeManager _grenadeManager;
+        
+        private CsTeam _lastRoundWinner = CsTeam.None;
 		public bool _IsEditMode = false;
 
         public ExecutesPlugin(GameManager gameManager, SpawnManager spawnManager, GrenadeManager grenadeManager)
@@ -45,7 +47,9 @@ namespace ExecutesPlugin
             RegisterListener<Listeners.OnMapStart>(OnMapStart);
 
 			SmokeFunctions.CSmokeGrenadeProjectile_CreateFunc.Hook(OnSmokeGrenadeProjectileCreate, HookMode.Pre);
-
+			
+			AddCommandListener("jointeam", OnCommandJoinTeam);
+			
             Console.WriteLine("[Executes] ----------- CS2 Executes loaded -----------");
 
             if (hotReload)
@@ -172,7 +176,7 @@ namespace ExecutesPlugin
 				Position = player.PlayerPawn.Value!.AbsOrigin,
 				Angle = player.PlayerPawn.Value.EyeAngles,
 				Team = team == "T" ? CsTeam.Terrorist : CsTeam.CounterTerrorist,
-				Type = Enums.ESpawnType.SPAWNTYPE_NORMAL
+				Type = ESpawnType.SPAWNTYPE_NORMAL
 			};
 
 			player.PrintToConsole("Latest spawn:");
@@ -234,14 +238,146 @@ namespace ExecutesPlugin
 			player.PrintToConsole(JsonSerializer.Serialize(grenade));
 			player.PrintToConsole("---------------------------");
 		}
+		
+		[ConsoleCommand("css_scramble", "Sets teams to scramble on the next round.")]
+		[ConsoleCommand("css_scrambleteams", "Sets teams to scramble on the next round.")]
+		[CommandHelper(whoCanExecute: CommandUsage.CLIENT_AND_SERVER)]
+		[RequiresPermissions("@css/admin")]
+		public void OnCommandScramble(CCSPlayerController? player, CommandInfo commandInfo)
+		{
+			_gameManager.ScrambleNextRound(player);
+		}
+		
+		[GameEventHandler]
+		public HookResult OnRoundEnd(EventRoundEnd @event, GameEventInfo info)
+		{
+			Console.WriteLine("[Executes] EventHandler::OnRoundEnd");
+			
+			_lastRoundWinner = (CsTeam)@event.Winner;
 
-        [GameEventHandler]
+			return HookResult.Continue;
+		}
+
+		[GameEventHandler]
+		public HookResult OnPlayerSpawn(EventPlayerSpawn @event, GameEventInfo info)
+		{
+			var player = @event.Userid;
+
+			if (!Helpers.IsValidPlayer(player) || !Helpers.IsPlayerConnected(player))
+			{
+				return HookResult.Continue;
+			}
+
+			// debug and check if the player is in the queue.
+			Console.WriteLine($"[Executes] [{player.PlayerName}] Checking ActivePlayers.");
+			if (!_gameManager.QueueManager.ActivePlayers.Contains(player))
+			{
+				Console.WriteLine(
+					$"[Executes] [{player.PlayerName}] Checking player pawn {player.PlayerPawn.Value != null}.");
+				if (player.PlayerPawn.Value != null && player.PlayerPawn.IsValid && player.PlayerPawn.Value.IsValid)
+				{
+					Console.WriteLine(
+						$"[Executes] [{player.PlayerName}] player pawn is valid {player.PlayerPawn.IsValid} && {player.PlayerPawn.Value.IsValid}.");
+					Console.WriteLine($"[Executes] [{player.PlayerName}] calling playerpawn.commitsuicide()");
+					player.PlayerPawn.Value.CommitSuicide(false, true);
+				}
+
+				Console.WriteLine($"[Executes] [{player.PlayerName}] Player not in ActivePlayers, moving to spectator.");
+				if (!player.IsBot)
+				{
+					Console.WriteLine($"[Executes] [{player.PlayerName}] moving to spectator.");
+					player.ChangeTeam(CsTeam.Spectator);
+				}
+
+				return HookResult.Continue;
+			}
+			else
+			{
+				Console.WriteLine($"[Executes] [{player.PlayerName}] Player is in ActivePlayers.");
+			}
+
+			return HookResult.Continue;
+		}
+		
+		[GameEventHandler]
+		public HookResult OnPlayerDeath(EventPlayerDeath @event, GameEventInfo info)
+		{
+			var attacker = @event.Attacker;
+			var assister = @event.Assister;
+
+			if (Helpers.IsValidPlayer(attacker))
+			{
+				_gameManager.AddScore(attacker, GameManager.ScoreForKill);
+			}
+
+			if (Helpers.IsValidPlayer(assister))
+			{
+				_gameManager.AddScore(assister, GameManager.ScoreForAssist);
+			}
+
+			return HookResult.Continue;
+		}
+
+		[GameEventHandler]
+		public HookResult OnBombDefused(EventBombDefused @event, GameEventInfo info)
+		{
+			var player = @event.Userid;
+
+			if (Helpers.IsValidPlayer(player))
+			{
+				_gameManager.AddScore(player, GameManager.ScoreForDefuse);
+			}
+
+			return HookResult.Continue;
+		}
+        
+        [GameEventHandler(HookMode.Pre)]
         public HookResult OnPlayerTeam(EventPlayerTeam @event, GameEventInfo info)
         {
-            Console.WriteLine("[Executes] EventHandler::OnPlayerTeam");
-            @event.Silent = true;
+	        Console.WriteLine("[Executes] EventHandler::OnPlayerTeam");
+	        
+	        // Ensure all team join events are silent.
+	        @event.Silent = true;
 
-            return HookResult.Continue;
+	        return HookResult.Continue;
+        }
+
+        private HookResult OnCommandJoinTeam(CCSPlayerController? player, CommandInfo commandInfo)
+        {
+	        if (
+		        !Helpers.IsValidPlayer(player)
+		        || commandInfo.ArgCount < 2
+		        || !Enum.TryParse<CsTeam>(commandInfo.GetArg(1), out var toTeam)
+	        )
+	        {
+		        return HookResult.Handled;
+	        }
+
+	        var fromTeam = player!.Team;
+
+	        Console.WriteLine($"[Executes] [{player.PlayerName}] {fromTeam} -> {toTeam}");
+
+	        _gameManager.QueueManager.DebugQueues(true);
+	        var response = _gameManager.QueueManager.PlayerJoinedTeam(player, fromTeam, toTeam);
+	        _gameManager.QueueManager.DebugQueues(false);
+
+	        Console.WriteLine($"[Executes] [{player.PlayerName}] checking to ensure we have active players");
+	        // If we don't have any active players, setup the active players and restart the game.
+	        if (_gameManager.QueueManager.ActivePlayers.Count == 0)
+	        {
+		        Console.WriteLine($"[Executes] [{player.PlayerName}] clearing round teams to allow team changes");
+		        _gameManager.QueueManager.ClearRoundTeams();
+
+		        Console.WriteLine(
+			        $"[Executes] [{player.PlayerName}] no active players found, calling QueueManager.Update()");
+		        _gameManager.QueueManager.DebugQueues(true);
+		        _gameManager.QueueManager.Update();
+		        _gameManager.QueueManager.DebugQueues(false);
+
+		        Helpers.RestartGame();
+	        }
+
+	        return response;
         }
 
         [GameEventHandler]
@@ -282,12 +418,6 @@ namespace ExecutesPlugin
                 return HookResult.Continue;
             }
 
-            if (_gameManager == null)
-	        {
-	            Console.WriteLine($"[Executes] Game manager not loaded.");
-	            return HookResult.Continue;
-	        }
-
 	        _gameManager.QueueManager.RemovePlayerFromQueues(player);
 
             return HookResult.Continue;
@@ -312,7 +442,37 @@ namespace ExecutesPlugin
 				return HookResult.Continue;
 			}
             
-            // TODO: Handle team swapping here
+			// Reset round teams to allow team changes.
+			_gameManager.QueueManager.ClearRoundTeams();
+
+			// Update Queue status
+			Console.WriteLine($"[Executes] Updating queues...");
+			_gameManager.QueueManager.DebugQueues(true);
+			_gameManager.QueueManager.Update();
+			_gameManager.QueueManager.DebugQueues(false);
+			Console.WriteLine($"[Executes] Updated queues.");
+
+			// Handle team swaps during round pre-start.
+			switch (_lastRoundWinner)
+			{
+				case CsTeam.CounterTerrorist:
+					Console.WriteLine($"[Executes] Calling CounterTerroristRoundWin()");
+					_gameManager.CounterTerroristRoundWin();
+					Console.WriteLine($"[Executes] CounterTerroristRoundWin call complete");
+					break;
+
+				case CsTeam.Terrorist:
+					Console.WriteLine($"[Executes] Calling TerroristRoundWin()");
+					_gameManager.TerroristRoundWin();
+					Console.WriteLine($"[Executes] TerroristRoundWin call complete");
+					break;
+			}
+
+			_gameManager.BalanceTeams();
+
+			// Set round teams to prevent team changes mid round
+			_gameManager.QueueManager.SetRoundTeams();
+
             
             // Attempt to get a random scenario from the game manager
             var scenario = _gameManager.GetRandomScenario();
@@ -326,9 +486,19 @@ namespace ExecutesPlugin
             return HookResult.Continue;
         }
 
-        [GameEventHandler(HookMode.Post)]
+        [GameEventHandler]
         public HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
         {
+	        // TODO: FIGURE OUT WHY THE FUCK I NEED TO DO THIS
+	        var weirdAliveSpectators = Utilities.GetPlayers()
+		        .Where(x => x is { TeamNum: < (int)CsTeam.Terrorist, PawnIsAlive: true });
+	        foreach (var weirdAliveSpectator in weirdAliveSpectators)
+	        {
+		        // I **think** it's caused by auto team balance being on, so turn it off
+		        Server.ExecuteCommand("mp_autoteambalance 0");
+		        weirdAliveSpectator.CommitSuicide(false, true);
+	        }
+	        
             Console.WriteLine("[Executes] EventHandler::OnRoundStart");
 
 			if (Helpers.IsWarmup())
@@ -337,19 +507,14 @@ namespace ExecutesPlugin
 				return HookResult.Continue;
 			}
             
+			// Clear the round scores
+			_gameManager.ResetPlayerScores();
+            
             // If we have a scenario then setup the players
 
 			var currentScenario = _gameManager.GetCurrentScenario();
             _spawnManager.SetupSpawns(currentScenario);
             _grenadeManager.SetupGrenades(currentScenario);
-            
-            return HookResult.Continue;
-        }
-      
-        [GameEventHandler]
-        public HookResult OnRoundEnd(EventRoundEnd @event, GameEventInfo info)
-        {
-            Console.WriteLine("[Executes] EventHandler::OnRoundEnd");
             
             return HookResult.Continue;
         }

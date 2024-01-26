@@ -117,6 +117,16 @@ namespace ExecutesPlugin
 		{
 			return GetGameRules()?.FreezePeriod ?? false;
 		}
+		
+		public static void RestartGame()
+		{
+			if (!GetGameRules().WarmupPeriod)
+			{
+				CheckRoundDone();
+			}
+
+			Server.ExecuteCommand("mp_restartgame 1");
+		}
 
 		public static List<T> Shuffle<T>(IEnumerable<T> list)
 		{
