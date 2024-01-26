@@ -11,8 +11,8 @@ namespace ExecutesPlugin.Models
         public EBombsite Bombsite { get; set; }
         public int RoundTime { get; set; }
         public int PlayerCount { get; set; }
-        public List<int> SpawnIds { get; set; } = new();
-        public List<int> GrenadeIds { get; set; } = new();
+        public HashSet<int> SpawnIds { get; set; } = new();
+        public HashSet<int> GrenadeIds { get; set; } = new();
 
         [JsonIgnore]
         public Dictionary<CsTeam, List<Spawn>> Spawns { get; set; } = new();
