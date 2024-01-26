@@ -6,7 +6,7 @@ namespace ExecutesPlugin
 {
 	public static class ChatHelpers
 	{
-		public const string ChatPrefix = $"[\u0004Executes\u0001] ";
+		public static readonly string ChatPrefix = $"[{ChatColors.Green}Executes{ChatColors.White}] ";
 
 		public static void ChatMessage(CCSPlayerController player, string message)
 		{

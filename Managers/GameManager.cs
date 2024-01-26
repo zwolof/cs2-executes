@@ -208,7 +208,7 @@ namespace ExecutesPlugin.Managers
 
             if (_consecutiveRoundsWon == _consecutiveRoundWinsToScramble)
             {
-                ChatHelpers.ChatMessageAll($"The terrorists won \u0004{_consecutiveRoundWinsToScramble}\u0001 rounds in a row. ");
+                ChatHelpers.ChatMessageAll($"The terrorists won {ChatColors.Green}{_consecutiveRoundWinsToScramble}{ChatColors.White} rounds in a row. ");
 
                 _consecutiveRoundsWon = 0;
                 ScrambleTeams();
@@ -217,11 +217,11 @@ namespace ExecutesPlugin.Managers
             {
                 if (_isScrambleEnabled)
                 {
-                    ChatHelpers.ChatMessageAll($"The terrorists have won \u0004{_consecutiveRoundsWon}\u0001 rounds in a row - if they win \u0004{_consecutiveRoundWinsToScramble - _consecutiveRoundsWon}\u0001 more, teams will be scrambled. ");
+                    ChatHelpers.ChatMessageAll($"The terrorists have won {ChatColors.Green}{_consecutiveRoundsWon}{ChatColors.White} rounds in a row - if they win {ChatColors.Green}{_consecutiveRoundWinsToScramble - _consecutiveRoundsWon}{ChatColors.White} more, teams will be scrambled. ");
                 }
                 else
                 {
-                    ChatHelpers.ChatMessageAll($"The terrorists have won \u0004{_consecutiveRoundsWon}\u0001 rounds in a row! ");
+                    ChatHelpers.ChatMessageAll($"The terrorists have won {ChatColors.Green}{_consecutiveRoundsWon}{ChatColors.White} rounds in a row! ");
                 }
             }
             else if (_scrambleNextRound)
@@ -236,7 +236,7 @@ namespace ExecutesPlugin.Managers
         {
             if (_consecutiveRoundsWon >= 3)
             {
-                ChatHelpers.ChatMessageAll($"The CTs have ended a \u0004{_consecutiveRoundsWon}\u0001-round long win streak!");
+                ChatHelpers.ChatMessageAll($"The CTs have ended a {ChatColors.Green}{_consecutiveRoundsWon}{ChatColors.White}-round long win streak!");
             }
 
             _consecutiveRoundsWon = 0;

@@ -577,7 +577,7 @@ namespace ExecutesPlugin
 			}
 			else 
 			{
-				var description = currentScenario.Description.Replace("{{site}}", $"\u0004{currentScenario.Bombsite}\u0001");
+				var description = currentScenario.Description.Replace("{{site}}", $"{ChatColors.Green}{currentScenario.Bombsite}{ChatColors.White}");
 				ChatHelpers.ChatMessageAll(description, CsTeam.Terrorist);
 
 				AddTimer(5.0f, () =>
@@ -589,7 +589,7 @@ namespace ExecutesPlugin
 					{
 						return;
 					}
-					randPlayer.ExecuteClientCommand($"say_team I think it's \u0004{currentScenario.Bombsite}\u0001.");
+					randPlayer.ExecuteClientCommand($"say_team I think it's {ChatColors.Green}{currentScenario.Bombsite}{ChatColors.White}.");
 				}, TimerFlags.STOP_ON_MAPCHANGE);
 			}
 

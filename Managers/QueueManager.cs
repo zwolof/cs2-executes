@@ -232,7 +232,7 @@ namespace ExecutesPlugin.Managers
             {
                 foreach (var player in QueuePlayers)
                 {
-					ChatHelpers.ChatMessage(player, $"The game is currently full with \u0004{ActivePlayers.Count}\u0001 players. You are in the waiting queue.");
+					ChatHelpers.ChatMessage(player, $"The game is currently full with {ChatColors.Green}{ActivePlayers.Count}{ChatColors.White} players. You are in the waiting queue.");
                 }
             }
         }
