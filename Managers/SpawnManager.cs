@@ -18,9 +18,12 @@ namespace ExecutesPlugin.Managers
             {
                 return;
             }
-            // TODO: A BUNCH OF CHECKS
+			// TODO: A BUNCH OF CHECKS
 
-            var spawns = scenario.Spawns.ToDictionary(x => x.Key, x => x.Value.ToHashSet());
+			var spawns = scenario.Spawns;
+
+			Console.WriteLine($"[Executes] {spawns[CsTeam.CounterTerrorist]} ct-spawns loaded.");
+			Console.WriteLine($"[Executes] {spawns[CsTeam.Terrorist]} t-spawns loaded.");
 
             foreach(var player in Helpers.Shuffle(players))
             {

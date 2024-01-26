@@ -13,9 +13,9 @@ namespace ExecutesPlugin.Models
         public List<int> GrenadeIds { get; set; } = new();
 
         [JsonIgnore]
-        public Dictionary<CsTeam, HashSet<Spawn>> Spawns { get; set; } = new();
+        public Dictionary<CsTeam, List<Spawn>> Spawns { get; set; } = new();
 
         [JsonIgnore] 
-        public Dictionary<CsTeam, HashSet<Grenade>> Grenades { get; set; } = new();
+        public Dictionary<CsTeam, List<Grenade>> Grenades { get; set; } = new();
     }
 }

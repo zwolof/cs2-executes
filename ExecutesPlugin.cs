@@ -7,9 +7,11 @@ using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
 using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Enums;
 using ExecutesPlugin.Managers;
+using ExecutesPlugin.Memory;
 using ExecutesPlugin.Models;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,6 +32,7 @@ namespace ExecutesPlugin
         private readonly GameManager _gameManager;
         private readonly QueueManager _queueManager;
         private readonly SpawnManager _spawnManager;
+		public bool _IsEditMode = false;
 
         public ExecutesPlugin(GameManager gameManager, QueueManager queueManager, SpawnManager spawnManager)
         {
@@ -42,6 +45,8 @@ namespace ExecutesPlugin
         {
             RegisterListener<Listeners.OnMapStart>(OnMapStart);
 
+			SmokeFunctions.CSmokeGrenadeProjectile_CreateFunc.Hook(OnSmokeGrenadeProjectileCreate, HookMode.Pre);
+
             Console.WriteLine("[Executes] ----------- CS2 Executes loaded -----------");
 
             if (hotReload)
@@ -49,6 +54,50 @@ namespace ExecutesPlugin
                 OnMapStart(Server.MapName);
             }
         }
+
+        public override void Unload(bool hotReload)
+        {
+            RemoveListener("OnMapStart", OnMapStart);
+
+            Console.WriteLine("[Executes] ----------- CS2 Executes unloaded -----------");
+        }
+
+        // private void OnSmokeGrenadeProjectileCreate(
+		// 	IntPtr position,
+		// 	IntPtr angle,
+		// 	IntPtr velocity,
+		// 	IntPtr angVelocity,
+		// 	IntPtr pOwner,
+		// 	IntPtr weaponInfo,
+		// 	CsTeam team
+		// )
+        private HookResult OnSmokeGrenadeProjectileCreate(DynamicHook hook)
+		{
+			Server.PrintToChatAll("[Executes] smokegrenade_projectile created [Pre].");
+
+			var position = hook.GetParam<IntPtr>(0);
+			var angle = hook.GetParam<IntPtr>(1);
+			var velocity = hook.GetParam<IntPtr>(2);
+			var angVelocity = hook.GetParam<IntPtr>(3);
+			var pOwner = hook.GetParam<IntPtr>(4);
+			var weaponInfo = hook.GetParam<IntPtr>(5);
+			var team = hook.GetParam<CsTeam>(6);
+
+			var grenade = new Grenade
+			{
+				Type = EGrenade.Smoke,
+				Position = new Vector(position),
+				Angle = new QAngle(angle),
+				Velocity = new Vector(velocity),
+				Team = team,
+			};
+
+			Server.PrintToChatAll(JsonSerializer.Serialize(grenade)); 
+			Server.PrintToChatAll("[Executes] smokegrenade_projectile created [Post].");
+			Server.PrintToChatAll($"[Executes] angVelocity: {new Vector(angVelocity).ToString()}");
+
+			return HookResult.Continue;
+		}
 
         private void OnMapStart(string mapName)
         {
@@ -59,6 +108,17 @@ namespace ExecutesPlugin
                 Console.WriteLine("[Executes] Failed to load spawns.");
             }
         }
+
+		[ConsoleCommand("css_reloadscenarios", "Reloads the scenarios from the map config")]
+		public void ReloadScenarios(CCSPlayerController? player, CommandInfo commandInfo)
+		{
+			var loaded = _gameManager.LoadSpawns(ModuleDirectory, Server.MapName);
+
+            if (!loaded)
+            {
+                Console.WriteLine("[Executes] Failed to load spawns.");
+            }
+		}
 
 		[ConsoleCommand("css_addspawn", "Adds a spawn point to the map")]
 		[CommandHelper(
@@ -73,6 +133,8 @@ namespace ExecutesPlugin
 				commandInfo.ReplyToCommand("[Executes] You must be a player to execute this command.");
 				return;
 			}
+
+			Debug.Assert(player != null, "player != null");
 			
 			var team = commandInfo.GetArg(1).ToUpper();
 
@@ -94,13 +156,11 @@ namespace ExecutesPlugin
 			{
 				Id = 0,
 				Name = "Spawn",
-				Position = player.PlayerPawn.Value.AbsOrigin,
+				Position = player.PlayerPawn.Value!.AbsOrigin,
 				Angle = player.PlayerPawn.Value.EyeAngles,
 				Team = team == "T" ? CsTeam.Terrorist : CsTeam.CounterTerrorist,
 				Type = Enums.ESpawnType.SPAWNTYPE_NORMAL
 			};
-
-			var csTeam = team == "T" ? CsTeam.Terrorist : CsTeam.CounterTerrorist;
 
 			player.PrintToConsole("Latest spawn:");
 			player.PrintToConsole("---------------------------");

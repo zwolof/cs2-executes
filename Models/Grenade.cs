@@ -20,7 +20,7 @@ namespace ExecutesPlugin.Models
 		[JsonConverter(typeof(VectorJsonConverter))]
 		public Vector? Velocity { get; set; }
 
-		public CsTeam? Team { get; set; }
+		public CsTeam Team { get; set; }
 		public float Delay { get; set; }
 	}
 }

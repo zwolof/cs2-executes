@@ -38,10 +38,9 @@ namespace ExecutesPlugin.Managers
             }
 
             _mapConfig = parsedConfig;
+            ParseMapConfigIdReferences(_mapConfig);
 
             Console.WriteLine($"-------------------------- Loaded {_mapConfig.Scenarios?.Count} executes config.");
-            
-            ParseMapConfigIdReferences(_mapConfig);
             
             return true;
         }
@@ -68,16 +67,27 @@ namespace ExecutesPlugin.Managers
 
         public void ParseMapConfigIdReferences(MapConfig mapConfig)
         {
+			Console.WriteLine($"[Executes] Parsing map config id references for {mapConfig.Scenarios.Count} scenarios.");
+			
             foreach (var scenario in mapConfig.Scenarios)
             {
+				Console.WriteLine($"[Executes] Parsing scenario \"{scenario.Name}\" -> SpawnIds: \"{scenario.SpawnIds.Count}\"");
+
                 foreach (var spawnId in scenario.SpawnIds)
                 {
                     var spawn = mapConfig.Spawns.First(x => x.Id == spawnId);
                     
                     // TODO: Figure out why the IDE thinks spawn is never null
-                    if (spawn != null && spawn.Team != null)
+                    if (spawn != null)
                     {
-                        scenario.Spawns[(CsTeam)spawn.Team].Add(spawn);
+						if(!scenario.Spawns.ContainsKey(spawn.Team))
+						{
+							scenario.Spawns.Add(spawn.Team, new List<Spawn>());
+						}
+						spawn.Team = Enum.Parse<CsTeam>(spawn.Team.ToString());
+                        scenario.Spawns[spawn.Team].Add(spawn);
+
+						Console.WriteLine($"[Executes] Added spawn \"{spawn.Id}\" to \"{spawn.Team}\"");
                     }
                     else
                     {
@@ -90,9 +100,14 @@ namespace ExecutesPlugin.Managers
                     var grenade = mapConfig.Grenades.First(x => x.Id == grenadeId);
                     
                     // TODO: Figure out why the IDE thinks grenade is never null
-                    if (grenade != null && grenade.Team != null)
+                    if (grenade != null)
                     {
-                        scenario.Grenades[(CsTeam)grenade.Team].Add(grenade);
+						if(!scenario.Grenades.ContainsKey(grenade.Team))
+						{
+							scenario.Grenades.Add(grenade.Team, new List<Grenade>());
+						}
+						grenade.Team = Enum.Parse<CsTeam>(grenade.Team.ToString());
+                        scenario.Grenades[grenade.Team].Add(grenade);
                     }
                     else
                     {
