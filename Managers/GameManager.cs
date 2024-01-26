@@ -35,7 +35,7 @@ namespace ExecutesPlugin.Managers
             var fileName = $"{map}.json";
 
             // Path.Exists
-            string _mapConfigDirectory = Path.Combine(moduleDirectory, "map_configs");
+            string _mapConfigDirectory = Path.Combine(moduleDirectory, "map_config");
             string _mapConfigPath = Path.Combine(_mapConfigDirectory, fileName);
 
             Console.WriteLine($"[Executes] Loading \"{_mapConfigPath}\"");
