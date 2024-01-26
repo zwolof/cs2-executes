@@ -143,7 +143,7 @@ namespace ExecutesPlugin.Managers
         public void ScrambleNextRound(CCSPlayerController? admin = null)
         {
             _scrambleNextRound = true;
-            ChatHelpers.ChatMessageAll($"retakes.teams.admin_scramble {admin?.PlayerName ?? "The server owner"}");
+            ChatHelpers.ChatMessageAll($"{admin?.PlayerName ?? "The server owner"} has set the teams to be scrambled next round.");
         }
 
         private void ScrambleTeams()
@@ -185,7 +185,7 @@ namespace ExecutesPlugin.Managers
 
             if (_consecutiveRoundsWon == _consecutiveRoundWinsToScramble)
             {
-                ChatHelpers.ChatMessageAll($"retakes.teams.scramble {_consecutiveRoundWinsToScramble}");
+                ChatHelpers.ChatMessageAll($"The terrorists won \u0004{_consecutiveRoundWinsToScramble}\u0001 rounds in a row. ");
 
                 _consecutiveRoundsWon = 0;
                 ScrambleTeams();
@@ -194,11 +194,11 @@ namespace ExecutesPlugin.Managers
             {
                 if (_isScrambleEnabled)
                 {
-                    ChatHelpers.ChatMessageAll($"retakes.teams.almost_scramble {_consecutiveRoundsWon} {_consecutiveRoundWinsToScramble - _consecutiveRoundsWon}");
+                    ChatHelpers.ChatMessageAll($"The terrorists have won \u0004{_consecutiveRoundsWon}\u0001 rounds in a row - if they win \u0004{_consecutiveRoundWinsToScramble - _consecutiveRoundsWon}\u0001 more, teams will be scrambled. ");
                 }
                 else
                 {
-                    ChatHelpers.ChatMessageAll($"retakes.teams.win_streak {_consecutiveRoundsWon}");
+                    ChatHelpers.ChatMessageAll($"The terrorists have won \u0004{_consecutiveRoundsWon}\u0001 rounds in a row! ");
                 }
             }
             else if (_scrambleNextRound)
@@ -213,7 +213,7 @@ namespace ExecutesPlugin.Managers
         {
             if (_consecutiveRoundsWon >= 3)
             {
-                ChatHelpers.ChatMessageAll($"[Executes] retakes.teams.win_streak_over {_consecutiveRoundsWon}");
+                ChatHelpers.ChatMessageAll($"The CTs have ended a \u0004{_consecutiveRoundsWon}\u0001-round long win streak!");
             }
 
             _consecutiveRoundsWon = 0;

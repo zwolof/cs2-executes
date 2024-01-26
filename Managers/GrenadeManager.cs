@@ -1,4 +1,3 @@
-using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Modules.Cvars;
 using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Enums;
@@ -32,17 +31,27 @@ namespace ExecutesPlugin.Managers
 				Console.WriteLine("[Executes] mp_freezetime not found.");
 			}
 
-			foreach(var grenade in scenario.Grenades[CsTeam.Terrorist])
-			{
-				var nadeThrowPercentage = new Random().Next(0, 100);
+			var teams = new List<CsTeam> { CsTeam.Terrorist, CsTeam.CounterTerrorist };
+			var nadesThrown = new Dictionary<CsTeam, int> {
+				{CsTeam.Terrorist, 0},
+				{CsTeam.CounterTerrorist, 0},
+			};
 
-				if(nadeThrowPercentage < 66)
+			foreach(var team in teams)
+			{
+				foreach(var grenade in scenario.Grenades[team])
 				{
-					Console.WriteLine($"[Executes] Skipping \"{grenade.Name}\".");
-					continue;
+					var nadeThrowPercentage = new Random().Next(0, 100);
+
+					if(nadeThrowPercentage < 66 || nadesThrown[team] >= Helpers.GetPlayerCount(team))
+					{
+						Console.WriteLine($"[Executes] Skipping \"{grenade.Name}\".");
+						continue;
+					}
+
+					new Timer(freezeTimeDuration + grenade.Delay, () => ThrowGrenade(grenade), TimerFlags.STOP_ON_MAPCHANGE);
+					nadesThrown[team] += 1;
 				}
-				// Server.PrintToChatAll($"[Executes] Throwing {grenade.Name} with a delay of {grenade.Delay}");
-				_ = new Timer(freezeTimeDuration + grenade.Delay, () => ThrowGrenade(grenade), TimerFlags.STOP_ON_MAPCHANGE);
 			}
 		}
 

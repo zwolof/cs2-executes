@@ -100,7 +100,7 @@ namespace ExecutesPlugin.Managers
 
                 Console.WriteLine($"[Executes] [{player.PlayerName}] Not found, adding to QueuePlayers.");
                 
-				ChatHelpers.ChatMessage(player, $"executes.queue.joined");
+				ChatHelpers.ChatMessage(player, $"You have been placed in the waiting queue.");
                 QueuePlayers.Add(player);
             }
             else
@@ -232,7 +232,7 @@ namespace ExecutesPlugin.Managers
             {
                 foreach (var player in QueuePlayers)
                 {
-					ChatHelpers.ChatMessage(player, $"\"retakes.queue.waiting\" ActivePlayers.Count");
+					ChatHelpers.ChatMessage(player, $"The game is currently full with \u0004{ActivePlayers.Count}\u0001 players. You are in the waiting queue.");
                 }
             }
         }
@@ -251,46 +251,38 @@ namespace ExecutesPlugin.Managers
         {
             if (!ActivePlayers.Any())
             {
-                Console.WriteLine(
-                    $"[Executes] ActivePlayers ({(isBefore ? "BEFORE" : "AFTER")}): No active players.");
+                Console.WriteLine($"[Executes] ActivePlayers ({(isBefore ? "BEFORE" : "AFTER")}): No active players.");
             }
             else
             {
-                Console.WriteLine(
-                    $"[Executes] ActivePlayers ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", ActivePlayers.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
+                Console.WriteLine($"[Executes] ActivePlayers ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", ActivePlayers.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
             }
 
             if (!QueuePlayers.Any())
             {
-                Console.WriteLine(
-                    $"[Executes] QueuePlayers ({(isBefore ? "BEFORE" : "AFTER")}): No players in the queue.");
+                Console.WriteLine($"[Executes] QueuePlayers ({(isBefore ? "BEFORE" : "AFTER")}): No players in the queue.");
             }
             else
             {
-                Console.WriteLine(
-                    $"[Executes] QueuePlayers ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", QueuePlayers.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
+                Console.WriteLine($"[Executes] QueuePlayers ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", QueuePlayers.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
             }
 
             if (!_roundTerrorists.Any())
             {
-                Console.WriteLine(
-                    $"[Executes] _roundTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): No players in the queue.");
+                Console.WriteLine($"[Executes] _roundTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): No players in the queue.");
             }
             else
             {
-                Console.WriteLine(
-                    $"[Executes] _roundTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", _roundTerrorists.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
+                Console.WriteLine($"[Executes] _roundTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", _roundTerrorists.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
             }
 
             if (!_roundCounterTerrorists.Any())
             {
-                Console.WriteLine(
-                    $"[Executes] _roundCounterTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): No players in the queue.");
+                Console.WriteLine($"[Executes] _roundCounterTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): No players in the queue.");
             }
             else
             {
-                Console.WriteLine(
-                    $"[Executes] _roundCounterTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", _roundCounterTerrorists.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
+                Console.WriteLine($"[Executes] _roundCounterTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", _roundCounterTerrorists.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
             }
         }
 
