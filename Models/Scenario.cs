@@ -7,8 +7,10 @@ namespace ExecutesPlugin.Models
     public class Scenario
     {
         public string? Name { get; set; }
-        public string? Description { get; set; }
+		public string Description { get; set; } = "";
         public EBombsite Bombsite { get; set; }
+        public int RoundTime { get; set; }
+        public int PlayerCount { get; set; }
         public List<int> SpawnIds { get; set; } = new();
         public List<int> GrenadeIds { get; set; } = new();
 

@@ -27,6 +27,7 @@ namespace ExecutesPlugin
 			Console.WriteLine($"[Executes] Moving {player.PlayerName} to {spawn.Name}.");
 
 			player.PlayerPawn.Value.Teleport(spawn.Position, spawn.Angle, new Vector());
+			// player.PlayerPawn.Value.AbsOrigin!.Z = spawn.Position.Z;
 		}
 	}
 }

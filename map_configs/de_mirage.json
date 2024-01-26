@@ -1,65 +1,80 @@
 {
-	"Scenarios": [
-		{
+	"Scenarios": [{
 			"Name": "1v2 A site",
 			"Description": "You are alone against 2 CTs, try to plant the bomb at {{site}} and win the round!",
-			"Bombsite": 2,
+			"Bombsite": 0,
 			"RoundTime": 55,
-			"PlayerCount": 3,
+			"PlayerCount": 2,
 			"SpawnIds": [
 				1, 2, 3,
 				5, 8, 9
 			],
-			"GrenadeIds": [1, 2]
+			"GrenadeIds": [2]
 		},
 		{
 			"Name": "A Execute",
 			"Description": "You are with your team, try to execute the {{site}} site!",
-			"Bombsite": 2,
+			"Bombsite": 0,
 			"RoundTime": 90,
-			"PlayerCount": 10,
+			"PlayerCount": 2,
 			"SpawnIds": [
 				1, 2, 3, 4, 20,
 				5, 7, 8, 9, 18
 			],
 			"GrenadeIds": [
-				1, 2, 3, 4
+				1, 2, 4, 12, 13
+			]
+		},
+		{
+			"Name": "B Execute",
+			"Description": "You are with your team, try to execute the {{site}} site!",
+			"Bombsite": 0,
+			"RoundTime": 90,
+			"PlayerCount": 2,
+			"SpawnIds": [
+				3, 14, 12, 15, 22,
+				10, 11, 8, 21, 18
+
+			],
+			"GrenadeIds": [
+				5, 10
 			]
 		},
 		{
 			"Name": "Mid Control",
 			"Description": "Take control of mid and try to win the round from there!",
-			"Bombsite": 2,
+			"Bombsite": -1,
 			"RoundTime": 90,
-			"PlayerCount": 10,
+			"PlayerCount": 2,
 			"SpawnIds": [
 				1, 2, 12, 4, 15,
 				10, 11, 16, 17, 18, 19
 			],
-			"GrenadeIds": [6, 8, 9]
+			"GrenadeIds": [
+				6, 8, 9
+			]
 		}
 	],
-	"Spawns": [
-		{
+	"Spawns": [{
 			"Id": 1,
 			"Name": "Market door",
-			"Position": "-1757.450562 -613.570984 -103.968750",
-			"Angle": "0.354681 -41.115639 0.000000",
+			"Position": "-1865.868 -613.6665 -167.9687",
+			"Angle": "3.2670593 -20.247467 0.000000",
 			"Team": 3,
 			"Type": 0
 		},
 		{
 			"Id": 2,
 			"Name": "A Site default",
-			"Position": "-331.959595 -2230.236084 -107.768051",
-			"Angle": "0.508197 54.832336 0.000000",
+			"Position": "-331.9596 -2230.236 -169.6347",
+			"Angle": "0.5081177 54.83242 0.000000",
 			"Team": 3,
 			"Type": 0
 		},
 		{
 			"Id": 3,
 			"Name": "Connector",
-			"Position": "-520.032776 -1127.786865 -103.968750",
+			"Position": "-531.39905 -1128.5453 -167.96875",
 			"Angle": "10.043006 117.930916 0.000000",
 			"Team": 3,
 			"Type": 0
@@ -67,7 +82,7 @@
 		{
 			"Id": 4,
 			"Name": "Watching chair",
-			"Position": "-961.454590 251.049561 -107.739594",
+			"Position": "-961.4546 251.04956 -170.72556",
 			"Angle": "-0.660990 -60.972954 0.000000",
 			"Team": 3,
 			"Type": 0
@@ -75,7 +90,7 @@
 		{
 			"Id": 5,
 			"Name": "Top connector smoke thrower",
-			"Position": "1239.898071 -1159.968750 -189.593109",
+			"Position": "1239.8981 -1159.9688 -246.40327",
 			"Angle": "0.604932 -176.481262 0.000000",
 			"Team": 2,
 			"Type": 0
@@ -83,7 +98,7 @@
 		{
 			"Id": 6,
 			"Name": "Jungle smoke thrower",
-			"Position": "815.969910 -1417.325073 -44.968750",
+			"Position": "808.9976 -1414.4857 -108.96875",
 			"Angle": "25.071077 -149.949524 0.000000",
 			"Team": 2,
 			"Type": 0
@@ -91,7 +106,7 @@
 		{
 			"Id": 7,
 			"Name": "Lamp flash thrower",
-			"Position": "871.074585 -1036.031250 -194.936127",
+			"Position": "871.0746 -1036.0312 -251.96875",
 			"Angle": "1.621187 -121.932861 0.000000",
 			"Team": 2,
 			"Type": 0
@@ -99,7 +114,7 @@
 		{
 			"Id": 8,
 			"Name": "Ramp entry",
-			"Position": "701.268982 -1339.096069 -199.394440",
+			"Position": "700.4075 -1339.0507 -262.91345",
 			"Angle": "-0.007584 -124.741066 0.000000",
 			"Team": 2,
 			"Type": 0
@@ -107,7 +122,7 @@
 		{
 			"Id": 9,
 			"Name": "Palace entry",
-			"Position": "630.284790 -2224.031250 24.031250",
+			"Position": "630.2848 -2224.0312 -39.9687",
 			"Angle": "0.331147 -170.801910 0.000000",
 			"Team": 2,
 			"Type": 0
@@ -115,15 +130,15 @@
 		{
 			"Id": 10,
 			"Name": "T Holding underpass",
-			"Position": "-258.697632 509.638367 -19.520943",
+			"Position": "-258.7791 510.23538 -82.82349",
 			"Angle": "20.175026 -166.691147 0.000000",
 			"Team": 2,
 			"Type": 0
 		},
 		{
 			"Id": 11,
-			"Name": "Holding apps push", 
-			"Position": "-810.916260 522.029236 -16.109413",
+			"Name": "Holding apps push",
+			"Position": "-810.89716 525.8363 -77.64809",
 			"Angle": "1.774376 160.292679 0.000000",
 			"Team": 2,
 			"Type": 0
@@ -131,7 +146,7 @@
 		{
 			"Id": 12,
 			"Name": "Holding B apartment from site",
-			"Position": "-2094.972656 397.493317 -95.968750",
+			"Position": "-2094.9727 397.49332 -159.9687",
 			"Angle": "-8.332553 29.167046 0.000000",
 			"Team": 3,
 			"Type": 0
@@ -139,7 +154,7 @@
 		{
 			"Id": 13,
 			"Name": "Holding B apartment from market",
-			"Position": "-2029.629028 -589.888184 -103.968750",
+			"Position": "-2020.7439 -586.5753 -167.96875",
 			"Angle": "-3.903962 72.774834 0.000000",
 			"Team": 3,
 			"Type": 0
@@ -147,7 +162,7 @@
 		{
 			"Id": 14,
 			"Name": "Holding B apartment from short",
-			"Position": "-1248.029785 381.034454 -103.845093",
+			"Position": "-1248.0298 381.6061 -167.53012",
 			"Angle": "-8.308367 152.667633 0.000000",
 			"Team": 3,
 			"Type": 0
@@ -155,7 +170,7 @@
 		{
 			"Id": 15,
 			"Name": "Holding window",
-			"Position": "-1260.813477 -1054.512939 -103.968750",
+			"Position": "-1260.8135 -1054.513 -167.9687",
 			"Angle": "1.105442 70.720329 0.000000",
 			"Team": 3,
 			"Type": 0
@@ -163,7 +178,7 @@
 		{
 			"Id": 16,
 			"Name": "Underpass push",
-			"Position": "-884.762634 479.967010 -303.968750",
+			"Position": "-884.76263 479.967 -367.9687",
 			"Angle": "0.331041 -118.914215 0.000000",
 			"Team": 2,
 			"Type": 0
@@ -171,15 +186,15 @@
 		{
 			"Id": 17,
 			"Name": "Top mid ramp",
-			"Position": "341.651886 305.665558 -199.252930",
+			"Position": "341.3341 306.16214 -262.5",
 			"Angle": "-6.348160 -106.253571 0.000000",
 			"Team": 2,
 			"Type": 0
 		},
 		{
 			"Id": 18,
-			"Name": "Top mid ramp",
-			"Position": "439.714966 -664.228943 -100.975998",
+			"Name": "Top mid behind boxes",
+			"Position": "439.71497 -664.22894 -159.9687",
 			"Angle": "1.807247 176.105743 0.000000",
 			"Team": 2,
 			"Type": 0
@@ -187,7 +202,7 @@
 		{
 			"Id": 19,
 			"Name": "Top mid ramp 2",
-			"Position": "472.211029 549.972839 -196.576355",
+			"Position": "472.21103 549.97284 -257.96875",
 			"Angle": "-4.968715 -109.708229 0.000000",
 			"Team": 2,
 			"Type": 0
@@ -195,14 +210,29 @@
 		{
 			"Id": 20,
 			"Name": "A balcony",
-			"Position": "151.968750 -1914.031250 24.031250",
+			"Position": "151.96875 -1914.0312 24.03125",
 			"Angle": "0.742501 -107.739052 0.000000",
+			"Team": 3,
+			"Type": 0
+		},
+		{
+			"Id": 21,
+			"Name": "B apps hugging wall",
+			"Position": "-591.58936 615.9659 -79.00924",
+			"Angle": "0.5565998 -177.71252 0.000000",
+			"Team": 2,
+			"Type": 0
+		},
+		{
+			"Id": 22,
+			"Name": "CT spawn looking towards B",
+			"Position": "-1514.7233 -2087.9307 -254.80817",
+			"Angle": "-3.2428112 92.6810 0.000000",
 			"Team": 3,
 			"Type": 0
 		}
 	],
-	"Grenades": [
-		{
+	"Grenades": [{
 			"Id": 1,
 			"Name": "Stairs",
 			"Type": 2,
@@ -291,6 +321,46 @@
 			"Velocity": "-554.84 -221.29 583.89",
 			"Team": 2,
 			"Delay": 0
+		},
+		{
+			"Id": 10,
+			"Name": "B Short",
+			"Type": 2,
+			"Position": "1,347.02 518.13 -159.62",
+			"Angle": "0.00 0.00 0.00",
+			"Velocity": "-534.37 -77.55 674.59",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 11,
+			"Name": "B Market Door",
+			"Type": 2,
+			"Position": "-168.92 883.45 -33.22",
+			"Angle": "0.00 0.00 0.00",
+			"Velocity": "-374.92 -190.59 797.53",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 12,
+			"Name": "B Market to Ramp",
+			"Type": 2,
+			"Position": "-1,702.57 -1,209.49 -151.95",
+			"Angle": "0.00 0.00 0.00",
+			"Velocity": "354.32 -61.67 840.76",
+			"Team": 3,
+			"Delay": 4.0
+		},
+		{
+			"Id": 13,
+			"Name": "CT Spawn to Palace",
+			"Type": 2,
+			"Position": "-2,012.69 -2,030.66 -201.42",
+			"Angle": "0.00 0.00 0.00",
+			"Velocity": "578.89 -36.05 614.84",
+			"Team": 3,
+			"Delay": 3.0
 		}
 	]
 }

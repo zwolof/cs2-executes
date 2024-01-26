@@ -8,7 +8,7 @@ namespace ExecutesPlugin.Managers
 {
     public sealed class GameManager : BaseManager
     {
-        private MapConfig _mapConfig = new();
+        public MapConfig _mapConfig = new();
         private Scenario? _currentScenario;
         private readonly QueueManager _queueManager;		
         private Dictionary<int, int> _playerRoundScores = new();
@@ -143,7 +143,7 @@ namespace ExecutesPlugin.Managers
         public void ScrambleNextRound(CCSPlayerController? admin = null)
         {
             _scrambleNextRound = true;
-            Server.PrintToChatAll($"[Executes] retakes.teams.admin_scramble {admin?.PlayerName ?? "The server owner"}");
+            ChatHelpers.ChatMessageAll($"retakes.teams.admin_scramble {admin?.PlayerName ?? "The server owner"}");
         }
 
         private void ScrambleTeams()
@@ -185,7 +185,7 @@ namespace ExecutesPlugin.Managers
 
             if (_consecutiveRoundsWon == _consecutiveRoundWinsToScramble)
             {
-                Server.PrintToChatAll($"[Executes] retakes.teams.scramble {_consecutiveRoundWinsToScramble}");
+                ChatHelpers.ChatMessageAll($"retakes.teams.scramble {_consecutiveRoundWinsToScramble}");
 
                 _consecutiveRoundsWon = 0;
                 ScrambleTeams();
@@ -194,11 +194,11 @@ namespace ExecutesPlugin.Managers
             {
                 if (_isScrambleEnabled)
                 {
-                    Server.PrintToChatAll($"[Executes] retakes.teams.almost_scramble {_consecutiveRoundsWon} {_consecutiveRoundWinsToScramble - _consecutiveRoundsWon}");
+                    ChatHelpers.ChatMessageAll($"retakes.teams.almost_scramble {_consecutiveRoundsWon} {_consecutiveRoundWinsToScramble - _consecutiveRoundsWon}");
                 }
                 else
                 {
-                    Server.PrintToChatAll($"[Executes] retakes.teams.win_streak {_consecutiveRoundsWon}");
+                    ChatHelpers.ChatMessageAll($"retakes.teams.win_streak {_consecutiveRoundsWon}");
                 }
             }
             else if (_scrambleNextRound)
@@ -213,7 +213,7 @@ namespace ExecutesPlugin.Managers
         {
             if (_consecutiveRoundsWon >= 3)
             {
-                Server.PrintToChatAll($"[Executes] retakes.teams.win_streak_over {_consecutiveRoundsWon}");
+                ChatHelpers.ChatMessageAll($"[Executes] retakes.teams.win_streak_over {_consecutiveRoundsWon}");
             }
 
             _consecutiveRoundsWon = 0;

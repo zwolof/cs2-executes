@@ -31,24 +31,21 @@ namespace ExecutesPlugin.Managers
 			Console.WriteLine($"[Executes] {spawns[CsTeam.CounterTerrorist].Count} CT-Spawns loaded.");
 			Console.WriteLine($"[Executes] {spawns[CsTeam.Terrorist].Count} T-Spawns loaded.");
 
-            foreach(var player in Helpers.Shuffle(players))
+            foreach(var player in players)
             {
-				Console.WriteLine($"[Executes] YOUR FUCKING TEAM IS {player.Team}");
-
                 if (player.Team != CsTeam.Terrorist && player.Team != CsTeam.CounterTerrorist)
                 {
-					Console.WriteLine($"[Executes] We hit this bs \"{player.PlayerName}\"");
+					Console.WriteLine($"[Executes] We hit this \"{player.PlayerName}\"");
                     continue;
                 }
 
-                // Since spawns are already shuffled, we can just take the first one
-                var spawn = spawns[player.Team].First();
-				Console.WriteLine($"[Executes] Spawn is \"{spawn.Name}\"");
+				var randomSpawnIndex = new Random().Next(0, spawns[player.Team].Count);
+				var randomSpawn = spawns[player.Team][randomSpawnIndex];
 
-                // Now we get rid of it so we don't use it again
-                spawns[player.Team].Remove(spawn);
+				spawns[player.Team].RemoveAt(randomSpawnIndex);
+				player.MoveToSpawn(randomSpawn);
 
-                player.MoveToSpawn(spawn);
+				Console.WriteLine($"[Executes] Random spawn is \"{randomSpawn.Name}\"");
             }
         }
     }

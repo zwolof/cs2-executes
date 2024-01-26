@@ -34,7 +34,14 @@ namespace ExecutesPlugin.Managers
 
 			foreach(var grenade in scenario.Grenades[CsTeam.Terrorist])
 			{
-				Server.PrintToChatAll($"[Executes] Throwing {grenade.Name} with a delay of {grenade.Delay}");
+				var nadeThrowPercentage = new Random().Next(0, 100);
+
+				if(nadeThrowPercentage < 66)
+				{
+					Console.WriteLine($"[Executes] Skipping \"{grenade.Name}\".");
+					continue;
+				}
+				// Server.PrintToChatAll($"[Executes] Throwing {grenade.Name} with a delay of {grenade.Delay}");
 				_ = new Timer(freezeTimeDuration + grenade.Delay, () => ThrowGrenade(grenade), TimerFlags.STOP_ON_MAPCHANGE);
 			}
 		}

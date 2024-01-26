@@ -99,7 +99,8 @@ namespace ExecutesPlugin.Managers
                 }
 
                 Console.WriteLine($"[Executes] [{player.PlayerName}] Not found, adding to QueuePlayers.");
-                player.PrintToChat($"[Executes] executes.queue.joined");
+                
+				ChatHelpers.ChatMessage(player, $"executes.queue.joined");
                 QueuePlayers.Add(player);
             }
             else
@@ -180,13 +181,15 @@ namespace ExecutesPlugin.Managers
                 nonVipActivePlayer.ChangeTeam(CsTeam.Spectator);
                 ActivePlayers.Remove(nonVipActivePlayer);
                 QueuePlayers.Add(nonVipActivePlayer);
-                nonVipActivePlayer.PrintToChat($"[Executes] queue.replaced_by_vip {vipQueuePlayer.PlayerName}");
+
+				ChatHelpers.ChatMessage(nonVipActivePlayer, $"queue.replaced_by_vip {vipQueuePlayer.PlayerName}");
 
                 // Add the new VIP player to ActivePlayers and remove them from QueuePlayers
                 ActivePlayers.Add(vipQueuePlayer);
                 QueuePlayers.Remove(vipQueuePlayer);
                 vipQueuePlayer.ChangeTeam(CsTeam.CounterTerrorist);
-                vipQueuePlayer.PrintToChat($"[Executes] queue.vip_took_place {nonVipActivePlayer.PlayerName}");
+                
+				ChatHelpers.ChatMessage(nonVipActivePlayer, $"queue.vip_took_place {nonVipActivePlayer.PlayerName}");
             }
         }
 
@@ -229,7 +232,7 @@ namespace ExecutesPlugin.Managers
             {
                 foreach (var player in QueuePlayers)
                 {
-                    player.PrintToChat($"[Executes] \"retakes.queue.waiting\" ActivePlayers.Count");
+					ChatHelpers.ChatMessage(player, $"\"retakes.queue.waiting\" ActivePlayers.Count");
                 }
             }
         }

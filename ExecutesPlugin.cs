@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
@@ -86,7 +87,7 @@ namespace ExecutesPlugin
 
 			if (!_IsEditMode) return HookResult.Continue;
 			
-			Server.PrintToChatAll("[Executes] smokegrenade_projectile created [Pre].");
+			Server.PrintToChatAll("smokegrenade_projectile created [Pre].");
 
 			var position = hook.GetParam<IntPtr>(0);
 			var angle = hook.GetParam<IntPtr>(1);
@@ -106,7 +107,7 @@ namespace ExecutesPlugin
 			};
 
 			Server.PrintToChatAll(JsonSerializer.Serialize(grenade)); 
-			Server.PrintToChatAll("[Executes] smokegrenade_projectile created [Post].");
+			ChatHelpers.ChatMessageAll("smokegrenade_projectile created [Post].");
 
 			return HookResult.Continue;
 		}
@@ -143,13 +144,8 @@ namespace ExecutesPlugin
             }
 		}
 
-		[ConsoleCommand("css_addspawn", "Adds a spawn point to the map")]
-		[CommandHelper(
-			minArgs: 2,
-			usage: "[T/CT] [A/B]",
-			whoCanExecute: CommandUsage.CLIENT_ONLY
-		)]
-		public void OnCommandAddSpawn(CCSPlayerController? player, CommandInfo commandInfo)
+		[ConsoleCommand("css_tospawn", "Prints the current position to the console")]
+		public void OnCommandToSpawn(CCSPlayerController? player, CommandInfo commandInfo)
 		{
 			if (!player.IsValidPlayer())
 			{
@@ -159,38 +155,36 @@ namespace ExecutesPlugin
 
 			Debug.Assert(player != null, "player != null");
 			
-			var team = commandInfo.GetArg(1).ToUpper();
+			var spawnString = commandInfo.GetArg(1).ToUpper();
 
-			if (team != "T" && team != "CT")
+			var spawnId = int.Parse(spawnString);
+
+			var spawn = _gameManager._mapConfig.Spawns.FirstOrDefault(x => x.Id == spawnId);
+
+			if(spawn == null)
 			{
-				commandInfo.ReplyToCommand($"[Executes] You must specify a team [T / CT] - [Value: {team}].");
+				commandInfo.ReplyToCommand($"[Executes] Spawn not found - [Value: {spawnString}].");
 				return;
 			}
-
-			var bombsite = commandInfo.GetArg(2).ToUpper();
-
-			if (bombsite != "A" && bombsite != "B")
-			{
-				commandInfo.ReplyToCommand($"[Executes] You must specify a bombsite [A / B] - [Value: {bombsite}].");
-				return;
-			}
-
-			var spawn = new Spawn
-			{
-				Id = 0,
-				Name = "Spawn",
-				Position = player.PlayerPawn.Value!.AbsOrigin,
-				Angle = player.PlayerPawn.Value.EyeAngles,
-				Team = team == "T" ? CsTeam.Terrorist : CsTeam.CounterTerrorist,
-				Type = ESpawnType.SPAWNTYPE_NORMAL
-			};
 
 			player.PrintToConsole("Latest spawn:");
-			player.PrintToConsole("---------------------------");
-			player.PrintToConsole(JsonSerializer.Serialize(spawn));
-			player.PrintToConsole("---------------------------");
+			player.MoveToSpawn(spawn);
+		}
 
-			commandInfo.ReplyToCommand("[Executes] Printed into console.");
+		[ConsoleCommand("css_getpos", "Prints the current position to the console")]
+		public void OnCommandGetPos(CCSPlayerController? player, CommandInfo commandInfo)
+		{
+			if (!player.IsValidPlayer())
+			{
+				commandInfo.ReplyToCommand("[Executes] You must be a player to execute this command.");
+				return;
+			}
+
+			player.PrintToConsole("Current position:");
+			player.PrintToConsole("---------------------------");
+			player.PrintToConsole($"Pos: {player.PlayerPawn.Value.AbsOrigin.X} {player.PlayerPawn.Value.AbsOrigin.Y} {player.PlayerPawn.Value.AbsOrigin.Z}");
+			player.PrintToConsole($"Eye: {player.PlayerPawn.Value.EyeAngles.X} {player.PlayerPawn.Value.EyeAngles.Y} {player.PlayerPawn.Value.EyeAngles.Z}");
+			player.PrintToConsole("---------------------------");
 		}
 
 		[ConsoleCommand("css_addgrenade", "Adds a grenade to the map config")]
@@ -374,8 +368,7 @@ namespace ExecutesPlugin
 		        Console.WriteLine($"[Executes] [{player.PlayerName}] clearing round teams to allow team changes");
 		        _queueManager.ClearRoundTeams();
 
-		        Console.WriteLine(
-			        $"[Executes] [{player.PlayerName}] no active players found, calling QueueManager.Update()");
+		        Console.WriteLine($"[Executes] [{player.PlayerName}] no active players found, calling QueueManager.Update()");
 		        _queueManager.DebugQueues(true);
 		        _queueManager.Update();
 		        _queueManager.DebugQueues(false);
@@ -433,6 +426,17 @@ namespace ExecutesPlugin
         public HookResult OnRoundFreezeEnd(EventRoundFreezeEnd @event, GameEventInfo info)
         {
             Console.WriteLine("[Executes] EventHandler::OnRoundFreezeEnd");
+
+			if (Helpers.IsWarmup())
+			{
+				Console.WriteLine("[Executes] Warmup detected, skipping.");
+				return HookResult.Continue;
+			}
+
+			var currentScenario = _gameManager.GetCurrentScenario();
+
+			var gameRules = Helpers.GetGameRules();
+			gameRules.RoundTime = currentScenario.RoundTime;
 
             return HookResult.Continue;
         }
@@ -564,6 +568,9 @@ namespace ExecutesPlugin
 			var currentScenario = _gameManager.GetCurrentScenario();
             _spawnManager.SetupSpawns(currentScenario);
             _grenadeManager.SetupGrenades(currentScenario);
+
+			var description = currentScenario.Description.Replace("{{site}}", $"\u0004{currentScenario.Bombsite}\u0001");
+			ChatHelpers.ChatMessageAll(description, CsTeam.Terrorist);
             
             return HookResult.Continue;
         }
