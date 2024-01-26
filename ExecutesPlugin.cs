@@ -101,19 +101,16 @@ namespace ExecutesPlugin
 			return HookResult.Continue;
 		}
 
-        private void OnMapStart(string mapName)
-        {
-            var loaded = _gameManager.LoadSpawns(ModuleDirectory, mapName);
+		private void OnMapStart(string mapName)
+		{
+			var loaded = _gameManager.LoadSpawns(ModuleDirectory, mapName);
 
-            if (!loaded)
-            {
-                Console.WriteLine("[Executes] Failed to load spawns.");
-                return;
-            }
-            
-            // TODO: Implement DI for this:
-            
-        }
+			if (!loaded)
+			{
+				Console.WriteLine("[Executes] Failed to load spawns.");
+				return;
+			}
+		}
 
 		[ConsoleCommand("css_debug", "Reloads the scenarios from the map config")]
 		public void OnToggleDebugCommand(CCSPlayerController? player, CommandInfo commandInfo)
