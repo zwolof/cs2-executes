@@ -4,6 +4,7 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Enums;
 using ExecutesPlugin.Memory;
+using ExecutesPlugin.Models;
 using Vector = CounterStrikeSharp.API.Modules.Utils.Vector;
 
 namespace ExecutesPlugin.Managers
@@ -12,31 +13,40 @@ namespace ExecutesPlugin.Managers
     {
         public GrenadeManager() {}
 
-        public void ThrowGrenade(CCSPlayerController player, EGrenade type, Vector position, QAngle angle, Vector velocity)
-        {
-            if (player.Pawn.Value == null)
-            {
-                return;
-            }
+		public void SetupGrenades(Scenario scenario)
+		{
+			if(scenario.Grenades.Count == 0)
+			{
+				Console.WriteLine("[Executes] No grenades to setup.");
+				return;
+			}
 
-            switch(type)
+			foreach(var grenade in scenario.Grenades[CsTeam.Terrorist])
+			{
+				ThrowGrenade(grenade);
+			}
+		}
+
+        public void ThrowGrenade(Grenade grenade)
+        {
+            switch(grenade.Type)
             {
                 case EGrenade.Smoke:
                     SmokeFunctions.CSmokeGrenadeProjectile_CreateFunc.Invoke(
-                        position.Handle,
-                        angle.Handle,
-                        velocity.Handle,
-                        velocity.Handle,
-                        player.Pawn.Value.Handle,
+                        grenade.Position!.Handle,
+                        grenade.Angle!.Handle,
+                        grenade.Velocity!.Handle,
+                        grenade.Velocity.Handle,
+                        IntPtr.Zero,
                         45,
-                        player.TeamNum
+                        (int)grenade.Team
                     );
                     break;
                 
                 default:
                     break;
             }
-
+			Console.WriteLine($"Threw grenade {grenade.Name}");
         }
     }
 }

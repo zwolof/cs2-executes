@@ -32,13 +32,15 @@ namespace ExecutesPlugin
         private readonly GameManager _gameManager;
         private readonly QueueManager _queueManager;
         private readonly SpawnManager _spawnManager;
+        private readonly GrenadeManager _grenadeManager;
 		public bool _IsEditMode = false;
 
-        public ExecutesPlugin(GameManager gameManager, QueueManager queueManager, SpawnManager spawnManager)
+        public ExecutesPlugin(GameManager gameManager, QueueManager queueManager, SpawnManager spawnManager, GrenadeManager grenadeManager)
         {
             _gameManager = gameManager;
             _queueManager = queueManager;
             _spawnManager = spawnManager;
+			_grenadeManager = grenadeManager;
         }
 
         public override void Load(bool hotReload)
@@ -316,9 +318,10 @@ namespace ExecutesPlugin
 			}
             
             // If we have a scenario then setup the players
-            _spawnManager.SetupSpawns(
-                _gameManager.GetCurrentScenario()
-            );
+
+			var currentScenario = _gameManager.GetCurrentScenario();
+            _spawnManager.SetupSpawns(currentScenario);
+            _grenadeManager.SetupGrenades(currentScenario);
             
             return HookResult.Continue;
         }

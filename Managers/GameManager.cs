@@ -92,26 +92,26 @@ namespace ExecutesPlugin.Managers
                         throw new Exception($"Error! spawn id \"{spawnId}\" does not exist!");
                     }
                 }
+
+				scenario.Grenades[CsTeam.CounterTerrorist] = new List<Grenade>();
+				scenario.Grenades[CsTeam.Terrorist] = new List<Grenade>();
                 
-                // foreach (var grenadeId in scenario.GrenadeIds)
-                // {
-                //     var grenade = mapConfig.Grenades.First(x => x.Id == grenadeId);
+                foreach (var grenadeId in scenario.GrenadeIds)
+                {
+                    var grenade = mapConfig.Grenades.First(x => x.Id == grenadeId);
                     
-                //     // TODO: Figure out why the IDE thinks grenade is never null
-                //     if (grenade != null)
-                //     {
-				// 		if(!scenario.Grenades.ContainsKey(grenade.Team))
-				// 		{
-				// 			scenario.Grenades.Add(grenade.Team, new List<Grenade>());
-				// 		}
-				// 		grenade.Team = Enum.Parse<CsTeam>(grenade.Team.ToString());
-                //         scenario.Grenades[grenade.Team].Add(grenade);
-                //     }
-                //     else
-                //     {
-                //         throw new Exception($"Error! grenade id \"{grenadeId}\" does not exist!");
-                //     }
-                // }
+                    // TODO: Figure out why the IDE thinks grenade is never null
+                    if (grenade != null)
+                    {
+                        scenario.Grenades[grenade.Team].Add(grenade);
+
+						Console.WriteLine($"[Executes] Added grenade \"{grenade.Name}\" to \"{grenade.Team}\"");
+                    }
+                    else
+                    {
+                        throw new Exception($"Error! grenade id \"{grenadeId}\" does not exist!");
+                    }
+                }
             }
         }
 
