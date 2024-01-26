@@ -32,7 +32,7 @@ jobs:
           mkdir -p output/ExecutesPlugin
           mv ./bin/Debug/net7.0/ExecutesPlugin.dll output/ExecutesPlugin/
           mv ./bin/Debug/net7.0/ExecutesPlugin.pdb output/ExecutesPlugin/
-          mv ./map_configs output/ExecutesPlugin/
+          mv ./map_config output/ExecutesPlugin/
 #          mv ./lang output/ExecutesPlugin/
       - name: Copy output (no map configs)
         run: |
