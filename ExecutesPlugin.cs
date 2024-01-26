@@ -585,7 +585,7 @@ namespace ExecutesPlugin
 				AddTimer(5.0f, () =>
 				{
 					var CTPlayers = Utilities.GetPlayers().Where(x => x.Team == CsTeam.CounterTerrorist).ToList();
-					var randPlayer = CTPlayers[Helpers.GetRandomInt(0, CTPlayers.Count)];
+					var randPlayer = CTPlayers[Helpers.GetRandomInt(0, CTPlayers.Count - 1)];
 
 					if(randPlayer == null)
 					{
