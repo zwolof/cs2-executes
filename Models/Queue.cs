@@ -1,6 +1,6 @@
 namespace ExecutesPlugin.Models
 {
-  // LIFO Queue
+    // FIFO Queue
     public class ExecutesQueue<T> where T : class
     {
         private readonly List<T> _queue = new();
