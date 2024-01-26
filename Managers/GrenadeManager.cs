@@ -17,7 +17,7 @@ namespace ExecutesPlugin.Managers
 
 		public void SetupGrenades(Scenario scenario)
 		{
-			if(scenario.Grenades.Count == 0)
+			if (scenario.Grenades.Count == 0)
 			{
 				Console.WriteLine("[Executes] No grenades to setup.");
 				return;
@@ -25,7 +25,7 @@ namespace ExecutesPlugin.Managers
 
 			foreach(var grenade in scenario.Grenades[CsTeam.Terrorist])
 			{
-				if(grenade.Delay > 0.0f)
+				if (grenade.Delay > 0.0f)
 				{
 					Server.PrintToChatAll($"[Executes] Throwing {grenade.Name} with a delay of {grenade.Delay}");
 					_ = new CSSTimer(grenade.Delay, () => ThrowGrenade(grenade), TimerFlags.STOP_ON_MAPCHANGE);

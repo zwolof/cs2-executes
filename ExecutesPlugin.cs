@@ -73,7 +73,7 @@ namespace ExecutesPlugin
         private HookResult OnSmokeGrenadeProjectileCreate(DynamicHook hook)
 		{
 
-			if(!_IsEditMode) return HookResult.Continue;
+			if (!_IsEditMode) return HookResult.Continue;
 			
 			Server.PrintToChatAll("[Executes] smokegrenade_projectile created [Pre].");
 
@@ -306,7 +306,7 @@ namespace ExecutesPlugin
         {
             Console.WriteLine("[Executes] EventHandler::OnRoundPreStart");
 
-			if(Helpers.IsWarmup())
+			if (Helpers.IsWarmup())
 			{
 				Console.WriteLine("[Executes] Warmup detected, skipping.");
 				return HookResult.Continue;
@@ -331,7 +331,7 @@ namespace ExecutesPlugin
         {
             Console.WriteLine("[Executes] EventHandler::OnRoundStart");
 
-			if(Helpers.IsWarmup())
+			if (Helpers.IsWarmup())
 			{
 				Console.WriteLine("[Executes] Warmup detected, skipping.");
 				return HookResult.Continue;
