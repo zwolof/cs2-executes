@@ -491,10 +491,10 @@ namespace ExecutesPlugin
         {
 			var hasBombBeenAllocated = false;
         
-	        Console.WriteLine($"[Executes]Trying to loop valid active players.");
+	        Console.WriteLine($"[Executes] Trying to loop valid active players.");
 	        foreach (var player in _gameManager.QueueManager.ActivePlayers.Where(Helpers.IsValidPlayer))
 	        {
-		        Console.WriteLine($"[Executes][{player.PlayerName}] Adding timer for allocation...");
+		        Console.WriteLine($"[Executes] [{player.PlayerName}] Adding timer for allocation...");
 
 		        if (!Helpers.IsValidPlayer(player))
 		        {
@@ -510,18 +510,18 @@ namespace ExecutesPlugin
 		        {
 			        if (!Helpers.IsValidPlayer(player))
 			        {
-				        Console.WriteLine($"[Executes]Allocating weapons: Player is not valid.");
+				        Console.WriteLine($"[Executes] Allocating weapons: Player is not valid.");
 				        return;
 			        }
 
 			        if (player.Team == CsTeam.Terrorist && !hasBombBeenAllocated)
 			        {
 				        hasBombBeenAllocated = true;
-				        Console.WriteLine($"[Executes]Player is first T, allocating bomb.");
+				        Console.WriteLine($"[Executes] Player is first T, allocating bomb.");
 				        Helpers.GiveAndSwitchToBomb(player);
 			        }
 			        
-			        Console.WriteLine($"[Executes]Allocating...");
+			        Console.WriteLine($"[Executes] Allocating...");
 			        AllocationManager.Allocate(player);
 		        });
 	        }

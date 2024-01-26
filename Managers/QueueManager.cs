@@ -38,24 +38,24 @@ namespace ExecutesPlugin.Managers
 
         public HookResult PlayerJoinedTeam(CCSPlayerController player, CsTeam fromTeam, CsTeam toTeam)
         {
-            Console.WriteLine($"[Executes][{player.PlayerName}] PlayerTriedToJoinTeam called.");
+            Console.WriteLine($"[Executes] [{player.PlayerName}] PlayerTriedToJoinTeam called.");
 
             if (fromTeam == CsTeam.None && toTeam == CsTeam.Spectator)
             {
                 // This is called when a player first joins.
                 Console.WriteLine(
-                    $"[Executes][{player.PlayerName}] {fromTeam.ToString()} -> {toTeam.ToString()}.");
+                    $"[Executes] [{player.PlayerName}] {fromTeam.ToString()} -> {toTeam.ToString()}.");
                 return HookResult.Continue;
             }
 
-            Console.WriteLine($"[Executes][{player.PlayerName}] Checking ActivePlayers.");
+            Console.WriteLine($"[Executes] [{player.PlayerName}] Checking ActivePlayers.");
             if (ActivePlayers.Contains(player))
             {
-                Console.WriteLine($"[Executes][{player.PlayerName}] Player is an active player.");
+                Console.WriteLine($"[Executes] [{player.PlayerName}] Player is an active player.");
 
                 if (toTeam == CsTeam.Spectator)
                 {
-                    Console.WriteLine($"[Executes][{player.PlayerName}] Switching to spectator.");
+                    Console.WriteLine($"[Executes] [{player.PlayerName}] Switching to spectator.");
                     RemovePlayerFromQueues(player);
                     Helpers.CheckRoundDone();
                     return HookResult.Continue;
@@ -71,7 +71,7 @@ namespace ExecutesPlugin.Managers
                 )
                 {
                     Console.WriteLine(
-                        $"[Executes][{player.PlayerName}] player is not in round list for {toTeam}, switching to spectator.");
+                        $"[Executes] [{player.PlayerName}] player is not in round list for {toTeam}, switching to spectator.");
                     ActivePlayers.Remove(player);
                     QueuePlayers.Add(player);
 
@@ -85,29 +85,29 @@ namespace ExecutesPlugin.Managers
                 }
 
                 Console.WriteLine(
-                    $"[Executes][{player.PlayerName}] The player tried joining the team they're already on, or, there were not enough players so we don't care. Do nothing.");
+                    $"[Executes] [{player.PlayerName}] The player tried joining the team they're already on, or, there were not enough players so we don't care. Do nothing.");
                 Helpers.CheckRoundDone();
                 return HookResult.Handled;
             }
 
-            Console.WriteLine($"[Executes][{player.PlayerName}] Checking QueuePlayers.");
+            Console.WriteLine($"[Executes] [{player.PlayerName}] Checking QueuePlayers.");
             if (!QueuePlayers.Contains(player))
             {
                 if (Helpers.GetGameRules().WarmupPeriod && ActivePlayers.Count < _maxExecutesPlayers)
                 {
                     Console.WriteLine(
-                        $"[Executes][{player.PlayerName}] Not found, adding to ActivePlayers (because in warmup).");
+                        $"[Executes] [{player.PlayerName}] Not found, adding to ActivePlayers (because in warmup).");
                     ActivePlayers.Add(player);
                     return HookResult.Continue;
                 }
 
-                Console.WriteLine($"[Executes][{player.PlayerName}] Not found, adding to QueuePlayers.");
+                Console.WriteLine($"[Executes] [{player.PlayerName}] Not found, adding to QueuePlayers.");
                 player.PrintToChat($"[Executes] executes.queue.joined");
                 QueuePlayers.Add(player);
             }
             else
             {
-                Console.WriteLine($"[Executes][{player.PlayerName}] Already in Queue, do nothing.");
+                Console.WriteLine($"[Executes] [{player.PlayerName}] Already in Queue, do nothing.");
             }
 
             Helpers.CheckRoundDone();
@@ -122,7 +122,7 @@ namespace ExecutesPlugin.Managers
             if (disconnectedActivePlayers.Count > 0)
             {
                 Console.WriteLine(
-                    $"[Executes]Removing {disconnectedActivePlayers.Count} disconnected players from ActivePlayers.");
+                    $"[Executes] Removing {disconnectedActivePlayers.Count} disconnected players from ActivePlayers.");
                 ActivePlayers.RemoveWhere(player => disconnectedActivePlayers.Contains(player));
             }
 
@@ -132,17 +132,17 @@ namespace ExecutesPlugin.Managers
             if (disconnectedQueuePlayers.Count > 0)
             {
                 Console.WriteLine(
-                    $"[Executes]Removing {disconnectedQueuePlayers.Count} disconnected players from QueuePlayers.");
+                    $"[Executes] Removing {disconnectedQueuePlayers.Count} disconnected players from QueuePlayers.");
                 QueuePlayers.RemoveWhere(player => disconnectedQueuePlayers.Contains(player));
             }
         }
 
         private void HandleQueuePriority()
         {
-            Console.WriteLine($"[Executes]handling queue priority.");
+            Console.WriteLine($"[Executes] handling queue priority.");
             if (ActivePlayers.Count != _maxExecutesPlayers)
             {
-                Console.WriteLine($"[Executes]ActivePlayers.Count != _maxRetakesPlayers, returning.");
+                Console.WriteLine($"[Executes] ActivePlayers.Count != _maxRetakesPlayers, returning.");
                 return;
             }
 
@@ -151,7 +151,7 @@ namespace ExecutesPlugin.Managers
 
             if (vipQueuePlayers.Count <= 0)
             {
-                Console.WriteLine($"[Executes]No VIP players found in queue, returning.");
+                Console.WriteLine($"[Executes] No VIP players found in queue, returning.");
                 return;
             }
 
@@ -174,7 +174,7 @@ namespace ExecutesPlugin.Managers
                 if (nonVipActivePlayers.Count == 0)
                 {
                     Console.WriteLine(
-                        $"[Executes]No non-VIP players found in ActivePlayers, returning.");
+                        $"[Executes] No non-VIP players found in ActivePlayers, returning.");
                     break;
                 }
 
@@ -201,8 +201,8 @@ namespace ExecutesPlugin.Managers
             RemoveDisconnectedPlayers();
 
             Console.WriteLine(
-                $"[Executes]{_maxExecutesPlayers} max players, {ActivePlayers.Count} active players, {QueuePlayers.Count} players in queue.");
-            Console.WriteLine($"[Executes]players to add: {_maxExecutesPlayers - ActivePlayers.Count}");
+                $"[Executes] {_maxExecutesPlayers} max players, {ActivePlayers.Count} active players, {QueuePlayers.Count} players in queue.");
+            Console.WriteLine($"[Executes] players to add: {_maxExecutesPlayers - ActivePlayers.Count}");
             var playersToAdd = _maxExecutesPlayers - ActivePlayers.Count;
 
             if (playersToAdd > 0 && QueuePlayers.Count > 0)
@@ -257,45 +257,45 @@ namespace ExecutesPlugin.Managers
             if (!ActivePlayers.Any())
             {
                 Console.WriteLine(
-                    $"[Executes]ActivePlayers ({(isBefore ? "BEFORE" : "AFTER")}): No active players.");
+                    $"[Executes] ActivePlayers ({(isBefore ? "BEFORE" : "AFTER")}): No active players.");
             }
             else
             {
                 Console.WriteLine(
-                    $"[Executes]ActivePlayers ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", ActivePlayers.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
+                    $"[Executes] ActivePlayers ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", ActivePlayers.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
             }
 
             if (!QueuePlayers.Any())
             {
                 Console.WriteLine(
-                    $"[Executes]QueuePlayers ({(isBefore ? "BEFORE" : "AFTER")}): No players in the queue.");
+                    $"[Executes] QueuePlayers ({(isBefore ? "BEFORE" : "AFTER")}): No players in the queue.");
             }
             else
             {
                 Console.WriteLine(
-                    $"[Executes]QueuePlayers ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", QueuePlayers.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
+                    $"[Executes] QueuePlayers ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", QueuePlayers.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
             }
 
             if (!_roundTerrorists.Any())
             {
                 Console.WriteLine(
-                    $"[Executes]_roundTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): No players in the queue.");
+                    $"[Executes] _roundTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): No players in the queue.");
             }
             else
             {
                 Console.WriteLine(
-                    $"[Executes]_roundTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", _roundTerrorists.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
+                    $"[Executes] _roundTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", _roundTerrorists.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
             }
 
             if (!_roundCounterTerrorists.Any())
             {
                 Console.WriteLine(
-                    $"[Executes]_roundCounterTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): No players in the queue.");
+                    $"[Executes] _roundCounterTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): No players in the queue.");
             }
             else
             {
                 Console.WriteLine(
-                    $"[Executes]_roundCounterTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", _roundCounterTerrorists.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
+                    $"[Executes] _roundCounterTerrorists ({(isBefore ? "BEFORE" : "AFTER")}): {string.Join(", ", _roundCounterTerrorists.Where(Helpers.IsValidPlayer).Select(player => player.PlayerName))}");
             }
         }
 
