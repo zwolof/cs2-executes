@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
@@ -30,15 +29,13 @@ namespace ExecutesPlugin
         #endregion
 
         private readonly GameManager _gameManager;
-        private readonly QueueManager _queueManager;
         private readonly SpawnManager _spawnManager;
         private readonly GrenadeManager _grenadeManager;
 		public bool _IsEditMode = false;
 
-        public ExecutesPlugin(GameManager gameManager, QueueManager queueManager, SpawnManager spawnManager, GrenadeManager grenadeManager)
+        public ExecutesPlugin(GameManager gameManager, SpawnManager spawnManager, GrenadeManager grenadeManager)
         {
             _gameManager = gameManager;
-            _queueManager = queueManager;
             _spawnManager = spawnManager;
 			_grenadeManager = grenadeManager;
         }
@@ -111,7 +108,11 @@ namespace ExecutesPlugin
             if (!loaded)
             {
                 Console.WriteLine("[Executes] Failed to load spawns.");
+                return;
             }
+            
+            // TODO: Implement DI for this:
+            
         }
 
 		[ConsoleCommand("css_debug", "Reloads the scenarios from the map config")]
@@ -119,7 +120,7 @@ namespace ExecutesPlugin
 		{
 			_IsEditMode = !_IsEditMode;
 
-            player.ChatMessage($"Debug mode is now {_IsEditMode}");
+            player?.ChatMessage($"Debug mode is now {_IsEditMode}");
 		}
 
 		[ConsoleCommand("css_reloadscenarios", "Reloads the scenarios from the map config")]
@@ -257,10 +258,14 @@ namespace ExecutesPlugin
                 return HookResult.Continue;
             }
 
+            player.TeamNum = (int)CsTeam.Spectator;
             player.ForceTeamTime = 3600.0f;
 
-            // Add the player to the queue
-            _queueManager._queue.Enqueue(player);            
+            // Create a timer to do this as it would occasionally fire too early.
+            AddTimer(1.0f, () => player.ExecuteClientCommand("teammenu"));
+
+            // TODO: Add the player to the queue
+            // _queueManager._queue.Enqueue(player);            
 
             return HookResult.Continue;
         }
@@ -278,8 +283,13 @@ namespace ExecutesPlugin
                 return HookResult.Continue;
             }
 
-            // Remove the player from the queue if they disconnect
-            _queueManager._queue.Drop(player);
+            if (_gameManager == null)
+	        {
+	            Console.WriteLine($"[Executes] Game manager not loaded.");
+	            return HookResult.Continue;
+	        }
+
+	        _gameManager.QueueManager.RemovePlayerFromQueues(player);
 
             return HookResult.Continue;
         }

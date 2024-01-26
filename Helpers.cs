@@ -1,10 +1,11 @@
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Modules.Entities.Constants;
 using CounterStrikeSharp.API.Modules.Utils;
 
 namespace ExecutesPlugin
 {
-	public class Helpers
+	public static class Helpers
 	{
 		public static CCSGameRules GetGameRules()
 		{
@@ -28,6 +29,66 @@ namespace ExecutesPlugin
 			}
 
 			return players.Count(x => x.Team == team);
+		}
+		
+		public static void CheckRoundDone()
+		{
+			var tHumanCount = GetCurrentNumPlayers(CsTeam.Terrorist);
+			var ctHumanCount = GetCurrentNumPlayers(CsTeam.CounterTerrorist);
+
+			if (tHumanCount == 0 || ctHumanCount == 0)
+			{
+				TerminateRound(RoundEndReason.TerroristsWin);
+			}
+		}
+		
+		public static void TerminateRound(RoundEndReason roundEndReason)
+		{
+			// TODO: once this stops crashing on windows use it there too
+			if (Environment.OSVersion.Platform == PlatformID.Unix)
+			{
+				GetGameRules().TerminateRound(0.1f, roundEndReason);
+			}
+			else
+			{
+				Console.WriteLine(
+					"[Executes] Windows server detected (Can't use TerminateRound) trying to kill all alive players instead.");
+				var alivePlayers = Utilities.GetPlayers()
+					.Where(IsValidPlayer)
+					.Where(player => player.PawnIsAlive)
+					.ToList();
+
+				foreach (var player in alivePlayers)
+				{
+					player.CommitSuicide(false, true);
+				}
+			}
+		}
+		
+		public static bool IsValidPlayer(CCSPlayerController? player)
+		{
+			return player != null && player.IsValid;
+		}
+
+		public static bool IsPlayerConnected(CCSPlayerController player)
+		{
+			return player.Connected == PlayerConnectedState.PlayerConnected;
+		}
+		
+		public static int GetCurrentNumPlayers(CsTeam? csTeam = null)
+		{
+			var players = 0;
+
+			foreach (var player in Utilities.GetPlayers()
+				         .Where(player => IsValidPlayer(player) && IsPlayerConnected(player)))
+			{
+				if (csTeam == null || player.Team == csTeam)
+				{
+					players++;
+				}
+			}
+
+			return players;
 		}
 
 		public static Dictionary<CsTeam, int> GetPlayerCountDict()

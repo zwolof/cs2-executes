@@ -1,6 +1,8 @@
 using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Models;
 using System.Text.Json;
+using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core;
 
 namespace ExecutesPlugin.Managers
 {
@@ -8,8 +10,13 @@ namespace ExecutesPlugin.Managers
     {
         private MapConfig _mapConfig = new();
         private Scenario? _currentScenario;
-
-        public GameManager() { }
+        
+        public GameManager(QueueManager queueManager, int? roundsToScramble, bool? isScrambleEnabled)
+        {
+            QueueManager = queueManager;
+            _consecutiveRoundWinsToScramble = roundsToScramble ?? 5;
+            _isScrambleEnabled = isScrambleEnabled ?? true;
+        }
 
         public bool LoadSpawns(string moduleDirectory, string map)
         {
@@ -41,7 +48,7 @@ namespace ExecutesPlugin.Managers
             ParseMapConfigIdReferences(_mapConfig);
 
             Console.WriteLine($"-------------------------- Loaded {_mapConfig.Scenarios?.Count} executes config.");
-            
+
             return true;
         }
 
@@ -60,32 +67,34 @@ namespace ExecutesPlugin.Managers
 
             var random = Helpers.GetRandomInt(0, validScenarios!.Count);
             var current = validScenarios[random];
-            
+
             _currentScenario = current;
             return current;
         }
 
         public void ParseMapConfigIdReferences(MapConfig mapConfig)
         {
-			Console.WriteLine($"[Executes] Parsing map config id references for {mapConfig.Scenarios.Count} scenarios.");
-			
+            Console.WriteLine(
+                $"[Executes] Parsing map config id references for {mapConfig.Scenarios.Count} scenarios.");
+
             foreach (var scenario in mapConfig.Scenarios)
             {
-				Console.WriteLine($"[Executes] Parsing scenario \"{scenario.Name}\" -> SpawnIds: \"{scenario.SpawnIds.Count}\"");
+                Console.WriteLine(
+                    $"[Executes] Parsing scenario \"{scenario.Name}\" -> SpawnIds: \"{scenario.SpawnIds.Count}\"");
 
-				scenario.Spawns[CsTeam.CounterTerrorist] = new List<Spawn>();
-				scenario.Spawns[CsTeam.Terrorist] = new List<Spawn>();
+                scenario.Spawns[CsTeam.CounterTerrorist] = new List<Spawn>();
+                scenario.Spawns[CsTeam.Terrorist] = new List<Spawn>();
 
                 foreach (var spawnId in scenario.SpawnIds)
                 {
                     var spawn = mapConfig.Spawns.First(x => x.Id == spawnId);
-                    
+
                     // TODO: Figure out why the IDE thinks spawn is never null
                     if (spawn != null)
                     {
                         scenario.Spawns[spawn.Team].Add(spawn);
 
-						Console.WriteLine($"[Executes] Added spawn \"{spawn.Id}\" to \"{spawn.Team}\"");
+                        Console.WriteLine($"[Executes] Added spawn \"{spawn.Id}\" to \"{spawn.Team}\"");
                     }
                     else
                     {
@@ -93,19 +102,19 @@ namespace ExecutesPlugin.Managers
                     }
                 }
 
-				scenario.Grenades[CsTeam.CounterTerrorist] = new List<Grenade>();
-				scenario.Grenades[CsTeam.Terrorist] = new List<Grenade>();
-                
+                scenario.Grenades[CsTeam.CounterTerrorist] = new List<Grenade>();
+                scenario.Grenades[CsTeam.Terrorist] = new List<Grenade>();
+
                 foreach (var grenadeId in scenario.GrenadeIds)
                 {
                     var grenade = mapConfig.Grenades.First(x => x.Id == grenadeId);
-                    
+
                     // TODO: Figure out why the IDE thinks grenade is never null
                     if (grenade != null)
                     {
                         scenario.Grenades[grenade.Team].Add(grenade);
 
-						Console.WriteLine($"[Executes] Added grenade \"{grenade.Name}\" to \"{grenade.Team}\"");
+                        Console.WriteLine($"[Executes] Added grenade \"{grenade.Name}\" to \"{grenade.Team}\"");
                     }
                     else
                     {
@@ -119,6 +128,218 @@ namespace ExecutesPlugin.Managers
         {
             // TODO: Implement this properly
             return _currentScenario ?? throw new Exception("No current scenario");
+        }
+
+        private Dictionary<int, int> _playerRoundScores = new();
+        public readonly QueueManager QueueManager;
+        private readonly int _consecutiveRoundWinsToScramble;
+        private readonly bool _isScrambleEnabled;
+
+        public const int ScoreForKill = 50;
+        public const int ScoreForAssist = 25;
+        public const int ScoreForDefuse = 50;
+
+        private bool _scrambleNextRound;
+
+        public void ScrambleNextRound(CCSPlayerController? admin = null)
+        {
+            _scrambleNextRound = true;
+            Server.PrintToChatAll(
+                $"[Executes] retakes.teams.admin_scramble {admin?.PlayerName ?? "The server owner"}");
+        }
+
+        private void ScrambleTeams()
+        {
+            var shuffledActivePlayers = Helpers.Shuffle(QueueManager.ActivePlayers);
+
+            var newTerrorists = shuffledActivePlayers.Take(QueueManager.GetTargetNumTerrorists()).ToList();
+            var newCounterTerrorists = shuffledActivePlayers.Except(newTerrorists).ToList();
+
+            SetTeams(newTerrorists, newCounterTerrorists);
+        }
+
+        public void ResetPlayerScores()
+        {
+            _playerRoundScores = new Dictionary<int, int>();
+        }
+
+        public void AddScore(CCSPlayerController player, int score)
+        {
+            if (!Helpers.IsValidPlayer(player) || player.UserId == null)
+            {
+                return;
+            }
+
+            var playerId = (int)player.UserId;
+
+            if (!_playerRoundScores.TryAdd(playerId, score))
+            {
+                // Add to the player's existing score
+                _playerRoundScores[playerId] += score;
+            }
+        }
+
+        private int _consecutiveRoundsWon;
+
+        public void TerroristRoundWin()
+        {
+            _consecutiveRoundsWon++;
+
+            if (_consecutiveRoundsWon == _consecutiveRoundWinsToScramble)
+            {
+                Server.PrintToChatAll(
+                    $"[Executes] retakes.teams.scramble {_consecutiveRoundWinsToScramble}");
+
+                _consecutiveRoundsWon = 0;
+                ScrambleTeams();
+            }
+            else if (_consecutiveRoundsWon >= 3)
+            {
+                if (_isScrambleEnabled)
+                {
+                    Server.PrintToChatAll(
+                        $"[Executes] retakes.teams.almost_scramble {_consecutiveRoundsWon} {_consecutiveRoundWinsToScramble - _consecutiveRoundsWon}");
+                }
+                else
+                {
+                    Server.PrintToChatAll(
+                        $"[Executes] retakes.teams.win_streak {_consecutiveRoundsWon}");
+                }
+            }
+            else if (_scrambleNextRound)
+            {
+                _scrambleNextRound = false;
+                _consecutiveRoundsWon = 0;
+                ScrambleTeams();
+            }
+        }
+
+        public void CounterTerroristRoundWin()
+        {
+            if (_consecutiveRoundsWon >= 3)
+            {
+                Server.PrintToChatAll(
+                    $"[Executes] retakes.teams.win_streak_over {_consecutiveRoundsWon}");
+            }
+
+            _consecutiveRoundsWon = 0;
+
+            var targetNumTerrorists = QueueManager.GetTargetNumTerrorists();
+            var sortedCounterTerroristPlayers = GetSortedActivePlayers(CsTeam.CounterTerrorist);
+
+            // Ensure that the players with the scores are set as new terrorists first.
+            var newTerrorists = sortedCounterTerroristPlayers.Where(player => player.Score > 0)
+                .Take(targetNumTerrorists)
+                .ToList();
+
+            if (newTerrorists.Count < targetNumTerrorists)
+            {
+                // Shuffle the other players with 0 score to ensure it's random who is swapped
+                var playersLeft = Helpers.Shuffle(sortedCounterTerroristPlayers.Except(newTerrorists).ToList());
+                newTerrorists.AddRange(playersLeft.Take(targetNumTerrorists - newTerrorists.Count));
+            }
+
+            if (newTerrorists.Count < targetNumTerrorists)
+            {
+                // If we still don't have enough terrorists
+                newTerrorists.AddRange(
+                    GetSortedActivePlayers(CsTeam.Terrorist)
+                        .Take(targetNumTerrorists - newTerrorists.Count)
+                );
+            }
+
+            newTerrorists.AddRange(sortedCounterTerroristPlayers.Where(player => player.Score > 0)
+                .Take(targetNumTerrorists - newTerrorists.Count).ToList());
+
+            var newCounterTerrorists = QueueManager.ActivePlayers.Except(newTerrorists).ToList();
+
+            SetTeams(newTerrorists, newCounterTerrorists);
+        }
+
+        public void BalanceTeams()
+        {
+            List<CCSPlayerController> newTerrorists = new();
+            List<CCSPlayerController> newCounterTerrorists = new();
+
+            var currentNumTerrorist = Helpers.GetCurrentNumPlayers(CsTeam.Terrorist);
+            var numTerroristsNeeded = QueueManager.GetTargetNumTerrorists() - currentNumTerrorist;
+
+            if (numTerroristsNeeded > 0)
+            {
+                var sortedCounterTerroristPlayers = GetSortedActivePlayers(CsTeam.CounterTerrorist);
+
+                newTerrorists = sortedCounterTerroristPlayers.Where(player => player.Score > 0)
+                    .Take(numTerroristsNeeded).ToList();
+
+                if (newTerrorists.Count < numTerroristsNeeded)
+                {
+                    var playersLeft = Helpers.Shuffle(sortedCounterTerroristPlayers.Except(newTerrorists).ToList());
+                    newTerrorists.AddRange(playersLeft.Take(numTerroristsNeeded - newTerrorists.Count));
+                }
+            }
+
+            var currentNumCounterTerroristAfterBalance = Helpers.GetCurrentNumPlayers(CsTeam.CounterTerrorist);
+            var numCounterTerroristsNeeded =
+                QueueManager.GetTargetNumCounterTerrorists() - currentNumCounterTerroristAfterBalance;
+
+            if (numCounterTerroristsNeeded > 0)
+            {
+                var terroristsWithZeroScore = QueueManager.ActivePlayers
+                    .Where(player =>
+                        Helpers.IsValidPlayer(player)
+                        && player.Team == CsTeam.Terrorist
+                        && _playerRoundScores.GetValueOrDefault((int)player.UserId!, 0) == 0
+                    )
+                    .Except(newTerrorists)
+                    .ToList();
+
+                // Shuffle to avoid repetitive swapping of the same players
+                newCounterTerrorists =
+                    Helpers.Shuffle(terroristsWithZeroScore).Take(numCounterTerroristsNeeded).ToList();
+
+                if (numCounterTerroristsNeeded > newCounterTerrorists.Count)
+                {
+                    // For remaining excess terrorists, move the ones with the lowest score to CT
+                    newCounterTerrorists.AddRange(
+                        QueueManager.ActivePlayers
+                            .Except(newCounterTerrorists)
+                            .Except(newTerrorists)
+                            .Where(player => Helpers.IsValidPlayer(player) && player.Team == CsTeam.Terrorist)
+                            .OrderBy(player => _playerRoundScores.GetValueOrDefault((int)player.UserId!, 0))
+                            .Take(numTerroristsNeeded - newCounterTerrorists.Count)
+                            .ToList()
+                    );
+                }
+            }
+
+            SetTeams(newTerrorists, newCounterTerrorists);
+        }
+
+        private List<CCSPlayerController> GetSortedActivePlayers(CsTeam? team = null)
+        {
+            return QueueManager.ActivePlayers
+                .Where(Helpers.IsValidPlayer)
+                .Where(player => team == null || player.Team == team)
+                .OrderByDescending(player => _playerRoundScores.GetValueOrDefault((int)player.UserId!, 0))
+                .ToList();
+        }
+
+        private void SetTeams(List<CCSPlayerController>? terrorists, List<CCSPlayerController>? counterTerrorists)
+        {
+            terrorists ??= new List<CCSPlayerController>();
+            counterTerrorists ??= new List<CCSPlayerController>();
+
+            foreach (var player in QueueManager.ActivePlayers.Where(Helpers.IsValidPlayer))
+            {
+                if (terrorists.Contains(player))
+                {
+                    player.SwitchTeam(CsTeam.Terrorist);
+                }
+                else if (counterTerrorists.Contains(player))
+                {
+                    player.SwitchTeam(CsTeam.CounterTerrorist);
+                }
+            }
         }
     }
 }
