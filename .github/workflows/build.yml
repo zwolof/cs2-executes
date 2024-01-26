@@ -3,14 +3,14 @@ name: Build the plugin
 on:
   push:
     branches: [ "master" ]
-    paths:
-      - '**.cs'
-      - '**.csproj'
+#    paths:
+#      - '**.cs'
+#      - '**.csproj'
   pull_request:
     branches: [ "master" ]
-    paths:
-      - '**.cs'
-      - '**.csproj'
+#    paths:
+#      - '**.cs'
+#      - '**.csproj'
   release:
     types:
       - created
@@ -29,7 +29,7 @@ jobs:
         run: dotnet build
       - name: Create output directory
         run: |
-          mkdir -p output/RetakesPlugin
+          mkdir -p output/ExecutesPlugin
           mv ./bin/Debug/net7.0/ExecutesPlugin.dll output/ExecutesPlugin/
           mv ./bin/Debug/net7.0/ExecutesPlugin.pdb output/ExecutesPlugin/
           mv ./map_configs output/ExecutesPlugin/
