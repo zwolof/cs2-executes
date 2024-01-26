@@ -7,7 +7,9 @@ using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Entities;
 using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
+using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Enums;
 using ExecutesPlugin.Managers;
@@ -573,12 +575,24 @@ namespace ExecutesPlugin
 			if(currentScenario.Bombsite == EBombsite.UNKNOWN)
 			{
 				ChatHelpers.ChatMessageAll(currentScenario.Description, CsTeam.Terrorist);
-				ChatHelpers.ChatMessageAll($"Test: {currentScenario.Name}");
+				// ChatHelpers.ChatMessageAll($"Test: {currentScenario.Name}");
 			}
 			else 
 			{
 				var description = currentScenario.Description.Replace("{{site}}", $"\u0004{currentScenario.Bombsite}\u0001");
 				ChatHelpers.ChatMessageAll(description, CsTeam.Terrorist);
+
+				AddTimer(5.0f, () =>
+				{
+					var CTPlayers = Utilities.GetPlayers().Where(x => x.Team == CsTeam.CounterTerrorist).ToList();
+					var randPlayer = CTPlayers[Helpers.GetRandomInt(0, CTPlayers.Count)];
+
+					if(randPlayer == null)
+					{
+						return;
+					}
+					randPlayer.ExecuteClientCommand($"say_team I think it's \u0004{currentScenario.Bombsite}\u0001.");
+				}, TimerFlags.STOP_ON_MAPCHANGE);
 			}
 
             
