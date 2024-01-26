@@ -1,4 +1,5 @@
 ﻿using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Modules.Entities;
 using CounterStrikeSharp.API.Modules.Entities.Constants;
 using CounterStrikeSharp.API.Modules.Utils;
 
@@ -60,7 +61,7 @@ public static class AllocationManager
 
     private static void AllocateGrenades(CCSPlayerController player)
     {
-        switch (new Random().Next(3))
+        switch (new Random().Next(4))
         {
             case 0:
                 player.GiveNamedItem(CsItem.Flashbang);
@@ -71,9 +72,13 @@ public static class AllocationManager
             case 2:
                 player.GiveNamedItem(player.Team == CsTeam.Terrorist ? CsItem.Molotov : CsItem.Incendiary);
                 break;
-            // case 3:
-            //     player.GiveNamedItem(CsItem.SmokeGrenade);
-            //     break;
+            case 3:
+                // Only allocate CTs smoke grenades.
+                if (player.Team == CsTeam.CounterTerrorist)
+                {
+                    player.GiveNamedItem(CsItem.SmokeGrenade);
+                }
+                break;
         }
     }
 }
