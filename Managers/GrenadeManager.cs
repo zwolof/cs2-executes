@@ -5,7 +5,9 @@ using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Enums;
 using ExecutesPlugin.Memory;
 using ExecutesPlugin.Models;
+using TimerFlags = CounterStrikeSharp.API.Modules.Timers.TimerFlags;
 using Vector = CounterStrikeSharp.API.Modules.Utils.Vector;
+using CSSTimer = CounterStrikeSharp.API.Modules.Timers.Timer;
 
 namespace ExecutesPlugin.Managers
 {
@@ -23,6 +25,12 @@ namespace ExecutesPlugin.Managers
 
 			foreach(var grenade in scenario.Grenades[CsTeam.Terrorist])
 			{
+				if(grenade.Delay > 0.0f)
+				{
+					Server.PrintToChatAll($"[Executes] Throwing {grenade.Name} with a delay of {grenade.Delay}");
+					_ = new CSSTimer(grenade.Delay, () => ThrowGrenade(grenade), TimerFlags.STOP_ON_MAPCHANGE);
+					continue;
+				}
 				ThrowGrenade(grenade);
 			}
 		}

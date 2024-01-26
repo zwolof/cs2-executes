@@ -75,6 +75,9 @@ namespace ExecutesPlugin
 		// )
         private HookResult OnSmokeGrenadeProjectileCreate(DynamicHook hook)
 		{
+
+			if(!_IsEditMode) return HookResult.Continue;
+			
 			Server.PrintToChatAll("[Executes] smokegrenade_projectile created [Pre].");
 
 			var position = hook.GetParam<IntPtr>(0);
@@ -110,6 +113,14 @@ namespace ExecutesPlugin
                 Console.WriteLine("[Executes] Failed to load spawns.");
             }
         }
+
+		[ConsoleCommand("css_debug", "Reloads the scenarios from the map config")]
+		public void OnToggleDebugCommand(CCSPlayerController? player, CommandInfo commandInfo)
+		{
+			_IsEditMode = !_IsEditMode;
+
+            player.ChatMessage($"Debug mode is now {_IsEditMode}");
+		}
 
 		[ConsoleCommand("css_reloadscenarios", "Reloads the scenarios from the map config")]
 		public void ReloadScenarios(CCSPlayerController? player, CommandInfo commandInfo)
