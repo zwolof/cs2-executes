@@ -5,10 +5,10 @@
 			"Description": "You are alone against 2 CTs, try to plant the bomb at {{site}} and win the round!",
 			"Bombsite": 0,
 			"RoundTime": 55,
-			"MinPlayerCount": 2,
+			"MinPlayerCount": 3,
 			"SpawnIds": [
 				1, 2, 3,
-				5, 8, 9
+				5, 9
 			],
 			"GrenadeIds": [2]
 		},
@@ -20,7 +20,7 @@
 			"MinPlayerCount": 2,
 			"SpawnIds": [
 				1, 2, 3, 4, 20,
-				5, 7, 8, 9, 18
+				5, 7, 9, 18
 			],
 			"GrenadeIds": [
 				1, 2, 4, 12, 13
