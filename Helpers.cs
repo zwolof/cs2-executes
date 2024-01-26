@@ -127,6 +127,24 @@ namespace ExecutesPlugin
 
 			Server.ExecuteCommand("mp_restartgame 1");
 		}
+		
+		public static void GiveAndSwitchToBomb(CCSPlayerController player)
+		{
+			player.GiveNamedItem(CsItem.Bomb);
+			NativeAPI.IssueClientCommand((int)player.UserId!, "slot5");
+		}
+
+		public static void RemoveHelmetAndHeavyArmour(CCSPlayerController player)
+		{
+			if (player.PlayerPawn.Value == null || player.PlayerPawn.Value.ItemServices == null)
+			{
+				return;
+			}
+
+			var itemServices = new CCSPlayer_ItemServices(player.PlayerPawn.Value.ItemServices.Handle);
+			itemServices.HasHelmet = false;
+			itemServices.HasHeavyArmor = false;
+		}
 
 		public static List<T> Shuffle<T>(IEnumerable<T> list)
 		{
