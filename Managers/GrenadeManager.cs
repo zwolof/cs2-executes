@@ -1,13 +1,11 @@
-using System.Numerics;
 using CounterStrikeSharp.API;
-using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Modules.Cvars;
 using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Enums;
 using ExecutesPlugin.Memory;
 using ExecutesPlugin.Models;
 using TimerFlags = CounterStrikeSharp.API.Modules.Timers.TimerFlags;
-using Vector = CounterStrikeSharp.API.Modules.Utils.Vector;
-using CSSTimer = CounterStrikeSharp.API.Modules.Timers.Timer;
+using Timer = CounterStrikeSharp.API.Modules.Timers.Timer;
 
 namespace ExecutesPlugin.Managers
 {
@@ -23,15 +21,21 @@ namespace ExecutesPlugin.Managers
 				return;
 			}
 
+			var freezeTimeDuration = 0;
+			var freezeTime = ConVar.Find("mp_freezetime");
+			if (freezeTime != null)
+			{
+				freezeTimeDuration = freezeTime.GetPrimitiveValue<int>();
+			}
+			else
+			{
+				Console.WriteLine("[Executes] mp_freezetime not found.");
+			}
+
 			foreach(var grenade in scenario.Grenades[CsTeam.Terrorist])
 			{
-				if (grenade.Delay > 0.0f)
-				{
-					Server.PrintToChatAll($"[Executes] Throwing {grenade.Name} with a delay of {grenade.Delay}");
-					_ = new CSSTimer(grenade.Delay, () => ThrowGrenade(grenade), TimerFlags.STOP_ON_MAPCHANGE);
-					continue;
-				}
-				ThrowGrenade(grenade);
+				Server.PrintToChatAll($"[Executes] Throwing {grenade.Name} with a delay of {grenade.Delay}");
+				_ = new Timer(freezeTimeDuration + grenade.Delay, () => ThrowGrenade(grenade), TimerFlags.STOP_ON_MAPCHANGE);
 			}
 		}
 
