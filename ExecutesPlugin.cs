@@ -569,8 +569,18 @@ namespace ExecutesPlugin
             _spawnManager.SetupSpawns(currentScenario);
             _grenadeManager.SetupGrenades(currentScenario);
 
-			var description = currentScenario.Description.Replace("{{site}}", $"\u0004{currentScenario.Bombsite}\u0001");
-			ChatHelpers.ChatMessageAll(description, CsTeam.Terrorist);
+
+			if(currentScenario.Bombsite == EBombsite.UNKNOWN)
+			{
+				ChatHelpers.ChatMessageAll(currentScenario.Description, CsTeam.Terrorist);
+				ChatHelpers.ChatMessageAll($"Test: {currentScenario.Name}");
+			}
+			else 
+			{
+				var description = currentScenario.Description.Replace("{{site}}", $"\u0004{currentScenario.Bombsite}\u0001");
+				ChatHelpers.ChatMessageAll(description, CsTeam.Terrorist);
+			}
+
             
             return HookResult.Continue;
         }

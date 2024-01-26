@@ -77,6 +77,29 @@ namespace ExecutesPlugin.Managers
                 return null;
             }
 
+			// If we find a scenario that has less spawns than active players, try again
+
+			var players = Utilities.GetPlayers();
+
+
+			foreach (var scenario in validScenarios)
+			{
+				var totalSpawnCount = (scenario.Spawns[CsTeam.Terrorist].Count + scenario.Spawns[CsTeam.CounterTerrorist].Count);
+
+				if (totalSpawnCount < _queueManager.ActivePlayers.Count)
+				{
+					Console.WriteLine($"[Executes] Skipping \"{scenario.Name}\" because it has less spawns than players.");
+					validScenarios.Remove(scenario);
+				}
+			}
+
+			if(validScenarios.Count == 0)
+			{
+				Console.WriteLine($"[Executes] No valid scenarios found.");
+				_currentScenario = null;
+				return null;
+			}
+
             var random = Helpers.GetRandomInt(0, validScenarios!.Count);
             var current = validScenarios[random];
 
