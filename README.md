@@ -13,7 +13,7 @@ If you appreciate the project then please take the time to star the repository ð
 - [ ] Ability to add spawns
 - [x] Fallback weapon allocation
 - [ ] Implement lurker spawns
-- [ ]
+- [ ] Implement Molotovs and Flashbangs
 
 ## Requirements
 
