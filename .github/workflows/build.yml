@@ -1,0 +1,90 @@
+name: Build the plugin
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - '**.cs'
+      - '**.csproj'
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - '**.cs'
+      - '**.csproj'
+  release:
+    types:
+      - created
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      - name: Build
+        run: dotnet build
+      - name: Create output directory
+        run: |
+          mkdir -p output/RetakesPlugin
+          mv ./bin/Debug/net7.0/ExecutesPlugin.dll output/ExecutesPlugin/
+          mv ./bin/Debug/net7.0/ExecutesPlugin.pdb output/ExecutesPlugin/
+          mv ./map_configs output/ExecutesPlugin/
+#          mv ./lang output/ExecutesPlugin/
+      - name: Copy output (no map configs)
+        run: |
+          cp -r output/ output-no-map-configs/
+          rm -rf output-no-map-configs/ExecutesPlugin/map_config
+      - name: Publish artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ExecutesPlugin-${{ github.sha }}
+          path: output
+      - name: Publish artifact (no map configs)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ExecutesPlugin-${{ github.sha }}-no-map-configs
+          path: output-no-map-configs
+  
+  release:
+    needs: build
+    permissions: write-all
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ExecutesPlugin-${{ github.sha }}
+      - name: Create release assets
+        run: |
+          zip -r ExecutesPlugin-${{ github.sha }}.zip ./ExecutesPlugin
+          rm -rf ./ExecutesPlugin/map_config
+          zip -r ExecutesPlugin-${{ github.sha }}-no-map-configs.zip ./ExecutesPlugin
+      - name: Get release info
+        run: |
+          RELEASE_INFO=$(curl -sH 'Accept: application/vnd.github.v3+json' https://api.github.com/repos/${{ github.repository }}/releases)
+          export UPLOAD_URL=$(echo $RELEASE_INFO | jq -r ".[] | select(.tag_name == \"${{ github.event.release.tag_name }}\").upload_url")
+          echo "UPLOAD_URL=$UPLOAD_URL" >> $GITHUB_ENV
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ env.UPLOAD_URL }}
+          asset_path: ./ExecutesPlugin-${{ github.sha }}.zip
+          asset_name: "cs2-retakes-${{ github.event.release.tag_name }}.zip"
+          asset_content_type: application/zip
+      - name: Upload release asset (no map configs)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ env.UPLOAD_URL }}
+          asset_path: ./ExecutesPlugin-${{ github.sha }}-no-map-configs.zip
+          asset_name: "cs2-retakes-${{ github.event.release.tag_name }}-no-map-configs.zip"
+          asset_content_type: application/zip
