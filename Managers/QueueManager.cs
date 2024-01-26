@@ -43,8 +43,7 @@ namespace ExecutesPlugin.Managers
             if (fromTeam == CsTeam.None && toTeam == CsTeam.Spectator)
             {
                 // This is called when a player first joins.
-                Console.WriteLine(
-                    $"[Executes] [{player.PlayerName}] {fromTeam.ToString()} -> {toTeam.ToString()}.");
+                Console.WriteLine($"[Executes] [{player.PlayerName}] {fromTeam.ToString()} -> {toTeam.ToString()}.");
                 return HookResult.Continue;
             }
 
@@ -70,8 +69,7 @@ namespace ExecutesPlugin.Managers
                     )
                 )
                 {
-                    Console.WriteLine(
-                        $"[Executes] [{player.PlayerName}] player is not in round list for {toTeam}, switching to spectator.");
+                    Console.WriteLine($"[Executes] [{player.PlayerName}] player is not in round list for {toTeam}, switching to spectator.");
                     ActivePlayers.Remove(player);
                     QueuePlayers.Add(player);
 
@@ -84,19 +82,18 @@ namespace ExecutesPlugin.Managers
                     return HookResult.Handled;
                 }
 
-                Console.WriteLine(
-                    $"[Executes] [{player.PlayerName}] The player tried joining the team they're already on, or, there were not enough players so we don't care. Do nothing.");
+                Console.WriteLine($"[Executes] [{player.PlayerName}] The player tried joining the team they're already on, or, there were not enough players so we don't care. Do nothing.");
                 Helpers.CheckRoundDone();
                 return HookResult.Handled;
             }
 
             Console.WriteLine($"[Executes] [{player.PlayerName}] Checking QueuePlayers.");
+
             if (!QueuePlayers.Contains(player))
             {
                 if (Helpers.GetGameRules().WarmupPeriod && ActivePlayers.Count < _maxExecutesPlayers)
                 {
-                    Console.WriteLine(
-                        $"[Executes] [{player.PlayerName}] Not found, adding to ActivePlayers (because in warmup).");
+                    Console.WriteLine($"[Executes] [{player.PlayerName}] Not found, adding to ActivePlayers (because in warmup).");
                     ActivePlayers.Add(player);
                     return HookResult.Continue;
                 }
@@ -121,18 +118,17 @@ namespace ExecutesPlugin.Managers
 
             if (disconnectedActivePlayers.Count > 0)
             {
-                Console.WriteLine(
-                    $"[Executes] Removing {disconnectedActivePlayers.Count} disconnected players from ActivePlayers.");
+                Console.WriteLine($"[Executes] Removing {disconnectedActivePlayers.Count} disconnected players from ActivePlayers.");
                 ActivePlayers.RemoveWhere(player => disconnectedActivePlayers.Contains(player));
             }
 
             var disconnectedQueuePlayers = QueuePlayers
-                .Where(player => !Helpers.IsValidPlayer(player) || !Helpers.IsPlayerConnected(player)).ToList();
+                .Where(player => !Helpers.IsValidPlayer(player) || !Helpers.IsPlayerConnected(player))
+				.ToList();
 
             if (disconnectedQueuePlayers.Count > 0)
             {
-                Console.WriteLine(
-                    $"[Executes] Removing {disconnectedQueuePlayers.Count} disconnected players from QueuePlayers.");
+                Console.WriteLine($"[Executes] Removing {disconnectedQueuePlayers.Count} disconnected players from QueuePlayers.");
                 QueuePlayers.RemoveWhere(player => disconnectedQueuePlayers.Contains(player));
             }
         }
@@ -147,7 +143,8 @@ namespace ExecutesPlugin.Managers
             }
 
             var vipQueuePlayers = QueuePlayers
-                .Where(player => AdminManager.PlayerHasPermissions(player, _queuePriorityFlag)).ToList();
+                .Where(player => AdminManager.PlayerHasPermissions(player, _queuePriorityFlag))
+				.ToList();
 
             if (vipQueuePlayers.Count <= 0)
             {
@@ -173,8 +170,7 @@ namespace ExecutesPlugin.Managers
 
                 if (nonVipActivePlayers.Count == 0)
                 {
-                    Console.WriteLine(
-                        $"[Executes] No non-VIP players found in ActivePlayers, returning.");
+                    Console.WriteLine($"[Executes] No non-VIP players found in ActivePlayers, returning.");
                     break;
                 }
 
@@ -184,15 +180,13 @@ namespace ExecutesPlugin.Managers
                 nonVipActivePlayer.ChangeTeam(CsTeam.Spectator);
                 ActivePlayers.Remove(nonVipActivePlayer);
                 QueuePlayers.Add(nonVipActivePlayer);
-                nonVipActivePlayer.PrintToChat(
-                    $"[Executes] queue.replaced_by_vip {vipQueuePlayer.PlayerName}");
+                nonVipActivePlayer.PrintToChat($"[Executes] queue.replaced_by_vip {vipQueuePlayer.PlayerName}");
 
                 // Add the new VIP player to ActivePlayers and remove them from QueuePlayers
                 ActivePlayers.Add(vipQueuePlayer);
                 QueuePlayers.Remove(vipQueuePlayer);
                 vipQueuePlayer.ChangeTeam(CsTeam.CounterTerrorist);
-                vipQueuePlayer.PrintToChat(
-                    $"[Executes] queue.vip_took_place {nonVipActivePlayer.PlayerName}");
+                vipQueuePlayer.PrintToChat($"[Executes] queue.vip_took_place {nonVipActivePlayer.PlayerName}");
             }
         }
 
@@ -200,15 +194,13 @@ namespace ExecutesPlugin.Managers
         {
             RemoveDisconnectedPlayers();
 
-            Console.WriteLine(
-                $"[Executes] {_maxExecutesPlayers} max players, {ActivePlayers.Count} active players, {QueuePlayers.Count} players in queue.");
+            Console.WriteLine($"[Executes] {_maxExecutesPlayers} max players, {ActivePlayers.Count} active players, {QueuePlayers.Count} players in queue.");
             Console.WriteLine($"[Executes] players to add: {_maxExecutesPlayers - ActivePlayers.Count}");
             var playersToAdd = _maxExecutesPlayers - ActivePlayers.Count;
 
             if (playersToAdd > 0 && QueuePlayers.Count > 0)
             {
-                Console.WriteLine(
-                    $"[Executes] inside if - this means the game has players to add and players in the queue.");
+                Console.WriteLine($"[Executes] inside if - this means the game has players to add and players in the queue.");
                 // Take players from QueuePlayers and add them to ActivePlayers
                 // Ordered by players with queue priority flag first since they
                 // have queue priority.
@@ -311,9 +303,12 @@ namespace ExecutesPlugin.Managers
         public void SetRoundTeams()
         {
             _roundTerrorists = ActivePlayers
-                .Where(player => Helpers.IsValidPlayer(player) && player.Team == CsTeam.Terrorist).ToList();
+                .Where(player => Helpers.IsValidPlayer(player) && player.Team == CsTeam.Terrorist)
+				.ToList();
+
             _roundCounterTerrorists = ActivePlayers
-                .Where(player => Helpers.IsValidPlayer(player) && player.Team == CsTeam.CounterTerrorist).ToList();
+                .Where(player => Helpers.IsValidPlayer(player) && player.Team == CsTeam.CounterTerrorist)
+				.ToList();
         }
     }
 }

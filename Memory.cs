@@ -2,7 +2,7 @@ using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
 
 namespace ExecutesPlugin.Memory
 {
-	public static class SmokeFunctions
+	public static class GrenadeFunctions
 	{
 		public static MemoryFunctionWithReturn<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, int> CSmokeGrenadeProjectile_CreateFunc = new(
 				Environment.OSVersion.Platform == PlatformID.Unix 

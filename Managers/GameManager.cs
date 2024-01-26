@@ -10,10 +10,20 @@ namespace ExecutesPlugin.Managers
     {
         private MapConfig _mapConfig = new();
         private Scenario? _currentScenario;
-        
+        private readonly QueueManager _queueManager;		
+        private Dictionary<int, int> _playerRoundScores = new();
+        private readonly int _consecutiveRoundWinsToScramble;
+        private readonly bool _isScrambleEnabled;
+
+        public const int ScoreForKill = 50;
+        public const int ScoreForAssist = 25;
+        public const int ScoreForDefuse = 50;
+
+        private bool _scrambleNextRound;
+
         public GameManager(QueueManager queueManager)
         {
-            QueueManager = queueManager;
+            _queueManager = queueManager;
             
             // TODO: Add a config option for this logic
             _consecutiveRoundWinsToScramble = 5;
@@ -76,13 +86,11 @@ namespace ExecutesPlugin.Managers
 
         public void ParseMapConfigIdReferences(MapConfig mapConfig)
         {
-            Console.WriteLine(
-                $"[Executes] Parsing map config id references for {mapConfig.Scenarios.Count} scenarios.");
+            Console.WriteLine($"[Executes] Parsing map config id references for {mapConfig.Scenarios.Count} scenarios.");
 
             foreach (var scenario in mapConfig.Scenarios)
             {
-                Console.WriteLine(
-                    $"[Executes] Parsing scenario \"{scenario.Name}\" -> SpawnIds: \"{scenario.SpawnIds.Count}\"");
+                Console.WriteLine($"[Executes] Parsing scenario \"{scenario.Name}\" -> SpawnIds: \"{scenario.SpawnIds.Count}\"");
 
                 scenario.Spawns[CsTeam.CounterTerrorist] = new List<Spawn>();
                 scenario.Spawns[CsTeam.Terrorist] = new List<Spawn>();
@@ -132,29 +140,17 @@ namespace ExecutesPlugin.Managers
             return _currentScenario ?? throw new Exception("No current scenario");
         }
 
-        private Dictionary<int, int> _playerRoundScores = new();
-        public readonly QueueManager QueueManager;
-        private readonly int _consecutiveRoundWinsToScramble;
-        private readonly bool _isScrambleEnabled;
-
-        public const int ScoreForKill = 50;
-        public const int ScoreForAssist = 25;
-        public const int ScoreForDefuse = 50;
-
-        private bool _scrambleNextRound;
-
         public void ScrambleNextRound(CCSPlayerController? admin = null)
         {
             _scrambleNextRound = true;
-            Server.PrintToChatAll(
-                $"[Executes] retakes.teams.admin_scramble {admin?.PlayerName ?? "The server owner"}");
+            Server.PrintToChatAll($"[Executes] retakes.teams.admin_scramble {admin?.PlayerName ?? "The server owner"}");
         }
 
         private void ScrambleTeams()
         {
-            var shuffledActivePlayers = Helpers.Shuffle(QueueManager.ActivePlayers);
+            var shuffledActivePlayers = Helpers.Shuffle(_queueManager.ActivePlayers);
 
-            var newTerrorists = shuffledActivePlayers.Take(QueueManager.GetTargetNumTerrorists()).ToList();
+            var newTerrorists = shuffledActivePlayers.Take(_queueManager.GetTargetNumTerrorists()).ToList();
             var newCounterTerrorists = shuffledActivePlayers.Except(newTerrorists).ToList();
 
             SetTeams(newTerrorists, newCounterTerrorists);
@@ -189,8 +185,7 @@ namespace ExecutesPlugin.Managers
 
             if (_consecutiveRoundsWon == _consecutiveRoundWinsToScramble)
             {
-                Server.PrintToChatAll(
-                    $"[Executes] retakes.teams.scramble {_consecutiveRoundWinsToScramble}");
+                Server.PrintToChatAll($"[Executes] retakes.teams.scramble {_consecutiveRoundWinsToScramble}");
 
                 _consecutiveRoundsWon = 0;
                 ScrambleTeams();
@@ -199,13 +194,11 @@ namespace ExecutesPlugin.Managers
             {
                 if (_isScrambleEnabled)
                 {
-                    Server.PrintToChatAll(
-                        $"[Executes] retakes.teams.almost_scramble {_consecutiveRoundsWon} {_consecutiveRoundWinsToScramble - _consecutiveRoundsWon}");
+                    Server.PrintToChatAll($"[Executes] retakes.teams.almost_scramble {_consecutiveRoundsWon} {_consecutiveRoundWinsToScramble - _consecutiveRoundsWon}");
                 }
                 else
                 {
-                    Server.PrintToChatAll(
-                        $"[Executes] retakes.teams.win_streak {_consecutiveRoundsWon}");
+                    Server.PrintToChatAll($"[Executes] retakes.teams.win_streak {_consecutiveRoundsWon}");
                 }
             }
             else if (_scrambleNextRound)
@@ -220,13 +213,12 @@ namespace ExecutesPlugin.Managers
         {
             if (_consecutiveRoundsWon >= 3)
             {
-                Server.PrintToChatAll(
-                    $"[Executes] retakes.teams.win_streak_over {_consecutiveRoundsWon}");
+                Server.PrintToChatAll($"[Executes] retakes.teams.win_streak_over {_consecutiveRoundsWon}");
             }
 
             _consecutiveRoundsWon = 0;
 
-            var targetNumTerrorists = QueueManager.GetTargetNumTerrorists();
+            var targetNumTerrorists = _queueManager.GetTargetNumTerrorists();
             var sortedCounterTerroristPlayers = GetSortedActivePlayers(CsTeam.CounterTerrorist);
 
             // Ensure that the players with the scores are set as new terrorists first.
@@ -250,10 +242,12 @@ namespace ExecutesPlugin.Managers
                 );
             }
 
-            newTerrorists.AddRange(sortedCounterTerroristPlayers.Where(player => player.Score > 0)
+            newTerrorists
+				.AddRange(sortedCounterTerroristPlayers
+				.Where(player => player.Score > 0)
                 .Take(targetNumTerrorists - newTerrorists.Count).ToList());
 
-            var newCounterTerrorists = QueueManager.ActivePlayers.Except(newTerrorists).ToList();
+            var newCounterTerrorists = _queueManager.ActivePlayers.Except(newTerrorists).ToList();
 
             SetTeams(newTerrorists, newCounterTerrorists);
         }
@@ -264,13 +258,14 @@ namespace ExecutesPlugin.Managers
             List<CCSPlayerController> newCounterTerrorists = new();
 
             var currentNumTerrorist = Helpers.GetCurrentNumPlayers(CsTeam.Terrorist);
-            var numTerroristsNeeded = QueueManager.GetTargetNumTerrorists() - currentNumTerrorist;
+            var numTerroristsNeeded = _queueManager.GetTargetNumTerrorists() - currentNumTerrorist;
 
             if (numTerroristsNeeded > 0)
             {
                 var sortedCounterTerroristPlayers = GetSortedActivePlayers(CsTeam.CounterTerrorist);
 
-                newTerrorists = sortedCounterTerroristPlayers.Where(player => player.Score > 0)
+                newTerrorists = sortedCounterTerroristPlayers
+					.Where(player => player.Score > 0)
                     .Take(numTerroristsNeeded).ToList();
 
                 if (newTerrorists.Count < numTerroristsNeeded)
@@ -282,11 +277,11 @@ namespace ExecutesPlugin.Managers
 
             var currentNumCounterTerroristAfterBalance = Helpers.GetCurrentNumPlayers(CsTeam.CounterTerrorist);
             var numCounterTerroristsNeeded =
-                QueueManager.GetTargetNumCounterTerrorists() - currentNumCounterTerroristAfterBalance;
+                _queueManager.GetTargetNumCounterTerrorists() - currentNumCounterTerroristAfterBalance;
 
             if (numCounterTerroristsNeeded > 0)
             {
-                var terroristsWithZeroScore = QueueManager.ActivePlayers
+                var terroristsWithZeroScore = _queueManager.ActivePlayers
                     .Where(player =>
                         Helpers.IsValidPlayer(player)
                         && player.Team == CsTeam.Terrorist
@@ -303,7 +298,7 @@ namespace ExecutesPlugin.Managers
                 {
                     // For remaining excess terrorists, move the ones with the lowest score to CT
                     newCounterTerrorists.AddRange(
-                        QueueManager.ActivePlayers
+                        _queueManager.ActivePlayers
                             .Except(newCounterTerrorists)
                             .Except(newTerrorists)
                             .Where(player => Helpers.IsValidPlayer(player) && player.Team == CsTeam.Terrorist)
@@ -319,7 +314,7 @@ namespace ExecutesPlugin.Managers
 
         private List<CCSPlayerController> GetSortedActivePlayers(CsTeam? team = null)
         {
-            return QueueManager.ActivePlayers
+            return _queueManager.ActivePlayers
                 .Where(Helpers.IsValidPlayer)
                 .Where(player => team == null || player.Team == team)
                 .OrderByDescending(player => _playerRoundScores.GetValueOrDefault((int)player.UserId!, 0))
@@ -331,7 +326,7 @@ namespace ExecutesPlugin.Managers
             terrorists ??= new List<CCSPlayerController>();
             counterTerrorists ??= new List<CCSPlayerController>();
 
-            foreach (var player in QueueManager.ActivePlayers.Where(Helpers.IsValidPlayer))
+            foreach (var player in _queueManager.ActivePlayers.Where(Helpers.IsValidPlayer))
             {
                 if (terrorists.Contains(player))
                 {

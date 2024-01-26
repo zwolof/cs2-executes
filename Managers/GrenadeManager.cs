@@ -44,7 +44,7 @@ namespace ExecutesPlugin.Managers
             switch(grenade.Type)
             {
                 case EGrenade.Smoke:
-                    SmokeFunctions.CSmokeGrenadeProjectile_CreateFunc.Invoke(
+                    GrenadeFunctions.CSmokeGrenadeProjectile_CreateFunc.Invoke(
                         grenade.Position!.Handle,
                         grenade.Angle!.Handle,
                         grenade.Velocity!.Handle,
@@ -58,7 +58,7 @@ namespace ExecutesPlugin.Managers
                 default:
                     break;
             }
-			Console.WriteLine($"Threw grenade {grenade.Name}");
+			Console.WriteLine($"[Executes] Threw grenade {grenade.Name}");
         }
     }
 }

@@ -29,24 +29,31 @@ namespace ExecutesPlugin
         #endregion
 
         private readonly GameManager _gameManager;
+        private readonly QueueManager _queueManager;
         private readonly SpawnManager _spawnManager;
         private readonly GrenadeManager _grenadeManager;
         
         private CsTeam _lastRoundWinner = CsTeam.None;
 		public bool _IsEditMode = false;
 
-        public ExecutesPlugin(GameManager gameManager, SpawnManager spawnManager, GrenadeManager grenadeManager)
+        public ExecutesPlugin(
+			GameManager gameManager,
+			SpawnManager spawnManager,
+			GrenadeManager grenadeManager,
+			QueueManager queueManager
+		)
         {
             _gameManager = gameManager;
             _spawnManager = spawnManager;
 			_grenadeManager = grenadeManager;
+			_queueManager = queueManager;
         }
 
         public override void Load(bool hotReload)
         {
             RegisterListener<Listeners.OnMapStart>(OnMapStart);
 
-			SmokeFunctions.CSmokeGrenadeProjectile_CreateFunc.Hook(OnSmokeGrenadeProjectileCreate, HookMode.Pre);
+			GrenadeFunctions.CSmokeGrenadeProjectile_CreateFunc.Hook(OnSmokeGrenadeProjectileCreate, HookMode.Pre);
 			
 			AddCommandListener("jointeam", OnCommandJoinTeam);
 			
@@ -100,7 +107,6 @@ namespace ExecutesPlugin
 
 			Server.PrintToChatAll(JsonSerializer.Serialize(grenade)); 
 			Server.PrintToChatAll("[Executes] smokegrenade_projectile created [Post].");
-			Server.PrintToChatAll($"[Executes] angVelocity: {new Vector(angVelocity).ToString()}");
 
 			return HookResult.Continue;
 		}
@@ -270,19 +276,19 @@ namespace ExecutesPlugin
 
 			// debug and check if the player is in the queue.
 			Console.WriteLine($"[Executes] [{player.PlayerName}] Checking ActivePlayers.");
-			if (!_gameManager.QueueManager.ActivePlayers.Contains(player))
+			if (!_queueManager.ActivePlayers.Contains(player))
 			{
-				Console.WriteLine(
-					$"[Executes] [{player.PlayerName}] Checking player pawn {player.PlayerPawn.Value != null}.");
+				Console.WriteLine($"[Executes] [{player.PlayerName}] Checking player pawn {player.PlayerPawn.Value != null}.");
+
 				if (player.PlayerPawn.Value != null && player.PlayerPawn.IsValid && player.PlayerPawn.Value.IsValid)
 				{
-					Console.WriteLine(
-						$"[Executes] [{player.PlayerName}] player pawn is valid {player.PlayerPawn.IsValid} && {player.PlayerPawn.Value.IsValid}.");
+					Console.WriteLine($"[Executes] [{player.PlayerName}] player pawn is valid {player.PlayerPawn.IsValid} && {player.PlayerPawn.Value.IsValid}.");
 					Console.WriteLine($"[Executes] [{player.PlayerName}] calling playerpawn.commitsuicide()");
 					player.PlayerPawn.Value.CommitSuicide(false, true);
 				}
 
 				Console.WriteLine($"[Executes] [{player.PlayerName}] Player not in ActivePlayers, moving to spectator.");
+				
 				if (!player.IsBot)
 				{
 					Console.WriteLine($"[Executes] [{player.PlayerName}] moving to spectator.");
@@ -357,22 +363,22 @@ namespace ExecutesPlugin
 
 	        Console.WriteLine($"[Executes] [{player.PlayerName}] {fromTeam} -> {toTeam}");
 
-	        _gameManager.QueueManager.DebugQueues(true);
-	        var response = _gameManager.QueueManager.PlayerJoinedTeam(player, fromTeam, toTeam);
-	        _gameManager.QueueManager.DebugQueues(false);
+	        _queueManager.DebugQueues(true);
+	        var response = _queueManager.PlayerJoinedTeam(player, fromTeam, toTeam);
+	        _queueManager.DebugQueues(false);
 
 	        Console.WriteLine($"[Executes] [{player.PlayerName}] checking to ensure we have active players");
 	        // If we don't have any active players, setup the active players and restart the game.
-	        if (_gameManager.QueueManager.ActivePlayers.Count == 0)
+	        if (_queueManager.ActivePlayers.Count == 0)
 	        {
 		        Console.WriteLine($"[Executes] [{player.PlayerName}] clearing round teams to allow team changes");
-		        _gameManager.QueueManager.ClearRoundTeams();
+		        _queueManager.ClearRoundTeams();
 
 		        Console.WriteLine(
 			        $"[Executes] [{player.PlayerName}] no active players found, calling QueueManager.Update()");
-		        _gameManager.QueueManager.DebugQueues(true);
-		        _gameManager.QueueManager.Update();
-		        _gameManager.QueueManager.DebugQueues(false);
+		        _queueManager.DebugQueues(true);
+		        _queueManager.Update();
+		        _queueManager.DebugQueues(false);
 
 		        Helpers.RestartGame();
 	        }
@@ -418,7 +424,7 @@ namespace ExecutesPlugin
                 return HookResult.Continue;
             }
 
-	        _gameManager.QueueManager.RemovePlayerFromQueues(player);
+	        _queueManager.RemovePlayerFromQueues(player);
 
             return HookResult.Continue;
         }
@@ -443,13 +449,13 @@ namespace ExecutesPlugin
 			}
             
 			// Reset round teams to allow team changes.
-			_gameManager.QueueManager.ClearRoundTeams();
+			_queueManager.ClearRoundTeams();
 
 			// Update Queue status
 			Console.WriteLine($"[Executes] Updating queues...");
-			_gameManager.QueueManager.DebugQueues(true);
-			_gameManager.QueueManager.Update();
-			_gameManager.QueueManager.DebugQueues(false);
+			_queueManager.DebugQueues(true);
+			_queueManager.Update();
+			_queueManager.DebugQueues(false);
 			Console.WriteLine($"[Executes] Updated queues.");
 
 			// Handle team swaps during round pre-start.
@@ -471,7 +477,7 @@ namespace ExecutesPlugin
 			_gameManager.BalanceTeams();
 
 			// Set round teams to prevent team changes mid round
-			_gameManager.QueueManager.SetRoundTeams();
+			_queueManager.SetRoundTeams();
 
             
             // Attempt to get a random scenario from the game manager
@@ -492,7 +498,7 @@ namespace ExecutesPlugin
 			var hasBombBeenAllocated = false;
         
 	        Console.WriteLine($"[Executes] Trying to loop valid active players.");
-	        foreach (var player in _gameManager.QueueManager.ActivePlayers.Where(Helpers.IsValidPlayer))
+	        foreach (var player in _queueManager.ActivePlayers.Where(Helpers.IsValidPlayer))
 	        {
 		        Console.WriteLine($"[Executes] [{player.PlayerName}] Adding timer for allocation...");
 
