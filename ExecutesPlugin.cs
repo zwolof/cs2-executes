@@ -35,7 +35,7 @@ namespace ExecutesPlugin
         private readonly GrenadeManager _grenadeManager;
         
         private CsTeam _lastRoundWinner = CsTeam.None;
-		public bool _IsEditMode = false;
+		public bool _IsEditMode;
 
         public ExecutesPlugin(
 			GameManager gameManager,
