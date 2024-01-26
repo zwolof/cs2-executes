@@ -182,9 +182,9 @@ namespace ExecutesPlugin
 				return;
 			}
 
-			player.PrintToConsole("Current position:");
+			player!.PrintToConsole("Current position:");
 			player.PrintToConsole("---------------------------");
-			player.PrintToConsole($"Pos: {player.PlayerPawn.Value.AbsOrigin.X} {player.PlayerPawn.Value.AbsOrigin.Y} {player.PlayerPawn.Value.AbsOrigin.Z}");
+			player.PrintToConsole($"Pos: {player.PlayerPawn.Value!.AbsOrigin!.X} {player.PlayerPawn.Value.AbsOrigin.Y} {player.PlayerPawn.Value.AbsOrigin.Z}");
 			player.PrintToConsole($"Eye: {player.PlayerPawn.Value.EyeAngles.X} {player.PlayerPawn.Value.EyeAngles.Y} {player.PlayerPawn.Value.EyeAngles.Z}");
 			player.PrintToConsole("---------------------------");
 		}

@@ -7,11 +7,13 @@ If you appreciate the project then please take the time to star the repository ð
 ![Star us](https://github.com/b3none/gdprconsent/raw/development/.github/README_ASSETS/star_us.png)
 
 ## Features / Roadmap
-- [ ] Decide on structure for executes configs
-- [ ] Bombsite selection
-- [ ] Implement per map configurations
+- [x] Decide on structure for executes configs
+- [x] Scenario selection
+- [x] Implement per map configurations
 - [ ] Ability to add spawns
-- [ ] Fallback weapon allocation
+- [x] Fallback weapon allocation
+- [ ] Implement lurker spawns
+- [ ] Implement Molotovs and Flashbangs
 
 ## Requirements
 
