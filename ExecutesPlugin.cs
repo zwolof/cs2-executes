@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Text;
 using System.Text.Json;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
@@ -7,7 +6,6 @@ using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API.Modules.Commands;
-using CounterStrikeSharp.API.Modules.Entities;
 using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
@@ -22,7 +20,7 @@ namespace ExecutesPlugin
     [MinimumApiVersion(147)]
     public class ExecutesPlugin : BasePlugin
     {
-        private const string Version = "0.0.1";
+        private const string Version = "1.0.0";
         
         #region Plugin Info
         public override string ModuleName => "Executes Plugin";
@@ -163,7 +161,7 @@ namespace ExecutesPlugin
 
 			var spawn = _gameManager._mapConfig.Spawns.FirstOrDefault(x => x.Id == spawnId);
 
-			if(spawn == null)
+			if (spawn == null)
 			{
 				commandInfo.ReplyToCommand($"[Executes] Spawn not found - [Value: {spawnString}].");
 				return;
@@ -572,7 +570,7 @@ namespace ExecutesPlugin
             _grenadeManager.SetupGrenades(currentScenario);
 
 
-			if(currentScenario.Bombsite == EBombsite.UNKNOWN)
+			if (currentScenario.Bombsite == EBombsite.UNKNOWN)
 			{
 				ChatHelpers.ChatMessageAll(currentScenario.Description, CsTeam.Terrorist);
 				// ChatHelpers.ChatMessageAll($"Test: {currentScenario.Name}");
@@ -587,7 +585,7 @@ namespace ExecutesPlugin
 					var CTPlayers = Utilities.GetPlayers().Where(x => x.Team == CsTeam.CounterTerrorist).ToList();
 					var randPlayer = CTPlayers[Helpers.GetRandomInt(0, CTPlayers.Count - 1)];
 
-					if(randPlayer == null)
+					if (randPlayer == null)
 					{
 						return;
 					}
