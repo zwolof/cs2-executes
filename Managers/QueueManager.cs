@@ -15,6 +15,7 @@ namespace ExecutesPlugin.Managers
 
         public QueueManager()
         {
+            // TODO: Add a config option for this logic
             _maxExecutesPlayers = 10;
             _terroristRatio = 0.45f;
             _queuePriorityFlag = "@css/vip";

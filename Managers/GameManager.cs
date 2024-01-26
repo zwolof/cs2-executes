@@ -14,6 +14,8 @@ namespace ExecutesPlugin.Managers
         public GameManager(QueueManager queueManager)
         {
             QueueManager = queueManager;
+            
+            // TODO: Add a config option for this logic
             _consecutiveRoundWinsToScramble = 5;
             _isScrambleEnabled = true;
         }
