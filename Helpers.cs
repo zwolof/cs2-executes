@@ -209,7 +209,7 @@ namespace ExecutesPlugin
 					sv_allow_votes 0
 					spec_replay_enable 0
 					mp_round_restart_delay 5
-					mp_freezetime 8
+					mp_freezetime 3
 
 					// ESL deathcam settings
 					spec_freeze_deathanim_time 0
