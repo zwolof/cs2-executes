@@ -1,18 +1,6 @@
 {
 	"Scenarios": [
 		{
-			"Name": "1v2 A site",
-			"Description": "You are alone against 2 CTs, try to plant the bomb at {{site}} and win the round!",
-			"Bombsite": 0,
-			"RoundTime": 55,
-			"MinPlayerCount": 3,
-			"SpawnIds": [
-				1, 2, 3,
-				5, 9
-			],
-			"GrenadeIds": [2]
-		},
-		{
 			"Name": "A Execute",
 			"Description": "Execute the {{site}} site!",
 			"Bombsite": 0,
