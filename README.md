@@ -26,3 +26,4 @@ If you appreciate the project then please take the time to star the repository ð
 
 ## Credits
 This was inspired by the [CS:GO Executes project](https://github.com/splewis/csgo-executes) written by [splewis](https://github.com/splewis).
+Thank you [svn](https://github.com/ipsvn) for providing us with the method to throw Smoke Grenades.
