@@ -1,3 +1,5 @@
+using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Cvars;
 using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Enums;
@@ -55,26 +57,103 @@ namespace ExecutesPlugin.Managers
 			}
 		}
 
-        public void ThrowGrenade(Grenade grenade)
-        {
-            switch(grenade.Type)
-            {
-                case EGrenade.Smoke:
-                    GrenadeFunctions.CSmokeGrenadeProjectile_CreateFunc.Invoke(
-                        grenade.Position!.Handle,
-                        grenade.Angle!.Handle,
-                        grenade.Velocity!.Handle,
-                        grenade.Velocity.Handle,
-                        IntPtr.Zero,
-                        45,
-                        (int)grenade.Team
-                    );
-                    break;
-                
-                default:
-                    break;
-            }
+		public void ThrowGrenade(Grenade grenade)
+		{
+			CBaseCSGrenadeProjectile? createdGrenade = null;
+			switch (grenade.Type)
+			{
+				case EGrenade.Smoke:
+				{
+					createdGrenade = GrenadeFunctions.CSmokeGrenadeProjectile_CreateFunc.Invoke(
+						grenade.Position!.Handle,
+						grenade.Angle!.Handle,
+						grenade.Velocity!.Handle,
+						grenade.Velocity.Handle,
+						IntPtr.Zero,
+						45,
+						(int)grenade.Team
+					);
+					break;
+				}
+				case EGrenade.Flashbang:
+				{
+					createdGrenade = Utilities.CreateEntityByName<CFlashbangProjectile>("flashbang_projectile");
+					if (createdGrenade == null)
+					{
+						return;
+					}
+
+					createdGrenade.DispatchSpawn();
+					break;
+				}
+				case EGrenade.Molotov:
+				case EGrenade.Incendiary:
+				{
+					var molotov = Utilities.CreateEntityByName<CMolotovProjectile>("molotov_projectile");
+					if (molotov == null)
+					{
+						return;
+					}
+
+					molotov.Damage = 200;
+					molotov.DmgRadius = 300;
+
+					molotov.DispatchSpawn();
+					molotov.AcceptInput("InitializeSpawnFromWorld");
+
+					if (grenade.Type == EGrenade.Molotov)
+					{
+						molotov.SetModel("weapons/models/grenade/molotov/weapon_molotov.vmdl");
+					}
+					else if (grenade.Type == EGrenade.Incendiary)
+					{
+						// have to set IsIncGrenade after InitializeSpawnFromWorld as it forces it to false
+						molotov.IsIncGrenade = true;
+						molotov.SetModel("weapons/models/grenade/incendiary/weapon_incendiarygrenade.vmdl");
+					}
+
+					createdGrenade = molotov;
+					break;
+				}
+				case EGrenade.HighExplosive:
+				{
+					createdGrenade = Utilities.CreateEntityByName<CHEGrenadeProjectile>("hegrenade_projectile");
+					if (createdGrenade == null)
+					{
+						return;
+					}
+
+					createdGrenade.Damage = 100;
+					createdGrenade.DmgRadius = createdGrenade.Damage * 3.5f;
+					createdGrenade.DispatchSpawn();
+					createdGrenade.AcceptInput("InitializeSpawnFromWorld");
+					break;
+				}
+				default:
+					Console.WriteLine($"[Executes] Unimplemented Grenade type {grenade.Type}");
+					break;
+			}
+
+			if (createdGrenade != null && createdGrenade.DesignerName != "smokegrenade_projectile")
+			{
+				createdGrenade.Teleport(grenade.Position!, grenade.Angle!, grenade.Velocity!);
+
+				createdGrenade.InitialPosition.X = grenade.Position!.X;
+				createdGrenade.InitialPosition.Y = grenade.Position!.Y;
+				createdGrenade.InitialPosition.Z = grenade.Position!.Z;
+
+				createdGrenade.InitialVelocity.X = grenade.Velocity!.X;
+				createdGrenade.InitialVelocity.Y = grenade.Velocity!.Y;
+				createdGrenade.InitialVelocity.Z = grenade.Velocity!.Z;
+
+				createdGrenade.AngVelocity.X = grenade.Velocity!.X;
+				createdGrenade.AngVelocity.Y = grenade.Velocity!.Y;
+				createdGrenade.AngVelocity.Z = grenade.Velocity!.Z;
+
+				createdGrenade.TeamNum = (byte)grenade.Team;
+			}
+
 			Console.WriteLine($"[Executes] Threw grenade {grenade.Name}");
-        }
-    }
+		}
+	}
 }
