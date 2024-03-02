@@ -18,7 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ExecutesPlugin
 {
     [MinimumApiVersion(147)]
-    public class ExecutesPlugin : BasePlugin
+    public class ExecutesPlugin : BasePlugin, IPluginConfig<ExecutesConfig>
     {
         private const string Version = "1.0.0";
         
@@ -28,6 +28,8 @@ namespace ExecutesPlugin
         public override string ModuleDescription => "Community executes for CS2.";
         public override string ModuleVersion => Version;
         #endregion
+
+		public ExecutesConfig Config { get; set; } = new();
 
         private readonly GameManager _gameManager;
         private readonly QueueManager _queueManager;
@@ -65,6 +67,11 @@ namespace ExecutesPlugin
                 OnMapStart(Server.MapName);
             }
         }
+
+		public void OnConfigParsed(ExecutesConfig config)
+		{
+			Config = config;
+		}
 
         public override void Unload(bool hotReload)
         {
@@ -437,6 +444,41 @@ namespace ExecutesPlugin
 
 			var gameRules = Helpers.GetGameRules();
 			gameRules.RoundTime = currentScenario.RoundTime;
+
+			var scenarioSite = currentScenario.Bombsite;
+			var bombTargets = Utilities.FindAllEntitiesByDesignerName<CBombTarget>("func_bomb_target");
+			foreach (var bombTarget in bombTargets)
+			{
+				var disableOtherBombsiteOverride = Config.DisableOtherBombsiteOverride;
+				if (disableOtherBombsiteOverride.OverrideEnabled)
+				{
+					if (!disableOtherBombsiteOverride.OverrideValue)
+					{
+						bombTarget.AcceptInput("Enable");
+						continue;
+					}
+				}
+				else if (!currentScenario.DisableOtherBombsite)
+				{
+					bombTarget.AcceptInput("Enable");
+					continue;
+				}
+
+				if (scenarioSite == EBombsite.UNKNOWN)
+				{
+					bombTarget.AcceptInput("Disable");
+					continue;
+				}
+				
+				if (bombTarget.IsBombSiteB)
+				{
+					bombTarget.AcceptInput(scenarioSite == EBombsite.B ? "Enable" : "Disable");
+				}
+				else
+				{
+					bombTarget.AcceptInput(scenarioSite == EBombsite.B ? "Disable" : "Enable");
+				}
+			}
 
             return HookResult.Continue;
         }
