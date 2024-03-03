@@ -34,6 +34,7 @@
 			"Name": "Mid Control",
 			"Description": "Take control of mid, and try to win the round from there!",
 			"Bombsite": -1,
+			"DisableOtherBombsite": false,
 			"RoundTime": 90,
 			"MinPlayerCount": 2,
 			"SpawnIds": [
