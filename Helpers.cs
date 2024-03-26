@@ -1,13 +1,24 @@
 using System.Text;
+using System.Text.Json;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Entities.Constants;
 using CounterStrikeSharp.API.Modules.Utils;
+using ExecutesPlugin.Models.JsonConverters;
 
 namespace ExecutesPlugin
 {
 	public static class Helpers
 	{
+		internal static readonly JsonSerializerOptions JsonSerializerOptions = new()
+		{
+			WriteIndented = true,
+			Converters =
+			{
+				new VectorJsonConverter(),
+				new QAngleJsonConverter()
+			}
+		};
 		public static CCSGameRules GetGameRules()
 		{
 			var gameRules = Utilities.FindAllEntitiesByDesignerName<CCSGameRulesProxy>("cs_gamerules").FirstOrDefault();

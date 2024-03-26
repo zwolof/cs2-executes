@@ -113,7 +113,7 @@ namespace ExecutesPlugin
 				Team = team,
 			};
 
-			Server.PrintToChatAll(JsonSerializer.Serialize(grenade)); 
+			Server.PrintToChatAll(JsonSerializer.Serialize(grenade, Helpers.JsonSerializerOptions)); 
 			ChatHelpers.ChatMessageAll("smokegrenade_projectile created [Post].");
 
 			return HookResult.Continue;
@@ -242,7 +242,7 @@ namespace ExecutesPlugin
 
 			player.PrintToConsole("Latest grenade:");
 			player.PrintToConsole("---------------------------");
-			player.PrintToConsole(JsonSerializer.Serialize(grenade));
+			player.PrintToConsole(JsonSerializer.Serialize(grenade, Helpers.JsonSerializerOptions));
 			player.PrintToConsole("---------------------------");
 		}
 		
