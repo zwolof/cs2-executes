@@ -48,7 +48,7 @@ namespace ExecutesPlugin.Managers
 
             var config = File.ReadAllText(_mapConfigPath);
 
-            var parsedConfig = JsonSerializer.Deserialize<MapConfig>(config);
+            var parsedConfig = JsonSerializer.Deserialize<MapConfig>(config, Helpers.JsonSerializerOptions);
 
             if (parsedConfig == null)
             {
