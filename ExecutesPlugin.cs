@@ -20,7 +20,7 @@ namespace ExecutesPlugin
     [MinimumApiVersion(147)]
     public class ExecutesPlugin : BasePlugin, IPluginConfig<ExecutesConfig>
     {
-        private const string Version = "1.0.0";
+        private const string Version = "1.0.2";
         
         #region Plugin Info
         public override string ModuleName => "Executes Plugin";
