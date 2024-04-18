@@ -1,0 +1,236 @@
+{
+	"Scenarios": [
+		{
+			"Name": "A Main/Donut Split Execute",
+			"Description": "Execute the {{site}} site!",
+			"Bombsite": 0,
+			"RoundTime": 90,
+			"MinPlayerCount": 2,
+			"SpawnIds": [
+				1, 
+				
+				6, 7
+			],
+			"GrenadeIds": [
+				1
+			]
+		},
+		{
+			"Name": "Mid -> Donut Execute",
+			"Description": "Execute the {{site}} site through only Donut!",
+			"Bombsite": 0,
+			"RoundTime": 90,
+			"MinPlayerCount": 2,
+			"SpawnIds": [
+				1, 
+				
+				6, 7
+			],
+			"GrenadeIds": [
+				1
+			]
+		}
+    ],
+    "Spawns": [
+		{
+			"Id": 1,
+			"Name": "A Big Box",
+			"Position": "",
+			"Angle": "",
+			"Team": 2,
+			"Type": 0
+		}
+    ],
+    "Grenades": [
+		{
+			"Id": 1,
+			"Name": "T-Spawn to Red Room",
+			"Type": 2,
+			"Position": "-391.97 -2,045.69 -153.66",
+			"Angle": "-26.58 93.51 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 2,
+			"Name": "A-Main to CT Spawn",
+			"Type": 2,
+			"Position": "-1,114.68 705.60 56.92",
+			"Angle": "7.30 63.08 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 3,
+			"Name": "A-Main to Donut",
+			"Type": 2,
+			"Position": "-1,397.86 763.26 54.03",
+			"Angle": "3.91 -85.93 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 4,
+			"Name": "A-Main Deep to BigBox",
+			"Type": 2,
+			"Position": "-1,924.54 118.89 74.81",
+			"Angle": "-1.45 86.44 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 5,
+			"Name": "A-Main to A-Main Exit",
+			"Type": 0,
+			"Position": "-1,873.64 80.38 76.03",
+			"Angle": "-1.02 105.66 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 6,
+			"Name": "A-Main Exit to Temple",
+			"Type": 2,
+			"Position": "-1,940.60 111.02 76.03",
+			"Angle": "0.22 73.81 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 7,
+			"Name": "A-Main Exit to Boost spot (Cheeky)",
+			"Type": 1,
+			"Position": "-1,984.03 255.41 88.03",
+			"Angle": "-16.85 154.51 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 8,
+			"Name": "A-Main Exit to Default Boxes A",
+			"Type": 3,
+			"Position": "-2,055.46 307.51 88.03",
+			"Angle": "-4.87 22.04 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 9,
+			"Name": "A-Main Exit to CT run-out",
+			"Type": 3,
+			"Position": "-2,055.46 307.51 88.03",
+			"Angle": "-6.93 35.96 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 10,
+			"Name": "A-Main Exit to A Plateau",
+			"Type": 3,
+			"Position": "-1,974.54 229.42 84.75",
+			"Angle": "-1.69 71.38 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 11,
+			"Name": "T-Spawn to Cave Entrance",
+			"Type": 2,
+			"Position": "142.04 -860.75 153.03",
+			"Angle": "-0.37 154.73 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 12,
+			"Name": "B Doors to B Cubby",
+			"Type": 3,
+			"Position": "1,129.28 -192.40 120.85",
+			"Angle": "9.64 -164.11 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 13,
+			"Name": "B Doors to Above Cubby (God-Flash)",
+			"Type": 0,
+			"Position": "1,148.55 -1,360.52 60.03",
+			"Angle": "2.13 111.40 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 14,
+			"Name": "B Doors to Above Ramp Exit (Left)",
+			"Type": 0,
+			"Position": "1,056.90 -914.76 9.03",
+			"Angle": "-7.45 89.32 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 15,
+			"Name": "B Doors to Above Ramp Exit (Right)",
+			"Type": 0,
+			"Position": "1,056.90 -914.76 9.03",
+			"Angle": "-24.15 71.83 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 16,
+			"Name": "B Boost Box to Default",
+			"Type": 3,
+			"Position": "1,294.56 -706.41 9.06",
+			"Angle": "12.03 -175.76 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 17,
+			"Name": "T-Spambable to Default",
+			"Type": 3,
+			"Position": "683.14 -239.61 135.27",
+			"Angle": "3.71 86.05 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
+			"Delay": 0
+		},
+		{
+			"Id": 18,
+			"Name": "Long 1st to B Ramp",
+			"Type": 0,
+			"Position": "1,253.31 489.00 122.56",
+			"Angle": "10.89 -87.38 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 3,
+			"Delay": 0
+		},
+		{
+			"Id": 19,
+			"Name": "B-Short to Spammable Cave Run-up",
+			"Type": 2,
+			"Position": "1,027.97 -768.44 7.88",
+			"Angle": "5.22 170.27 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 4,
+			"Delay": 0
+		}
+    ]
+}
