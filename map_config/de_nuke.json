@@ -388,7 +388,7 @@
 	"Grenades": [
 		{
 			"Id": 1,
-			"Name": "T-Spawn to RedBox Wall Smoke (Close)",
+			"Name": "T-Spawn to RedBox Wall (Shallow)",
 			"Type": 2,
 			"Position": "-1,268.03 -1,162.70 -415.97",
 			"Angle": "-0.20 -1.64 0.00",
@@ -398,7 +398,7 @@
 		},
 		{
 			"Id": 2,
-			"Name": "T-Spawn to RedBox Wall Smoke (Deep)",
+			"Name": "T-Spawn to RedBox Wall (Deep)",
 			"Type": 2,
 			"Position": "-732.88 -1,322.14 -407.97",
 			"Angle": "-11.27 -23.37 0.00",
@@ -476,23 +476,23 @@
 			"Team": 2,
 			"Delay": 0
 		},
-		{ 
-			"Id": 10, 
-			"Name": "Outside Silo to Heaven", 
-			"Type": 2, 
-			"Position": "-9.95 -1,452.29 24.21", 
-			"Angle": "0.00 0.00 0.00", 
-			"Velocity": "393.66 435.85 332.70", 
-			"Team": 2, 
+		{
+			"Id": 10,
+			"Name": "Outside Silo to Heaven",
+			"Type": 2,
+			"Position": "612.93 -859.53 -415.97",
+			"Angle": "13.94 38.75 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
+			"Team": 2,
 			"Delay": 0
 		},
-		{ 
+		{
 			"Id": 11,
 			"Name": "T-Roof to Mini Garage(Inner)",
 			"Type": 2,
-			"Position": "-97.17 -292.84 -82.84",
-			"Angle": "0.00 0.00 0.00",
-			"Velocity": "215.58 -351.17 420.27",
+			"Position": "-105.03 -280.03 -171.97",
+			"Angle": "-11.40 -59.69 0.00",
+			"Velocity": "-431.16 -115.31 506.39",
 			"Team": 2,
 			"Delay": 0
 		},
