@@ -33,10 +33,15 @@ public sealed class GrenadeManager : BaseManager
 			Console.WriteLine("[Executes] mp_freezetime not found.");
 		}
 
-		var teams = new List<CsTeam> { CsTeam.Terrorist, CsTeam.CounterTerrorist };
-		var nadesThrown = new Dictionary<CsTeam, int> {
-			{CsTeam.Terrorist, 0},
-			{CsTeam.CounterTerrorist, 0},
+		var teams = new List<CsTeam>
+		{ 
+			CsTeam.Terrorist, 
+			CsTeam.CounterTerrorist 
+		};
+		var nadesThrown = new Dictionary<CsTeam, int>
+		{
+			{ CsTeam.Terrorist, 0 },
+			{ CsTeam.CounterTerrorist, 0 },
 		};
 
 		foreach(var team in teams)

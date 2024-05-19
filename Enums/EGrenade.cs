@@ -1,6 +1,7 @@
 namespace ExecutesPlugin.Enums;
 
-public enum EGrenade {
+public enum EGrenade
+{
 	Flashbang,
 	HighExplosive,
 	Smoke,
