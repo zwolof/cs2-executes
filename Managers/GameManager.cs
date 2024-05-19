@@ -8,7 +8,7 @@ namespace ExecutesPlugin.Managers;
 
 public sealed class GameManager : BaseManager
 {
-    public MapConfig _mapConfig = new();
+    public MapConfig? _mapConfig;
     private Scenario? _currentScenario;
     private readonly QueueManager _queueManager;		
     private Dictionary<int, int> _playerRoundScores = new();
@@ -43,6 +43,7 @@ public sealed class GameManager : BaseManager
         if (!File.Exists(_mapConfigPath))
         {
             Console.WriteLine($"[Executes] {fileName} does not exist.");
+            _mapConfig = null;
             return false;
         }
 
@@ -53,6 +54,7 @@ public sealed class GameManager : BaseManager
         if (parsedConfig == null)
         {
             Console.WriteLine($"[Executes] Failed to parse {fileName}");
+            _mapConfig = null;
             return false;
         }
 
@@ -67,6 +69,14 @@ public sealed class GameManager : BaseManager
     public Scenario? GetRandomScenario()
     {
         Console.WriteLine("Calling GameManager::GetRandomScenario()");
+
+        if (_mapConfig == null)
+        {
+            Console.WriteLine("There is no map config loaded.");
+            _currentScenario = null;
+            return null;
+        }
+
         Console.WriteLine($"There are {_mapConfig.Scenarios.Count} scenarios loaded.");
 
         var validScenarios = _mapConfig.Scenarios;
@@ -81,10 +91,9 @@ public sealed class GameManager : BaseManager
 
         var players = Utilities.GetPlayers();
 
-
         foreach (var scenario in validScenarios)
         {
-            var totalSpawnCount = (scenario.Spawns[CsTeam.Terrorist].Count + scenario.Spawns[CsTeam.CounterTerrorist].Count);
+            var totalSpawnCount = scenario.Spawns[CsTeam.Terrorist].Count + scenario.Spawns[CsTeam.CounterTerrorist].Count;
 
             if (totalSpawnCount < _queueManager.ActivePlayers.Count)
             {

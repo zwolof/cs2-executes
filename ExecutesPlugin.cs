@@ -169,8 +169,14 @@ public class ExecutesPlugin : BasePlugin, IPluginConfig<ExecutesConfig>
 
 		var spawnId = int.Parse(spawnString);
 
-		var spawn = _gameManager._mapConfig.Spawns.FirstOrDefault(x => x.Id == spawnId);
+		var mapConfig = _gameManager._mapConfig;
+		if (mapConfig == null)
+		{
+			commandInfo.ReplyToCommand($"[Executes] There is no map config loaded.");
+			return;
+		}
 
+		var spawn = mapConfig.Spawns.FirstOrDefault(x => x.Id == spawnId);
 		if (spawn == null)
 		{
 			commandInfo.ReplyToCommand($"[Executes] Spawn not found - [Value: {spawnString}].");
