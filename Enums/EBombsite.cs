@@ -1,10 +1,9 @@
-namespace ExecutesPlugin.Enums
-{
-	public enum EBombsite
-	{
-		UNKNOWN = -1,
-		A = 0,
+namespace ExecutesPlugin.Enums;
 
-		B = 1
-	}
+public enum EBombsite
+{
+	UNKNOWN = -1,
+	A = 0,
+
+	B = 1
 }

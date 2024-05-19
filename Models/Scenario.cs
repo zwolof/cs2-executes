@@ -2,23 +2,22 @@ using System.Text.Json.Serialization;
 using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Enums;
 
-namespace ExecutesPlugin.Models
+namespace ExecutesPlugin.Models;
+
+public class Scenario
 {
-    public class Scenario
-    {
-        public string? Name { get; set; }
-		public string Description { get; set; } = "";
-        public EBombsite Bombsite { get; set; }
-        public bool DisableOtherBombsite { get; set; } = true;
-        public int RoundTime { get; set; }
-        public int MinPlayerCount { get; set; }
-        public HashSet<int> SpawnIds { get; set; } = new();
-        public HashSet<int> GrenadeIds { get; set; } = new();
+    public string? Name { get; set; }
+    public string Description { get; set; } = "";
+    public EBombsite Bombsite { get; set; }
+    public bool DisableOtherBombsite { get; set; } = true;
+    public int RoundTime { get; set; }
+    public int MinPlayerCount { get; set; }
+    public HashSet<int> SpawnIds { get; set; } = new();
+    public HashSet<int> GrenadeIds { get; set; } = new();
 
-        [JsonIgnore]
-        public Dictionary<CsTeam, List<Spawn>> Spawns { get; set; } = new();
+    [JsonIgnore]
+    public Dictionary<CsTeam, List<Spawn>> Spawns { get; set; } = new();
 
-        [JsonIgnore] 
-        public Dictionary<CsTeam, List<Grenade>> Grenades { get; set; } = new();
-    }
+    [JsonIgnore] 
+    public Dictionary<CsTeam, List<Grenade>> Grenades { get; set; } = new();
 }

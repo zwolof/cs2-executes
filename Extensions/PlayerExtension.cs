@@ -2,32 +2,31 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
 using ExecutesPlugin.Models;
 
-namespace ExecutesPlugin
+namespace ExecutesPlugin;
+
+public static class PlayerExtension
 {
-	public static class PlayerExtension
+	public static void ChatMessage(this CCSPlayerController player, string message)
 	{
-		public static void ChatMessage(this CCSPlayerController player, string message)
+		player.PrintToChat($"[Executes] {message}");
+	}
+
+	public static bool IsValidPlayer(this CCSPlayerController? player)
+	{
+		return player != null && player.IsValid && player.Connected == PlayerConnectedState.PlayerConnected;
+	}
+
+	public static void MoveToSpawn(this CCSPlayerController player, Spawn spawn)
+	{
+		if (player.PlayerPawn.Value == null || spawn.Position == null || spawn.Angle == null) 
 		{
-			player.PrintToChat($"[Executes] {message}");
+			Console.WriteLine("[Executes] Spawn position or angle is null.");
+			return;
 		}
 
-		public static bool IsValidPlayer(this CCSPlayerController? player)
-		{
-			return player != null && player.IsValid && player.Connected == PlayerConnectedState.PlayerConnected;
-		}
+		Console.WriteLine($"[Executes] Moving {player.PlayerName} to {spawn.Name}.");
 
-		public static void MoveToSpawn(this CCSPlayerController player, Spawn spawn)
-		{
-			if (player.PlayerPawn.Value == null || spawn.Position == null || spawn.Angle == null) 
-			{
-				Console.WriteLine("[Executes] Spawn position or angle is null.");
-				return;
-			}
-
-			Console.WriteLine($"[Executes] Moving {player.PlayerName} to {spawn.Name}.");
-
-			player.PlayerPawn.Value.Teleport(spawn.Position, spawn.Angle, new Vector());
-			// player.PlayerPawn.Value.AbsOrigin!.Z = spawn.Position.Z;
-		}
+		player.PlayerPawn.Value.Teleport(spawn.Position, spawn.Angle, new Vector());
+		// player.PlayerPawn.Value.AbsOrigin!.Z = spawn.Position.Z;
 	}
 }

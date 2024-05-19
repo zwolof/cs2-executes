@@ -1,41 +1,40 @@
-namespace ExecutesPlugin.Models
+namespace ExecutesPlugin.Models;
+
+// FIFO Queue
+public class ExecutesQueue<T> where T : class
 {
-    // FIFO Queue
-    public class ExecutesQueue<T> where T : class
+    private readonly List<T> _queue = new();
+
+    public ExecutesQueue() {}
+
+    public void Enqueue(T item)
     {
-        private readonly List<T> _queue = new();
+        _queue.Add(item);
+    }
 
-        public ExecutesQueue() {}
+    public void EnqueuePriority(T item)
+    {
+        _queue.Insert(0, item);
+    }
 
-        public void Enqueue(T item)
+    public T GetNext()
+    {
+        return _queue.First();
+    }
+
+    public bool Drop(T item)
+    {
+        if (_queue.Contains(item))
         {
-            _queue.Add(item);
+            _queue.Remove(item);
+            return true;
         }
 
-        public void EnqueuePriority(T item)
-        {
-            _queue.Insert(0, item);
-        }
+        return false;
+    }
 
-        public T GetNext()
-        {
-            return _queue.First();
-        }
-
-        public bool Drop(T item)
-        {
-            if (_queue.Contains(item))
-            {
-                _queue.Remove(item);
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool IsEmpty()
-        {
-            return _queue.Count == 0;
-        }
+    public bool IsEmpty()
+    {
+        return _queue.Count == 0;
     }
 }

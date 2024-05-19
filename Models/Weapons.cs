@@ -1,13 +1,9 @@
-using CounterStrikeSharp.API.Modules.Utils;
-using ExecutesPlugin.Enums;
+namespace ExecutesPlugin.Models;
 
-namespace ExecutesPlugin.Models
+public class Weapons
 {
-	public class Weapons
-	{
-		public string? DesignerName { get; set; }
-		public int Clip1 { get; set; }
-		public int Clip2 { get; set; }
-		public int ReserveAmmo { get; set; }
-	}
+	public string? DesignerName { get; set; }
+	public int Clip1 { get; set; }
+	public int Clip2 { get; set; }
+	public int ReserveAmmo { get; set; }
 }
