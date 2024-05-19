@@ -17,7 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ExecutesPlugin;
 
-[MinimumApiVersion(147)]
+[MinimumApiVersion(206)]
 public class ExecutesPlugin : BasePlugin, IPluginConfig<ExecutesConfig>
 {
 	private const string Version = "1.0.2";
