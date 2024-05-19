@@ -628,6 +628,11 @@ public class ExecutesPlugin : BasePlugin, IPluginConfig<ExecutesConfig>
 			AddTimer(5.0f, () =>
 			{
 				var CTPlayers = Utilities.GetPlayers().Where(x => x.Team == CsTeam.CounterTerrorist).ToList();
+				if (CTPlayers.Count == 0)
+				{
+					return;
+				}
+				
 				var randPlayer = CTPlayers[Helpers.GetRandomInt(0, CTPlayers.Count - 1)];
 
 				if (randPlayer == null)
