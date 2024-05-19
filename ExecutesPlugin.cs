@@ -129,7 +129,10 @@ public class ExecutesPlugin : BasePlugin, IPluginConfig<ExecutesConfig>
 			return;
 		}
 		
-		Helpers.ExecuteExecutesConfiguration(ModuleDirectory);
+		AddTimer(1.0f, () =>
+		{
+			Helpers.ExecuteExecutesConfiguration(ModuleDirectory);
+		}, TimerFlags.STOP_ON_MAPCHANGE);
 	}
 
 	[ConsoleCommand("css_debug", "Reloads the scenarios from the map config")]

@@ -26,7 +26,6 @@ public static class PlayerExtension
 
 		Console.WriteLine($"[Executes] Moving {player.PlayerName} to {spawn.Name}.");
 
-		player.PlayerPawn.Value.Teleport(spawn.Position, spawn.Angle, new Vector());
-		// player.PlayerPawn.Value.AbsOrigin!.Z = spawn.Position.Z;
+		player.PlayerPawn.Value.Teleport(spawn.Position, spawn.Angle, Vector.Zero);
 	}
 }
