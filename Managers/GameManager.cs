@@ -9,7 +9,11 @@ namespace ExecutesPlugin.Managers;
 public sealed class GameManager : BaseManager
 {
     public MapConfig? _mapConfig;
+
+
     private Scenario? _currentScenario;
+    public bool IsForcingScenario;
+
     private readonly QueueManager _queueManager;		
     private Dictionary<int, int> _playerRoundScores = new();
     private readonly int _consecutiveRoundWinsToScramble;
@@ -75,6 +79,12 @@ public sealed class GameManager : BaseManager
             Console.WriteLine("There is no map config loaded.");
             _currentScenario = null;
             return null;
+        }
+
+        if (IsForcingScenario)
+        {
+            Console.WriteLine("[Executes] Reusing scenario due to forcing enabled");
+            return _currentScenario;
         }
 
         Console.WriteLine($"There are {_mapConfig.Scenarios.Count} scenarios loaded.");
@@ -164,6 +174,17 @@ public sealed class GameManager : BaseManager
                 }
             }
         }
+    }
+
+    public void SetForcedScenario(Scenario? scenario)
+    {
+        if (scenario == null)
+        {
+            IsForcingScenario = false;
+            return;
+        }
+        _currentScenario = scenario;
+        IsForcingScenario = true;
     }
 
     public Scenario GetCurrentScenario()
