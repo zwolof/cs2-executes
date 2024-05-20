@@ -399,8 +399,3 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-
-# Staged Map Configs
-map_config/de_inferno.json
-map_config/de_overpass.json
-map_config/de_vertigo.json
