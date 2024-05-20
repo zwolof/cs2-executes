@@ -1,9 +1,8 @@
-namespace ExecutesPlugin.Managers
-{
-    public interface IBaseManager { }
+namespace ExecutesPlugin.Managers;
 
-    public class BaseManager : IBaseManager
-    {
-        public BaseManager() { }
-    }
+public interface IBaseManager { }
+
+public class BaseManager : IBaseManager
+{
+    public BaseManager() { }
 }

@@ -24,14 +24,14 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.0.x
       - name: Build
         run: dotnet build
       - name: Create output directory
         run: |
           mkdir -p output/ExecutesPlugin
-          mv ./bin/Debug/net7.0/ExecutesPlugin.dll output/ExecutesPlugin/
-          mv ./bin/Debug/net7.0/ExecutesPlugin.pdb output/ExecutesPlugin/
+          mv ./bin/Debug/net8.0/ExecutesPlugin.dll output/ExecutesPlugin/
+          mv ./bin/Debug/net8.0/ExecutesPlugin.pdb output/ExecutesPlugin/
           mv ./map_config output/ExecutesPlugin/
 #          mv ./lang output/ExecutesPlugin/
       - name: Copy output (no map configs)

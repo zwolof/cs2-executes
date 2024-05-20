@@ -1,10 +1,9 @@
 
-namespace ExecutesPlugin.Enums
+namespace ExecutesPlugin.Enums;
+
+public enum ESpawnType : int
 {
-	public enum ESpawnType : int
-	{
-		SPAWNTYPE_NORMAL,
-		SPAWNTYPE_LURKER,
-		SPAWNTYPE_ENTRY
-	}
+	SPAWNTYPE_NORMAL,
+	SPAWNTYPE_LURKER,
+	SPAWNTYPE_ENTRY
 }
