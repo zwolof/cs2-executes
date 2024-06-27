@@ -6,6 +6,7 @@ using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Entities.Constants;
 using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
@@ -262,6 +263,50 @@ public class ExecutesPlugin : BasePlugin, IPluginConfig<ExecutesConfig>
 	public void OnCommandScramble(CCSPlayerController? player, CommandInfo commandInfo)
 	{
 		_gameManager.ScrambleNextRound(player);
+	}
+
+	[ConsoleCommand("css_forcescenario", "Force a scenario to be replayed continously.")]
+	[CommandHelper(whoCanExecute: CommandUsage.CLIENT_AND_SERVER)]
+	[RequiresPermissions("@css/admin")]
+	public void OnCommandForceScenario(CCSPlayerController? player, CommandInfo commandInfo)
+	{
+		var mapConfig = _gameManager._mapConfig;
+		if (mapConfig == null)
+		{
+			commandInfo.ReplyToCommand("[Executes] No map config is loaded.");
+			return;
+		}
+
+		var scenarioName = commandInfo.GetArg(1).ToLower();
+		if (string.IsNullOrEmpty(scenarioName))
+		{
+			if (_gameManager.IsForcingScenario)
+			{
+				_gameManager.SetForcedScenario(null);
+				commandInfo.ReplyToCommand($"[Executes] Stopped force scenario.");
+				Helpers.TerminateRound(RoundEndReason.RoundDraw);
+			}
+			else
+			{
+				commandInfo.ReplyToCommand("[Executes] You must provide a scenario name to start force scenario.");
+			}
+
+			return;
+		}
+
+		var scenario = mapConfig.Scenarios
+			.FirstOrDefault(scenario => scenario.Name?.ToLower()?.Contains(scenarioName) ?? false);
+
+		if (scenario == null)
+		{
+			commandInfo.ReplyToCommand($"[Executes] Could not find a scenario with the name {scenarioName}.");
+			return;
+		}
+
+		_gameManager.SetForcedScenario(scenario);
+		commandInfo.ReplyToCommand($"[Executes] Started force scenario of {scenario.Name}");
+		Helpers.TerminateRound(RoundEndReason.RoundDraw);
+
 	}
 	
 	[GameEventHandler]
