@@ -53,7 +53,16 @@ public sealed class GameManager : BaseManager
 
         var config = File.ReadAllText(_mapConfigPath);
 
-        var parsedConfig = JsonSerializer.Deserialize<MapConfig>(config, Helpers.JsonSerializerOptions);
+        MapConfig? parsedConfig = null;
+        try
+        {
+            parsedConfig = JsonSerializer.Deserialize<MapConfig>(config, Helpers.JsonSerializerOptions);
+        }
+        catch (JsonException exc)
+        {
+            Console.WriteLine($"[Executes] Failed parsing map config JSON: {exc.Message}");
+            Console.WriteLine(exc.StackTrace);
+        }
 
         if (parsedConfig == null)
         {
