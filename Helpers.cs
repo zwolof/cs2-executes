@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
 using CounterStrikeSharp.API;
@@ -77,7 +78,7 @@ public static class Helpers
 		}
 	}
 	
-	public static bool IsValidPlayer(CCSPlayerController? player)
+	public static bool IsValidPlayer([NotNullWhen(true)] CCSPlayerController? player)
 	{
 		return player != null && player.IsValid;
 	}
@@ -145,7 +146,7 @@ public static class Helpers
 		NativeAPI.IssueClientCommand((int)player.UserId!, "slot5");
 	}
 
-	public static void RemoveHelmetAndHeavyArmour(CCSPlayerController player)
+	public static void RemoveHelmet(CCSPlayerController player)
 	{
 		if (player.PlayerPawn.Value == null || player.PlayerPawn.Value.ItemServices == null)
 		{
@@ -154,7 +155,6 @@ public static class Helpers
 
 		var itemServices = new CCSPlayer_ItemServices(player.PlayerPawn.Value.ItemServices.Handle);
 		itemServices.HasHelmet = false;
-		itemServices.HasHeavyArmor = false;
 	}
 
 	public static List<T> Shuffle<T>(IEnumerable<T> list)

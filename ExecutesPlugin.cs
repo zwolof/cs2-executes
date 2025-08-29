@@ -76,8 +76,6 @@ public class ExecutesPlugin : BasePlugin, IPluginConfig<ExecutesConfig>
 
 	public override void Unload(bool hotReload)
 	{
-		RemoveListener("OnMapStart", OnMapStart);
-
 		Console.WriteLine("[Executes] ----------- CS2 Executes unloaded -----------");
 	}
 
@@ -608,7 +606,7 @@ public class ExecutesPlugin : BasePlugin, IPluginConfig<ExecutesConfig>
 			}
 
 			// Strip the player of all of their weapons and the bomb before any spawn / allocation occurs.
-			Helpers.RemoveHelmetAndHeavyArmour(player);
+			Helpers.RemoveHelmet(player);
 			player.RemoveWeapons();
 
 			// Create a timer to do this as it would occasionally fire too early.
