@@ -65,17 +65,12 @@ jobs:
           zip -r ExecutesPlugin-${{ github.sha }}.zip ./ExecutesPlugin
           rm -rf ./ExecutesPlugin/map_config
           zip -r ExecutesPlugin-${{ github.sha }}-no-map-configs.zip ./ExecutesPlugin
-      - name: Get release info
-        run: |
-          RELEASE_INFO=$(curl -sH 'Accept: application/vnd.github.v3+json' https://api.github.com/repos/${{ github.repository }}/releases)
-          export UPLOAD_URL=$(echo $RELEASE_INFO | jq -r ".[] | select(.tag_name == \"${{ github.event.release.tag_name }}\").upload_url")
-          echo "UPLOAD_URL=$UPLOAD_URL" >> $GITHUB_ENV
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ env.UPLOAD_URL }}
+          upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./ExecutesPlugin-${{ github.sha }}.zip
           asset_name: "cs2-executes-${{ github.event.release.tag_name }}.zip"
           asset_content_type: application/zip
@@ -84,7 +79,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ env.UPLOAD_URL }}
+          upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./ExecutesPlugin-${{ github.sha }}-no-map-configs.zip
           asset_name: "cs2-executes-${{ github.event.release.tag_name }}-no-map-configs.zip"
           asset_content_type: application/zip
