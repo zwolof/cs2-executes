@@ -76,8 +76,41 @@ public sealed class GrenadeManager : BaseManager
 					grenade.Velocity.Handle,
 					IntPtr.Zero,
 					45,
-					(int)grenade.Team
-				);
+					(int)grenade.Team);
+				break;
+			}
+			case EGrenade.Molotov:
+			case EGrenade.Incendiary:
+			{
+				createdGrenade = GrenadeFunctions.CMolotovProjectile_CreateFunc.Invoke(
+					grenade.Position!.Handle,
+					grenade.Angle!.Handle,
+					grenade.Velocity!.Handle,
+					grenade.Velocity.Handle,
+					IntPtr.Zero,
+					grenade.Type == EGrenade.Molotov ? 46 : 48);
+				break;
+			}
+			case EGrenade.HighExplosive:
+			{
+				createdGrenade = GrenadeFunctions.CHEGrenadeProjectile_CreateFunc.Invoke(
+					grenade.Position!.Handle,
+					grenade.Angle!.Handle,
+					grenade.Velocity!.Handle,
+					grenade.Velocity.Handle,
+					IntPtr.Zero,
+					44);
+				break;
+			}
+			case EGrenade.Decoy:
+			{
+				createdGrenade = GrenadeFunctions.CDecoyProjectile_CreateFunc.Invoke(
+					grenade.Position!.Handle,
+					grenade.Angle!.Handle,
+					grenade.Velocity!.Handle,
+					grenade.Velocity.Handle,
+					IntPtr.Zero,
+					47);
 				break;
 			}
 			case EGrenade.Flashbang:
@@ -89,49 +122,6 @@ public sealed class GrenadeManager : BaseManager
 				}
 
 				createdGrenade.DispatchSpawn();
-				break;
-			}
-			case EGrenade.Molotov:
-			case EGrenade.Incendiary:
-			{
-				var molotov = Utilities.CreateEntityByName<CMolotovProjectile>("molotov_projectile");
-				if (molotov == null)
-				{
-					return;
-				}
-
-				molotov.Damage = 200;
-				molotov.DmgRadius = 300;
-
-				molotov.DispatchSpawn();
-				molotov.AcceptInput("InitializeSpawnFromWorld");
-
-				if (grenade.Type == EGrenade.Molotov)
-				{
-					molotov.SetModel("weapons/models/grenade/molotov/weapon_molotov.vmdl");
-				}
-				else if (grenade.Type == EGrenade.Incendiary)
-				{
-					// have to set IsIncGrenade after InitializeSpawnFromWorld as it forces it to false
-					molotov.IsIncGrenade = true;
-					molotov.SetModel("weapons/models/grenade/incendiary/weapon_incendiarygrenade.vmdl");
-				}
-
-				createdGrenade = molotov;
-				break;
-			}
-			case EGrenade.HighExplosive:
-			{
-				createdGrenade = Utilities.CreateEntityByName<CHEGrenadeProjectile>("hegrenade_projectile");
-				if (createdGrenade == null)
-				{
-					return;
-				}
-
-				createdGrenade.Damage = 100;
-				createdGrenade.DmgRadius = createdGrenade.Damage * 3.5f;
-				createdGrenade.DispatchSpawn();
-				createdGrenade.AcceptInput("InitializeSpawnFromWorld");
 				break;
 			}
 			default:

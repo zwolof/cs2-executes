@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using CounterStrikeSharp.API;
@@ -20,6 +21,9 @@ public static class Helpers
 			new QAngleJsonConverter()
 		}
 	};
+
+	public static bool IsLinux => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+	
 	public static CCSGameRules GetGameRules()
 	{
 		var gameRules = Utilities.FindAllEntitiesByDesignerName<CCSGameRulesProxy>("cs_gamerules").FirstOrDefault();
