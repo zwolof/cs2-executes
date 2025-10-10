@@ -26,10 +26,10 @@ public static class GrenadeFunctions
                 : "48 8B C4 48 89 58 10 4C 89 40 18 48 89 48 08"
         );
     
-    public static MemoryFunctionWithReturn<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, int, CHEGrenadeProjectile>
+    public static MemoryFunctionWithReturn<IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, int, CDecoyProjectile>
         CDecoyProjectile_CreateFunc = new(
             Helpers.IsLinux
-                ? "55 4C 89 C1 48 89 E5 41 57 45 89 CF 41 56 49 89 FE 41 55 49 89 D5 48 89 F2 48 89 FE 41 54 48 8D 3D 72 EA 84 FF"
+                ? "55 4C 89 C1 48 89 E5 41 57 45 89 CF 41 56 49 89 FE 41 55 49 89 D5 48 89 F2 48 89 FE 41 54 48 8D 3D ?? ?? ?? ?? 4D 89 C4 53 48 83 EC 48"
                 : "48 8B C4 55 56 48 81 EC 58 01 00 00"
         );
 }
